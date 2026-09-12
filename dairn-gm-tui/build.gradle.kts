@@ -8,13 +8,12 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":cairn-2e"))
-    implementation(project(":great-steppe"))
+    implementation(project(":dairn-gm-engine:core"))
+    implementation(project(":dairn-gm-engine:cairn-2e"))
+    implementation(project(":dairn-gm-engine:great-steppe"))
     testImplementation(kotlin("test"))
 }
 
 application {
     mainClass.set("io.github.dairn.cli.MainKt")
 }
-

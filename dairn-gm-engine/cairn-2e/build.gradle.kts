@@ -7,7 +7,6 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":core"))
+    implementation(project(":dairn-gm-engine:core"))
     testImplementation(kotlin("test"))
 }
-
