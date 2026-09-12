@@ -67,13 +67,15 @@ class DairnCli(
         if ("--seed" in rest && seed == null) return error(messages.text("error.seed"), messages)
         val dice = RandomDice(seed?.let(::Random) ?: Random.Default)
         val choices = optionValues(rest, "--choice").mapNotNull(::parseAssignment).toMap()
-        return runInteractive(creationModule.characterCreationProcess, dice, choices, messages)
+        val texts = optionValues(rest, "--text").mapNotNull(::parseAssignment).toMap()
+        return runInteractive(creationModule.characterCreationProcess, dice, choices, texts, messages)
     }
 
     private fun runInteractive(
         process: InteractiveProcess,
         dice: Dice,
         suppliedChoices: Map<String, String>,
+        suppliedTexts: Map<String, String>,
         messages: Messages,
     ): Int {
         var step: InteractiveStep = process.start()
@@ -101,7 +103,8 @@ class DairnCli(
                 }
                 is ProcessRequest.EnterText -> {
                     output(request.prompt)
-                    val value = input() ?: return error(messages.text("error.response.missing", request.id.value), messages)
+                    val value = suppliedTexts[request.id.value] ?: input()
+                        ?: return error(messages.text("error.response.missing", request.id.value), messages)
                     if (!request.allowBlank && value.isBlank()) {
                         return error(messages.text("error.response.invalid", request.id.value), messages)
                     }
@@ -183,7 +186,8 @@ ${m.text("options")}:
   -h, --help             ${m.text("option.help")}
   --module <id>          ${m.text("character.module")}
   --seed <number>        ${m.text("character.seed")}
-  --choice <id=value>    ${m.text("character.choice.option")}"""
+  --choice <id=value>    ${m.text("character.choice.option")}
+  --text <id=value>      Supply a text response non-interactively"""
 
     private fun optionValue(args: List<String>, option: String): String? {
         val index = args.indexOf(option)

@@ -59,10 +59,21 @@ class DairnCliTest {
     }
 
     @Test
-    fun `Great Steppe reports that creation is not implemented`() {
-        val (code, text) = execute("character", "new", "--module", "great-steppe")
-        assertEquals(2, code)
-        assertContains(text, "not implemented")
+    fun `Great Steppe uses its own creation process through the same shell`() {
+        val (code, text) = execute(
+            "character", "new", "--module", "great-steppe", "--seed", "42",
+            "--text", "great-steppe.character.lifepath=Подкидыш",
+            "--text", "great-steppe.character.experience=Жизнь в караване",
+            "--text", "great-steppe.character.inventory=Посох, припасы",
+            "--text", "great-steppe.character.name=Айбек",
+            "--text", "great-steppe.character.appearance=Высокий, спокойный",
+            "--text", "great-steppe.character.bond=Долг перед родом",
+            "--choice", "great-steppe.character.attribute-swap=keep",
+        )
+        assertEquals(0, code)
+        assertContains(text, "great-steppe.character")
+        assertContains(text, "Айбек")
+        assertContains(text, "Жизненный путь")
     }
 
     @Test

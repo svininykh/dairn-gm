@@ -54,7 +54,10 @@ non-interactively and reproducibly for tests and integrations:
 
 Attributes are rolled in `STR`, `DEX`, `WIL` order. The player may keep them or swap one pair,
 following Cairn 2e rules.
-Character creation for Great Steppe remains intentionally unimplemented until its rules are defined.
+Great Steppe now exposes its own character-creation process through the same neutral protocol. Its
+personal character data, free-form name, attributes, HP, traits, bond, and age are kept separate from
+Cairn's background-driven process. The group Omen is intentionally excluded from a single-character
+artifact because it is determined only after comparing the ages of all characters.
 
 Cairn-derived rules data and attribution are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
