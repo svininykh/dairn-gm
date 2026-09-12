@@ -23,7 +23,7 @@ class InteractiveCharacterCreationTest {
         val started = CairnInteractiveCharacterCreation.start()
         val rolls = assertIs<ProcessRequest.Roll>(started.request)
         assertEquals(
-            listOf("background", "str", "dex", "wil", "hp", "age", "gold", "lifepath-past", "lifepath-present"),
+            listOf("background", "str", "dex", "wil", "hp", "age", "lifepath-past", "lifepath-present"),
             rolls.rolls.map { it.id },
         )
 
@@ -39,7 +39,6 @@ class InteractiveCharacterCreationTest {
                         "wil" to 15,
                         "hp" to 4,
                         "age" to 27,
-                        "gold" to 11,
                         "lifepath-past" to 1,
                         "lifepath-present" to 6,
                     ),

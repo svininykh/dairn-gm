@@ -8,7 +8,6 @@ data class CairnCharacter(
     val background: CharacterBackground,
     val attributes: Map<Attribute, Int>,
     val hitProtection: Int,
-    val goldPieces: Int,
     val lifepath: List<LifepathExperience>,
 ) : ProcessArtifact {
     override val type: String = "cairn-2e.character"
@@ -21,7 +20,6 @@ data class CairnCharacter(
             ArtifactField("DEX", attributes.getValue(Attribute.DEXTERITY)),
             ArtifactField("WIL", attributes.getValue(Attribute.WILLPOWER)),
             ArtifactField("HP", hitProtection),
-            ArtifactField("GP", goldPieces),
             ArtifactField("Equipment", background.startingEquipment),
             ArtifactField("Lifepath", lifepath.map(LifepathExperience::text)),
         )
@@ -43,7 +41,6 @@ private data class Generated(
     val attributes: List<Int>,
     val hitProtection: Int,
     val age: Int,
-    val goldPieces: Int,
     val lifepathRolls: List<Int>,
 )
 
@@ -60,7 +57,6 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
             RollSpec("wil", DiceExpression(3, 6)),
             RollSpec("hp", DiceExpression(1, 6)),
             RollSpec("age", DiceExpression(2, 20, 10)),
-            RollSpec("gold", DiceExpression(3, 6)),
             RollSpec("lifepath-past", DiceExpression(1, 6)),
             RollSpec("lifepath-present", DiceExpression(1, 6)),
         ),
@@ -94,7 +90,6 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
             attributes = listOf("str", "dex", "wil").map(response.totals::getValue),
             hitProtection = response.totals.getValue("hp"),
             age = response.totals.getValue("age"),
-            goldPieces = response.totals.getValue("gold"),
             lifepathRolls = listOf("lifepath-past", "lifepath-present").map(response.totals::getValue),
         )
         val request = ProcessRequest.Choose(
@@ -151,7 +146,6 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
                 background = state.generated.background,
                 attributes = Attribute.entries.zip(scores).toMap(),
                 hitProtection = state.generated.hitProtection,
-                goldPieces = state.generated.goldPieces,
                 lifepath = state.lifepath,
             ),
         )
