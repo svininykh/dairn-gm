@@ -1,6 +1,10 @@
 package io.github.dairn.cli
 
 import io.github.dairn.cairn.Cairn2eModule
+import io.github.dairn.cairn.CairnCharacterCreation
+import io.github.dairn.core.CharacterCreationModule
+import io.github.dairn.core.ModuleId
+import io.github.dairn.core.ModuleInfo
 import io.github.dairn.core.ModuleRegistry
 import io.github.dairn.steppe.GreatSteppeModule
 import kotlin.test.Test
@@ -55,6 +59,21 @@ class DairnCliTest {
         val (code, text) = execute("character", "new", "--module", "great-steppe")
         assertEquals(2, code)
         assertContains(text, "not implemented")
+    }
+
+    @Test
+    fun `character creation is discovered by capability rather than module id`() {
+        val customModule = object : CharacterCreationModule {
+            override val info = ModuleInfo(ModuleId("custom-rules"), "test", "module.custom.name")
+            override val characterCreation = CairnCharacterCreation
+        }
+        val lines = mutableListOf<String>()
+        val code = DairnCli(ModuleRegistry(listOf(customModule)), lines::add).run(
+            arrayOf("character", "new", "--module", "custom-rules", "--seed", "7", "--assign", "1,2,3"),
+        )
+
+        assertEquals(0, code)
+        assertContains(lines.joinToString("\n"), "Character created")
     }
 
     private fun execute(vararg args: String): Pair<Int, String> {

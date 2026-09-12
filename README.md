@@ -26,6 +26,9 @@ current state + command -> new state + effects + optional required choice
 The engine does not persist process state. A TUI, server, StoryTeller, or StoryMaker owns the state
 and supplies random results and user choices as explicit commands.
 
+Rulesets advertise optional capabilities through their module API. The TUI discovers character
+creation through `CharacterCreationModule`; it does not contain ruleset ID checks or own rules logic.
+
 ## Run
 
 ```shell

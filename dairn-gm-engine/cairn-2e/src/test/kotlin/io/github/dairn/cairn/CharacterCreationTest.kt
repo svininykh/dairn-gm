@@ -1,6 +1,8 @@
 package io.github.dairn.cairn
 
 import io.github.dairn.core.Attribute
+import io.github.dairn.core.CharacterCreationCommand
+import io.github.dairn.core.CharacterCreationState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -37,4 +39,3 @@ class CharacterCreationTest {
         }
     }
 }
-

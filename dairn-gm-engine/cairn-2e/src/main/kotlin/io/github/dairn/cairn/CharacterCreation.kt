@@ -2,25 +2,13 @@ package io.github.dairn.cairn
 
 import io.github.dairn.core.Attribute
 import io.github.dairn.core.Character
+import io.github.dairn.core.CharacterCreationCommand
+import io.github.dairn.core.CharacterCreationProcess
+import io.github.dairn.core.CharacterCreationState
 import io.github.dairn.core.Choice
-import io.github.dairn.core.GameProcess
-import io.github.dairn.core.ProcessCommand
-import io.github.dairn.core.ProcessState
 import io.github.dairn.core.TransitionResult
 
-sealed interface CharacterCreationState : ProcessState {
-    data object NotStarted : CharacterCreationState
-    data class AwaitingAssignment(val scores: List<Int>, val hitProtection: Int) : CharacterCreationState
-    data class Completed(val character: Character) : CharacterCreationState
-}
-
-sealed interface CharacterCreationCommand : ProcessCommand {
-    data class Start(val scores: List<Int>, val hitProtection: Int) : CharacterCreationCommand
-    /** Indices into the rolled scores, ordered as STR, DEX, WIL. */
-    data class AssignAttributes(val order: List<Int>) : CharacterCreationCommand
-}
-
-object CairnCharacterCreation : GameProcess<CharacterCreationState, CharacterCreationCommand> {
+object CairnCharacterCreation : CharacterCreationProcess {
     const val ATTRIBUTE_ASSIGNMENT_CHOICE = "cairn-2e.character.attributes"
 
     override fun transition(
@@ -62,4 +50,3 @@ object CairnCharacterCreation : GameProcess<CharacterCreationState, CharacterCre
         )
     }
 }
-

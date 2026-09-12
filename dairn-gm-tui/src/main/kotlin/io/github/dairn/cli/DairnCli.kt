@@ -1,9 +1,9 @@
 package io.github.dairn.cli
 
-import io.github.dairn.cairn.CairnCharacterCreation
-import io.github.dairn.cairn.CharacterCreationCommand
-import io.github.dairn.cairn.CharacterCreationState
 import io.github.dairn.core.Attribute
+import io.github.dairn.core.CharacterCreationCommand
+import io.github.dairn.core.CharacterCreationModule
+import io.github.dairn.core.CharacterCreationState
 import io.github.dairn.core.ModuleId
 import io.github.dairn.core.ModuleRegistry
 import io.github.dairn.core.RandomDice
@@ -65,15 +65,16 @@ class DairnCli(
         if (moduleIndex < 0 || moduleIndex + 1 >= rest.size) return error(messages.text("error.module.required"), messages)
         val moduleId = runCatching { ModuleId(rest[moduleIndex + 1]) }.getOrNull()
             ?: return error(messages.text("error.module.unknown", rest[moduleIndex + 1]), messages)
-        modules.find(moduleId) ?: return error(messages.text("error.module.unknown", moduleId), messages)
-        if (moduleId.value != "cairn-2e") return error(messages.text("error.character.unsupported", moduleId), messages)
+        val module = modules.find(moduleId) ?: return error(messages.text("error.module.unknown", moduleId), messages)
+        val creationModule = module as? CharacterCreationModule
+            ?: return error(messages.text("error.character.unsupported", moduleId), messages)
 
         val seed = optionValue(rest, "--seed")?.toLongOrNull()
         if ("--seed" in rest && seed == null) return error(messages.text("error.seed"), messages)
         val dice = RandomDice(seed?.let(::Random) ?: Random.Default)
         val scores = List(Attribute.entries.size) { dice.roll(3, 6).total }
         val hitProtection = dice.roll(1, 6).total
-        val started = CairnCharacterCreation.transition(
+        val started = creationModule.characterCreation.transition(
             CharacterCreationState.NotStarted,
             CharacterCreationCommand.Start(scores, hitProtection),
         )
@@ -84,7 +85,7 @@ class DairnCli(
             ?: return error(messages.text("error.assignment.missing"), messages)
         val assignment = assignmentText.split(",").mapNotNull { it.trim().toIntOrNull()?.minus(1) }
         val completed = runCatching {
-            CairnCharacterCreation.transition(
+            creationModule.characterCreation.transition(
                 started.state,
                 CharacterCreationCommand.AssignAttributes(assignment),
             )
