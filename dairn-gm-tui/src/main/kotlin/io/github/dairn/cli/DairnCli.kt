@@ -1,12 +1,6 @@
 package io.github.dairn.cli
 
-import io.github.dairn.core.Attribute
-import io.github.dairn.core.CharacterCreationCommand
-import io.github.dairn.core.CharacterCreationModule
-import io.github.dairn.core.CharacterCreationState
-import io.github.dairn.core.ModuleId
-import io.github.dairn.core.ModuleRegistry
-import io.github.dairn.core.RandomDice
+import io.github.dairn.core.*
 import kotlin.random.Random
 
 class DairnCli(
@@ -66,76 +60,64 @@ class DairnCli(
         val moduleId = runCatching { ModuleId(rest[moduleIndex + 1]) }.getOrNull()
             ?: return error(messages.text("error.module.unknown", rest[moduleIndex + 1]), messages)
         val module = modules.find(moduleId) ?: return error(messages.text("error.module.unknown", moduleId), messages)
-        val creationModule = module as? CharacterCreationModule
+        val creationModule = module as? InteractiveCharacterCreationModule
             ?: return error(messages.text("error.character.unsupported", moduleId), messages)
 
         val seed = optionValue(rest, "--seed")?.toLongOrNull()
         if ("--seed" in rest && seed == null) return error(messages.text("error.seed"), messages)
         val dice = RandomDice(seed?.let(::Random) ?: Random.Default)
-        val scores = List(Attribute.entries.size) { dice.roll(3, 6).total }
-        val hitProtection = dice.roll(1, 6).total
-        val backgroundRoll = dice.roll(1, 20).total
-        val age = dice.roll(2, 20).total + 10
-        val goldPieces = dice.roll(3, 6).total
-        val started = creationModule.characterCreation.transition(
-            CharacterCreationState.NotStarted,
-            CharacterCreationCommand.Start(backgroundRoll, scores, hitProtection, age, goldPieces),
-        )
+        val choices = optionValues(rest, "--choice").mapNotNull(::parseAssignment).toMap()
+        return runInteractive(creationModule.characterCreationProcess, dice, choices, messages)
+    }
 
-        val awaitingName = started.state as CharacterCreationState.AwaitingName
-        output(messages.text("character.background", awaitingName.background.name))
-        awaitingName.background.names.forEachIndexed { index, name -> output("  ${index + 1}. $name") }
-        output(messages.text("character.name.prompt"))
-        val nameIndex = (optionValue(rest, "--name") ?: input())?.toIntOrNull()?.minus(1)
-            ?: return error(messages.text("error.name.missing"), messages)
-        val named = runCatching {
-            creationModule.characterCreation.transition(started.state, CharacterCreationCommand.ChooseName(nameIndex))
-        }.getOrElse { return error(messages.text("error.name.invalid"), messages) }
-
-        val awaitingLifepath = named.state as CharacterCreationState.AwaitingLifepath
-        val lifepathRolls = List(awaitingLifepath.lifepath.tables.size) { dice.roll(1, 6).total }
-        val lifepathResolved = creationModule.characterCreation.transition(
-            named.state,
-            CharacterCreationCommand.ResolveLifepath(lifepathRolls),
-        )
-        val lifepathState = lifepathResolved.state as CharacterCreationState.AwaitingSwap
-        output(messages.text("character.lifepath"))
-        lifepathState.lifepath.forEach { experience ->
-            output("  [${experience.roll}] ${experience.prompt}")
-            output("      ${experience.text}")
+    private fun runInteractive(
+        process: InteractiveProcess,
+        dice: Dice,
+        suppliedChoices: Map<String, String>,
+        messages: Messages,
+    ): Int {
+        var step: InteractiveStep = process.start()
+        while (step is InteractiveStep.Waiting) {
+            val waiting = step
+            val response = when (val request = waiting.request) {
+                is ProcessRequest.Roll -> {
+                    val totals = request.rolls.associate { spec ->
+                        spec.id to (dice.roll(spec.dice.count, spec.dice.sides).total + spec.dice.modifier)
+                    }
+                    output("${request.prompt}:")
+                    totals.forEach { (id, total) -> output("  $id = $total") }
+                    ProcessResponse.Rolled(request.id, totals)
+                }
+                is ProcessRequest.Choose -> {
+                    output(request.prompt)
+                    request.options.forEachIndexed { index, option -> output("  ${index + 1}. ${option.label} [${option.id}]") }
+                    val entered = suppliedChoices[request.id.value] ?: input()
+                        ?: return error(messages.text("error.response.missing", request.id.value), messages)
+                    val selected = request.options.getOrNull(entered.toIntOrNull()?.minus(1) ?: -1)?.id ?: entered
+                    if (request.options.none { it.id == selected }) {
+                        return error(messages.text("error.response.invalid", request.id.value), messages)
+                    }
+                    ProcessResponse.Selected(request.id, listOf(selected))
+                }
+                is ProcessRequest.EnterText -> {
+                    output(request.prompt)
+                    val value = input() ?: return error(messages.text("error.response.missing", request.id.value), messages)
+                    if (!request.allowBlank && value.isBlank()) {
+                        return error(messages.text("error.response.invalid", request.id.value), messages)
+                    }
+                    ProcessResponse.TextEntered(request.id, value)
+                }
+            }
+            step = runCatching { process.advance(waiting.state, response) }
+                .getOrElse { return error(messages.text("error.process", it.message ?: ""), messages) }
         }
-
-        output(messages.text("character.rolls", scores.joinToString(", "), hitProtection, age))
-        output(messages.text("character.swap.prompt"))
-        val swapText = optionValue(rest, "--swap") ?: input()
-            ?: return error(messages.text("error.swap.missing"), messages)
-        val swap = when (swapText.lowercase()) {
-            "keep", "0" -> null
-            "str-dex", "1" -> 0 to 1
-            "str-wil", "2" -> 0 to 2
-            "dex-wil", "3" -> 1 to 2
-            else -> return error(messages.text("error.swap.invalid"), messages)
-        }
-        val completed = runCatching {
-            creationModule.characterCreation.transition(
-                lifepathResolved.state,
-                CharacterCreationCommand.SwapAttributes(swap),
-            )
-        }.getOrElse { return error(messages.text("error.swap.invalid"), messages) }
-        val character = (completed.state as CharacterCreationState.Completed).character
+        val artifact = (step as InteractiveStep.Completed).artifact
         output(messages.text("character.complete"))
-        output("  ${messages.text("character.name")}: ${character.name}")
-        output("  ${messages.text("character.age")}: ${character.age}")
-        output("  ${messages.text("character.background.label")}: ${character.background}")
-        output("  STR ${character.attributes.getValue(Attribute.STRENGTH)}")
-        output("  DEX ${character.attributes.getValue(Attribute.DEXTERITY)}")
-        output("  WIL ${character.attributes.getValue(Attribute.WILLPOWER)}")
-        output("  HP  ${character.hitProtection}")
-        output("  GP  ${character.goldPieces}")
-        output("  ${messages.text("character.inventory")}:")
-        character.inventory.forEach { output("    - $it") }
-        output("  ${messages.text("character.lifepath")}:")
-        character.lifepath.forEach { output("    - ${it.text}") }
+        output("  type: ${artifact.type}")
+        artifact.fields.forEach { field ->
+            output("  ${field.label}:")
+            field.values.forEach { output("    $it") }
+        }
         return 0
     }
 
@@ -201,12 +183,22 @@ ${m.text("options")}:
   -h, --help             ${m.text("option.help")}
   --module <id>          ${m.text("character.module")}
   --seed <number>        ${m.text("character.seed")}
-  --name <1..10>         ${m.text("character.name.option")}
-  --swap <choice>        ${m.text("character.swap.option")}"""
+  --choice <id=value>    ${m.text("character.choice.option")}"""
 
     private fun optionValue(args: List<String>, option: String): String? {
         val index = args.indexOf(option)
         return if (index >= 0) args.getOrNull(index + 1) else null
+    }
+
+    private fun optionValues(args: List<String>, option: String): List<String> = args.mapIndexedNotNull { index, value ->
+        if (value == option) args.getOrNull(index + 1) else null
+    }
+
+    private fun parseAssignment(value: String): Pair<String, String>? {
+        val separator = value.indexOf('=')
+        return if (separator > 0 && separator < value.lastIndex) {
+            value.substring(0, separator) to value.substring(separator + 1)
+        } else null
     }
 
     private companion object {

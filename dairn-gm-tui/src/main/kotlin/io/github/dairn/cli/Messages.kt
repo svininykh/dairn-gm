@@ -34,6 +34,7 @@ class Messages(private val language: Language) {
                 "character.seed" to "Қайталанатын генерацияға арналған сан",
                 "character.name.option" to "Ат нөмірі",
                 "character.swap.option" to "keep, str-dex, str-wil немесе dex-wil",
+                "character.choice.option" to "Процесс сұрауына жауап",
                 "character.background" to "Тек-тамыры: %s. Атты таңдаңыз:",
                 "character.name.prompt" to "Ат нөмірін енгізіңіз:",
                 "character.rolls" to "STR, DEX, WIL: [%s], HP: %s, жас: %s",
@@ -57,6 +58,9 @@ class Messages(private val language: Language) {
                 "error.name.invalid" to "Ат нөмірі 1-ден 10-ға дейін болуы керек.",
                 "error.swap.missing" to "Сипаттамаларды алмастыру таңдалмады.",
                 "error.swap.invalid" to "Алмастыру нұсқасы жарамсыз.",
+                "error.response.missing" to "%s сұрауына жауап берілмеді.",
+                "error.response.invalid" to "%s сұрауына жауап жарамсыз.",
+                "error.process" to "Процесс қатесі: %s",
             ),
             Language.RU to mapOf(
                 "app.description" to "Модульные инструменты ведущего DAIRN",
@@ -76,6 +80,7 @@ class Messages(private val language: Language) {
                 "character.seed" to "Число для воспроизводимой генерации",
                 "character.name.option" to "Номер имени",
                 "character.swap.option" to "keep, str-dex, str-wil или dex-wil",
+                "character.choice.option" to "Ответ на запрос процесса",
                 "character.background" to "Предыстория: %s. Выберите имя:",
                 "character.name.prompt" to "Введите номер имени:",
                 "character.rolls" to "STR, DEX, WIL: [%s], HP: %s, возраст: %s",
@@ -99,6 +104,9 @@ class Messages(private val language: Language) {
                 "error.name.invalid" to "Номер имени должен быть от 1 до 10.",
                 "error.swap.missing" to "Обмен характеристик не выбран.",
                 "error.swap.invalid" to "Недопустимый вариант обмена.",
+                "error.response.missing" to "Нет ответа на запрос %s.",
+                "error.response.invalid" to "Недопустимый ответ на запрос %s.",
+                "error.process" to "Ошибка процесса: %s",
             ),
             Language.EN to mapOf(
                 "app.description" to "Modular DAIRN game-master tools",
@@ -118,6 +126,7 @@ class Messages(private val language: Language) {
                 "character.seed" to "Number used for reproducible generation",
                 "character.name.option" to "Name number",
                 "character.swap.option" to "keep, str-dex, str-wil, or dex-wil",
+                "character.choice.option" to "Response to a process request",
                 "character.background" to "Background: %s. Choose a name:",
                 "character.name.prompt" to "Enter the name number:",
                 "character.rolls" to "STR, DEX, WIL: [%s], HP: %s, age: %s",
@@ -141,6 +150,9 @@ class Messages(private val language: Language) {
                 "error.name.invalid" to "The name number must be between 1 and 10.",
                 "error.swap.missing" to "No attribute swap was selected.",
                 "error.swap.invalid" to "Invalid attribute swap.",
+                "error.response.missing" to "No response for request %s.",
+                "error.response.invalid" to "Invalid response for request %s.",
+                "error.process" to "Process error: %s",
             ),
         )
     }

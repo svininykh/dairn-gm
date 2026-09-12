@@ -1,8 +1,8 @@
 package io.github.dairn.cli
 
 import io.github.dairn.cairn.Cairn2eModule
-import io.github.dairn.cairn.CairnCharacterCreation
-import io.github.dairn.core.CharacterCreationModule
+import io.github.dairn.cairn.CairnInteractiveCharacterCreation
+import io.github.dairn.core.InteractiveCharacterCreationModule
 import io.github.dairn.core.ModuleId
 import io.github.dairn.core.ModuleInfo
 import io.github.dairn.core.ModuleRegistry
@@ -44,13 +44,17 @@ class DairnCliTest {
     @Test
     fun `character new completes reproducibly for Cairn`() {
         val (code, text) = execute(
-            "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42", "--name", "2", "--swap", "str-wil",
+            "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42",
+            "--choice", "cairn-2e.character.name=1",
+            "--choice", "cairn-2e.character.attribute-swap=str-wil",
         )
         assertEquals(0, code)
         assertContains(text, "Персонаж создан")
         assertContains(text, "STR")
         assertEquals(text, execute(
-            "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42", "--name", "2", "--swap", "str-wil",
+            "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42",
+            "--choice", "cairn-2e.character.name=1",
+            "--choice", "cairn-2e.character.attribute-swap=str-wil",
         ).second)
     }
 
@@ -63,13 +67,17 @@ class DairnCliTest {
 
     @Test
     fun `character creation is discovered by capability rather than module id`() {
-        val customModule = object : CharacterCreationModule {
+        val customModule = object : InteractiveCharacterCreationModule {
             override val info = ModuleInfo(ModuleId("custom-rules"), "test", "module.custom.name")
-            override val characterCreation = CairnCharacterCreation
+            override val characterCreationProcess = CairnInteractiveCharacterCreation
         }
         val lines = mutableListOf<String>()
         val code = DairnCli(ModuleRegistry(listOf(customModule)), lines::add).run(
-            arrayOf("character", "new", "--module", "custom-rules", "--seed", "7", "--name", "1", "--swap", "keep"),
+            arrayOf(
+                "character", "new", "--module", "custom-rules", "--seed", "7",
+                "--choice", "cairn-2e.character.name=0",
+                "--choice", "cairn-2e.character.attribute-swap=keep",
+            ),
         )
 
         assertEquals(0, code)

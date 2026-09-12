@@ -108,6 +108,19 @@ sealed interface ProcessResponse {
 
 interface ProcessArtifact {
     val type: String
+    val fields: List<ArtifactField>
+}
+
+data class ArtifactField(
+    val label: String,
+    val values: List<String>,
+) {
+    constructor(label: String, value: Any) : this(label, listOf(value.toString()))
+
+    init {
+        require(label.isNotBlank())
+        require(values.isNotEmpty())
+    }
 }
 
 sealed interface InteractiveStep {

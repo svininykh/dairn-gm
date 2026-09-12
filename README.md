@@ -49,7 +49,7 @@ Cairn 2e character creation supports interactive name and attribute-swap prompts
 non-interactively and reproducibly for tests and integrations:
 
 ```shell
-./gradlew :dairn-gm-tui:run --args="--lang en character new --module cairn-2e --seed 42 --name 2 --swap str-wil"
+./gradlew :dairn-gm-tui:run --args="--lang en character new --module cairn-2e --seed 42 --choice cairn-2e.character.name=1 --choice cairn-2e.character.attribute-swap=str-wil"
 ```
 
 Attributes are rolled in `STR`, `DEX`, `WIL` order. The player may keep them or swap one pair,

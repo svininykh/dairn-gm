@@ -12,6 +12,19 @@ data class CairnCharacter(
     val lifepath: List<LifepathExperience>,
 ) : ProcessArtifact {
     override val type: String = "cairn-2e.character"
+    override val fields: List<ArtifactField>
+        get() = listOf(
+            ArtifactField("Name", name),
+            ArtifactField("Age", age),
+            ArtifactField("Background", background.name),
+            ArtifactField("STR", attributes.getValue(Attribute.STRENGTH)),
+            ArtifactField("DEX", attributes.getValue(Attribute.DEXTERITY)),
+            ArtifactField("WIL", attributes.getValue(Attribute.WILLPOWER)),
+            ArtifactField("HP", hitProtection),
+            ArtifactField("GP", goldPieces),
+            ArtifactField("Equipment", background.startingEquipment),
+            ArtifactField("Lifepath", lifepath.map(LifepathExperience::text)),
+        )
 }
 
 private sealed interface CairnCreationState : ProcessState {
