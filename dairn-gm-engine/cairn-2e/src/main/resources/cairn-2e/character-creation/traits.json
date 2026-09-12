@@ -1,0 +1,45 @@
+{
+  "sourceRevision": "009578e8e98f7d235daf3f884da2ea3c14e758c4",
+  "categories": [
+    {
+      "id": "physique",
+      "name": "Physique",
+      "results": ["Athletic", "Brawny", "Flabby", "Lanky", "Rugged", "Scrawny", "Short", "Statuesque", "Stout", "Towering"]
+    },
+    {
+      "id": "skin",
+      "name": "Skin",
+      "results": ["Birthmarked", "Marked", "Oily", "Rosy", "Scarred", "Soft", "Tanned", "Tattooed", "Weathered", "Webbed"]
+    },
+    {
+      "id": "hair",
+      "name": "Hair",
+      "results": ["Bald", "Braided", "Curly", "Filthy", "Frizzy", "Long", "Luxurious", "Oily", "Wavy", "Wispy"]
+    },
+    {
+      "id": "face",
+      "name": "Face",
+      "results": ["Bony", "Broken", "Chiseled", "Elongated", "Pale", "Perfect", "Rakish", "Sharp", "Square", "Sunken"]
+    },
+    {
+      "id": "speech",
+      "name": "Speech",
+      "results": ["Blunt", "Booming", "Cryptic", "Droning", "Formal", "Gravelly", "Precise", "Squeaky", "Stuttering", "Whispery"]
+    },
+    {
+      "id": "clothing",
+      "name": "Clothing",
+      "results": ["Antique", "Bloody", "Elegant", "Filthy", "Foreign", "Frayed", "Frumpy", "Livery", "Rancid", "Soiled"]
+    },
+    {
+      "id": "virtue",
+      "name": "Virtue",
+      "results": ["Ambitious", "Cautious", "Courageous", "Disciplined", "Gregarious", "Honorable", "Humble", "Merciful", "Serene", "Tolerant"]
+    },
+    {
+      "id": "vice",
+      "name": "Vice",
+      "results": ["Aggressive", "Bitter", "Craven", "Deceitful", "Greedy", "Lazy", "Nervous", "Rude", "Vain", "Vengeful"]
+    }
+  ]
+}

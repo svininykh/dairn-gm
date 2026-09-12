@@ -12,6 +12,8 @@ class InteractiveCharacterCreationTest {
     fun `resource catalog contains complete backgrounds and lifepaths`() {
         assertEquals(20, CairnCharacterData.backgrounds.size)
         assertEquals(20, CairnCharacterData.lifepaths.size)
+        assertEquals(8, CairnCharacterData.traits.size)
+        CairnCharacterData.traits.forEach { assertEquals(10, it.results.size, it.name) }
         CairnCharacterData.backgrounds.forEach { background ->
             assertEquals(10, background.names.size, background.name)
             assertEquals(2, CairnCharacterData.lifepaths.getValue(background.lifepathId).tables.size)
@@ -23,7 +25,11 @@ class InteractiveCharacterCreationTest {
         val started = CairnInteractiveCharacterCreation.start()
         val rolls = assertIs<ProcessRequest.Roll>(started.request)
         assertEquals(
-            listOf("background", "str", "dex", "wil", "hp", "age", "lifepath-past", "lifepath-present"),
+            listOf(
+                "background", "str", "dex", "wil", "hp", "age", "lifepath-past", "lifepath-present",
+                "trait-physique", "trait-skin", "trait-hair", "trait-face",
+                "trait-speech", "trait-clothing", "trait-virtue", "trait-vice",
+            ),
             rolls.rolls.map { it.id },
         )
 
@@ -41,6 +47,14 @@ class InteractiveCharacterCreationTest {
                         "age" to 27,
                         "lifepath-past" to 1,
                         "lifepath-present" to 6,
+                        "trait-physique" to 1,
+                        "trait-skin" to 2,
+                        "trait-hair" to 3,
+                        "trait-face" to 4,
+                        "trait-speech" to 5,
+                        "trait-clothing" to 6,
+                        "trait-virtue" to 7,
+                        "trait-vice" to 8,
                     ),
                 ),
             ),
@@ -65,5 +79,9 @@ class InteractiveCharacterCreationTest {
         assertEquals("Basil", character.name)
         assertEquals(listOf(15, 12, 8), Attribute.entries.map(character.attributes::getValue))
         assertEquals(listOf(1, 6), character.lifepath.map { it.roll })
+        assertEquals(
+            listOf("Athletic", "Marked", "Curly", "Elongated", "Formal", "Frayed", "Humble", "Rude"),
+            character.traits.map { it.result },
+        )
     }
 }

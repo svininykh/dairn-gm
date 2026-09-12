@@ -17,3 +17,7 @@ data class LifepathTable(val prompt: String, val die: String, val results: List<
 data class LifepathResult(val roll: Int, val text: String)
 
 data class LifepathExperience(val prompt: String, val roll: Int, val text: String)
+
+data class CharacterTrait(val id: String, val name: String, val results: List<String>)
+
+data class RolledCharacterTrait(val id: String, val name: String, val roll: Int, val result: String)

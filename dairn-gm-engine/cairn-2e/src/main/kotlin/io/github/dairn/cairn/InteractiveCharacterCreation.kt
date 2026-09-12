@@ -9,6 +9,7 @@ data class CairnCharacter(
     val attributes: Map<Attribute, Int>,
     val hitProtection: Int,
     val lifepath: List<LifepathExperience>,
+    val traits: List<RolledCharacterTrait>,
 ) : ProcessArtifact {
     override val type: String = "cairn-2e.character"
     override val fields: List<ArtifactField>
@@ -22,6 +23,7 @@ data class CairnCharacter(
             ArtifactField("HP", hitProtection),
             ArtifactField("Equipment", background.startingEquipment),
             ArtifactField("Lifepath", lifepath.map(LifepathExperience::text)),
+            *traits.map { ArtifactField(it.name, it.result) }.toTypedArray(),
         )
 }
 
@@ -42,6 +44,7 @@ private data class Generated(
     val hitProtection: Int,
     val age: Int,
     val lifepathRolls: List<Int>,
+    val traitRolls: List<Int>,
 )
 
 object CairnInteractiveCharacterCreation : InteractiveProcess {
@@ -59,6 +62,7 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
             RollSpec("age", DiceExpression(2, 20, 10)),
             RollSpec("lifepath-past", DiceExpression(1, 6)),
             RollSpec("lifepath-present", DiceExpression(1, 6)),
+            *CairnCharacterData.traits.map { RollSpec("trait-${it.id}", DiceExpression(1, 10)) }.toTypedArray(),
         ),
     )
 
@@ -91,6 +95,7 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
             hitProtection = response.totals.getValue("hp"),
             age = response.totals.getValue("age"),
             lifepathRolls = listOf("lifepath-past", "lifepath-present").map(response.totals::getValue),
+            traitRolls = CairnCharacterData.traits.map { response.totals.getValue("trait-${it.id}") },
         )
         val request = ProcessRequest.Choose(
             RequestId("cairn-2e.character.name"),
@@ -147,6 +152,9 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
                 attributes = Attribute.entries.zip(scores).toMap(),
                 hitProtection = state.generated.hitProtection,
                 lifepath = state.lifepath,
+                traits = CairnCharacterData.traits.zip(state.generated.traitRolls).map { (trait, roll) ->
+                    RolledCharacterTrait(trait.id, trait.name, roll, trait.results[roll - 1])
+                },
             ),
         )
     }
