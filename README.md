@@ -66,3 +66,7 @@ stateless transition and the resulting experiences are attached to the completed
 The ruleset-neutral interaction protocol in `core` represents shell interaction as `Roll`, `Choose`,
 or `EnterText` requests and typed responses. Existing Cairn creation will be migrated to this protocol
 before a different Great Steppe creation process is introduced.
+
+The Cairn module now exposes an interactive-process implementation that owns its dice expressions,
+request order, and validation. The legacy TUI path remains temporarily available until the shell is
+migrated to the protocol.

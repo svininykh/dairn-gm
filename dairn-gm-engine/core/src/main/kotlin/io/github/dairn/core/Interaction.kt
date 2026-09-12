@@ -128,9 +128,13 @@ interface InteractiveProcess {
     fun advance(state: ProcessState, response: ProcessResponse): InteractiveStep
 }
 
+/** Optional module capability for a ruleset-defined character creation process. */
+interface InteractiveCharacterCreationModule : DairnModule {
+    val characterCreationProcess: InteractiveProcess
+}
+
 fun ProcessRequest.requireMatching(response: ProcessResponse) {
     require(id == response.requestId) {
         "Response ${response.requestId.value} does not match request ${id.value}"
     }
 }
-
