@@ -21,8 +21,7 @@
         "Oil Can (6 uses)",
         "Needle-knife (d6)",
         "Protective Gloves (_petty_)"
-      ],
-      "lifepathId": "aurifex"
+      ]
     },
     {
       "id": "barber-surgeon",
@@ -46,8 +45,7 @@
         "Bandages (3 uses)",
         "Leech (restores 1 STR, 3 uses)",
         "Stained Medical Finery (_petty_)"
-      ],
-      "lifepathId": "barber-surgeon"
+      ]
     },
     {
       "id": "beast-handler",
@@ -71,8 +69,7 @@
         "Soporific Darts (STR save or fall asleep, 6 uses)",
         "Lure",
         "Rope (25ft)"
-      ],
-      "lifepathId": "beast-handler"
+      ]
     },
     {
       "id": "bonekeeper",
@@ -95,8 +92,7 @@
         "Oil Can (6 uses)",
         "Stake (d6)",
         "Chains (10ft)"
-      ],
-      "lifepathId": "bonekeeper"
+      ]
     },
     {
       "id": "cutpurse",
@@ -120,8 +116,7 @@
         "Padded Leather (1 Armor)",
         "Lockpicks",
         "Black Outfit (_petty_)"
-      ],
-      "lifepathId": "cutpurse"
+      ]
     },
     {
       "id": "fieldwarden",
@@ -145,8 +140,7 @@
         "Sling (d6)",
         "Hand Axe (d6)",
         "Repellent (pick the type, 3 uses)"
-      ],
-      "lifepathId": "fieldwarden"
+      ]
     },
     {
       "id": "fletchwind",
@@ -170,8 +164,7 @@
         "Serrated Knife (d6)",
         "Boiled Leather (1 Armor)",
         "Heartroot Salve (restores 1d4 STR, 1 use)"
-      ],
-      "lifepathId": "fletchwind"
+      ]
     },
     {
       "id": "foundling",
@@ -195,8 +188,7 @@
         "Heirloom Amulet (_petty_, glows in the presence of magic)",
         "Sling (d6)",
         "Dagger (d6)"
-      ],
-      "lifepathId": "foundling"
+      ]
     },
     {
       "id": "fungal-forager",
@@ -219,8 +211,7 @@
         "Candle Helmet (+1 Armor, dim, 6 uses)",
         "Rope (25ft)",
         "Metal Pail"
-      ],
-      "lifepathId": "fungal-forager"
+      ]
     },
     {
       "id": "greenwise",
@@ -244,8 +235,7 @@
         "Root Knife (d6)",
         "Healing Salve (restore 1d4 STR, 1 use)",
         "Twine Bauble (_petty_, _Ward_ once per day) _Ward_: A silver circle 50ft across appears on the ground. Choose one species that cannot cross it."
-      ],
-      "lifepathId": "greenwise"
+      ]
     },
     {
       "id": "half-witch",
@@ -269,8 +259,7 @@
         "Iron Dagger (d6)",
         "Herbs Pouch (restore 1 STR, 3 uses)",
         "Ghillie Suit"
-      ],
-      "lifepathId": "half-witch"
+      ]
     },
     {
       "id": "hexenbane",
@@ -294,8 +283,7 @@
         "Blessed Tinctures",
         "Silver Knife (d6)",
         "Crossbow (d8, _bulky_)"
-      ],
-      "lifepathId": "hexenbane"
+      ]
     },
     {
       "id": "jongleur",
@@ -319,8 +307,7 @@
         "Simple Instrument (Pipes, Lute, etc.)",
         "Lucky Jerkin (+1 Armor)",
         "Sling (d6)"
-      ],
-      "lifepathId": "jongleur"
+      ]
     },
     {
       "id": "kettlewright",
@@ -344,8 +331,7 @@
         "Roll of Tin",
         "Gloves (_petty_)",
         "Hammer (d6)"
-      ],
-      "lifepathId": "kettlewright"
+      ]
     },
     {
       "id": "marchguard",
@@ -368,8 +354,7 @@
         "Oil Can (6 uses)",
         "Long Sword (d10, _bulky_)",
         "Boiled Leather (1 Armor)"
-      ],
-      "lifepathId": "marchguard"
+      ]
     },
     {
       "id": "mountebank",
@@ -393,8 +378,7 @@
         "Trick Playing Cards",
         "Fancy Hat (_petty_)",
         "Cane Sword (d6)"
-      ],
-      "lifepathId": "mountebank"
+      ]
     },
     {
       "id": "outrider",
@@ -418,8 +402,7 @@
         "Leather Jerkin (1 Armor)",
         "Crossbow (d8, _bulky_)",
         "Spyglass"
-      ],
-      "lifepathId": "outrider"
+      ]
     },
     {
       "id": "prowler",
@@ -443,8 +426,7 @@
         "Boiled Leather (1 Armor)",
         "Short Sword (d6)",
         "Spring-Loaded trap (4 STR damage)"
-      ],
-      "lifepathId": "prowler"
+      ]
     },
     {
       "id": "rill-runner",
@@ -468,8 +450,7 @@
         "Brigandine (1 Armor, _bulky_)",
         "Compass",
         "Dagger (d6)"
-      ],
-      "lifepathId": "rill-runner"
+      ]
     },
     {
       "id": "scrivener",
@@ -493,8 +474,7 @@
         "Blank Book",
         "Awl (d6)",
         "Badge (_petty_)"
-      ],
-      "lifepathId": "scrivener"
+      ]
     }
   ]
 }

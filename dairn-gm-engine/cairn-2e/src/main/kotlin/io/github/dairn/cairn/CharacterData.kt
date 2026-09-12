@@ -8,15 +8,17 @@ internal object CairnCharacterData {
     private val json = Json { ignoreUnknownKeys = false }
 
     val backgrounds: List<CharacterBackground>
-    val lifepaths: Map<String, Lifepath>
+    val backgroundTables: Map<String, BackgroundTables>
     val traits: List<CharacterTrait>
 
     init {
         val backgroundData = json.decodeFromString<BackgroundDocument>(resource("$ROOT/backgrounds.json"))
-        val lifepathData = json.decodeFromString<LifepathDocument>(resource("$ROOT/lifepaths.json"))
+        val tableData = json.decodeFromString<BackgroundTableDocument>(resource("$ROOT/background-tables.json"))
         val traitData = json.decodeFromString<TraitDocument>(resource("$ROOT/traits.json"))
         backgrounds = backgroundData.backgrounds.map(BackgroundData::toDomain)
-        lifepaths = lifepathData.lifepaths.map(LifepathData::toDomain).associateBy(Lifepath::id)
+        backgroundTables = tableData.backgroundTables
+            .map(BackgroundTablesData::toDomain)
+            .associateBy(BackgroundTables::backgroundId)
         traits = traitData.categories.map(TraitData::toDomain)
         validate()
     }
@@ -24,16 +26,18 @@ internal object CairnCharacterData {
     private fun validate() {
         require(backgrounds.size == 20) { "Cairn 2e must define exactly 20 backgrounds" }
         require(backgrounds.map { it.id }.distinct().size == backgrounds.size) { "Background ids must be unique" }
-        require(lifepaths.size == backgrounds.size) { "Every background must have one lifepath" }
+        require(backgroundTables.size == backgrounds.size) { "Every background must have its own tables" }
         backgrounds.forEach { background ->
             require(background.names.size == 10) { "${background.id} must define exactly 10 names" }
-            require(background.lifepathId in lifepaths) { "Missing lifepath ${background.lifepathId}" }
+            require(background.id in backgroundTables) { "Missing tables for ${background.id}" }
         }
-        lifepaths.values.forEach { lifepath ->
-            require(lifepath.tables.size == 2) { "${lifepath.id} must define exactly two lifepath tables" }
-            lifepath.tables.forEach { table ->
-                require(table.die == "d6") { "${lifepath.id} lifepath tables must use d6" }
-                require(table.results.map { it.roll } == (1..6).toList()) { "${lifepath.id} must define results 1 through 6" }
+        backgroundTables.values.forEach { background ->
+            require(background.tables.size == 2) { "${background.backgroundId} must define exactly two background tables" }
+            background.tables.forEach { table ->
+                require(table.die == "d6") { "${background.backgroundId} tables must use d6" }
+                require(table.results.map { it.roll } == (1..6).toList()) {
+                    "${background.backgroundId} must define results 1 through 6"
+                }
             }
         }
         require(traits.map(CharacterTrait::id) == listOf(
@@ -58,27 +62,26 @@ private data class BackgroundData(
     val name: String,
     val names: List<String>,
     val startingEquipment: List<String>,
-    val lifepathId: String,
 ) {
-    fun toDomain() = CharacterBackground(id, name, names, startingEquipment, lifepathId)
+    fun toDomain() = CharacterBackground(id, name, names, startingEquipment)
 }
 
 @Serializable
-private data class LifepathDocument(val lifepaths: List<LifepathData>)
+private data class BackgroundTableDocument(val backgroundTables: List<BackgroundTablesData>)
 
 @Serializable
-private data class LifepathData(val id: String, val tables: List<LifepathTableData>) {
-    fun toDomain() = Lifepath(id, tables.map(LifepathTableData::toDomain))
+private data class BackgroundTablesData(val id: String, val tables: List<BackgroundTableData>) {
+    fun toDomain() = BackgroundTables(id, tables.map(BackgroundTableData::toDomain))
 }
 
 @Serializable
-private data class LifepathTableData(val prompt: String, val die: String, val results: List<LifepathResultData>) {
-    fun toDomain() = LifepathTable(prompt, die, results.map(LifepathResultData::toDomain))
+private data class BackgroundTableData(val prompt: String, val die: String, val results: List<BackgroundTableResultData>) {
+    fun toDomain() = BackgroundTable(prompt, die, results.map(BackgroundTableResultData::toDomain))
 }
 
 @Serializable
-private data class LifepathResultData(val roll: Int, val result: String) {
-    fun toDomain() = LifepathResult(roll, result)
+private data class BackgroundTableResultData(val roll: Int, val result: String) {
+    fun toDomain() = BackgroundTableResult(roll, result)
 }
 
 @Serializable

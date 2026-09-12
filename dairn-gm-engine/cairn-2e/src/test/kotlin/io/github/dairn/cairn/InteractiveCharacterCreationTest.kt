@@ -9,14 +9,14 @@ import kotlin.test.assertIs
 
 class InteractiveCharacterCreationTest {
     @Test
-    fun `resource catalog contains complete backgrounds and lifepaths`() {
+    fun `resource catalog contains complete backgrounds and their tables`() {
         assertEquals(20, CairnCharacterData.backgrounds.size)
-        assertEquals(20, CairnCharacterData.lifepaths.size)
+        assertEquals(20, CairnCharacterData.backgroundTables.size)
         assertEquals(8, CairnCharacterData.traits.size)
         CairnCharacterData.traits.forEach { assertEquals(10, it.results.size, it.name) }
         CairnCharacterData.backgrounds.forEach { background ->
             assertEquals(10, background.names.size, background.name)
-            assertEquals(2, CairnCharacterData.lifepaths.getValue(background.lifepathId).tables.size)
+            assertEquals(2, CairnCharacterData.backgroundTables.getValue(background.id).tables.size)
         }
     }
 
@@ -26,7 +26,7 @@ class InteractiveCharacterCreationTest {
         val rolls = assertIs<ProcessRequest.Roll>(started.request)
         assertEquals(
             listOf(
-                "background", "str", "dex", "wil", "hp", "age", "lifepath-past", "lifepath-present",
+                "background", "str", "dex", "wil", "hp", "age", "background-table-1", "background-table-2",
                 "trait-physique", "trait-skin", "trait-hair", "trait-face",
                 "trait-speech", "trait-clothing", "trait-virtue", "trait-vice",
             ),
@@ -45,8 +45,8 @@ class InteractiveCharacterCreationTest {
                         "wil" to 15,
                         "hp" to 4,
                         "age" to 27,
-                        "lifepath-past" to 1,
-                        "lifepath-present" to 6,
+                        "background-table-1" to 1,
+                        "background-table-2" to 6,
                         "trait-physique" to 1,
                         "trait-skin" to 2,
                         "trait-hair" to 3,
@@ -78,7 +78,7 @@ class InteractiveCharacterCreationTest {
         val character = assertIs<CairnCharacter>(completed.artifact)
         assertEquals("Basil", character.name)
         assertEquals(listOf(15, 12, 8), Attribute.entries.map(character.attributes::getValue))
-        assertEquals(listOf(1, 6), character.lifepath.map { it.roll })
+        assertEquals(listOf(1, 6), character.backgroundResults.map { it.roll })
         assertEquals(
             listOf("Athletic", "Marked", "Curly", "Elongated", "Formal", "Frayed", "Humble", "Rude"),
             character.traits.map { it.result },

@@ -8,7 +8,7 @@ data class CairnCharacter(
     val background: CharacterBackground,
     val attributes: Map<Attribute, Int>,
     val hitProtection: Int,
-    val lifepath: List<LifepathExperience>,
+    val backgroundResults: List<ResolvedBackgroundTable>,
     val traits: List<RolledCharacterTrait>,
 ) : ProcessArtifact {
     override val type: String = "cairn-2e.character"
@@ -22,7 +22,7 @@ data class CairnCharacter(
             ArtifactField("WIL", attributes.getValue(Attribute.WILLPOWER)),
             ArtifactField("HP", hitProtection),
             ArtifactField("Equipment", background.startingEquipment),
-            ArtifactField("Lifepath", lifepath.map(LifepathExperience::text)),
+            ArtifactField("Background Results", backgroundResults.map(ResolvedBackgroundTable::text)),
             *traits.map { ArtifactField(it.name, it.result) }.toTypedArray(),
         )
 }
@@ -33,7 +33,7 @@ private sealed interface CairnCreationState : ProcessState {
     data class AwaitingSwap(
         val generated: Generated,
         val name: String,
-        val lifepath: List<LifepathExperience>,
+        val backgroundResults: List<ResolvedBackgroundTable>,
         val request: ProcessRequest.Choose,
     ) : CairnCreationState
 }
@@ -43,7 +43,7 @@ private data class Generated(
     val attributes: List<Int>,
     val hitProtection: Int,
     val age: Int,
-    val lifepathRolls: List<Int>,
+    val backgroundTableRolls: List<Int>,
     val traitRolls: List<Int>,
 )
 
@@ -60,8 +60,8 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
             RollSpec("wil", DiceExpression(3, 6)),
             RollSpec("hp", DiceExpression(1, 6)),
             RollSpec("age", DiceExpression(2, 20, 10)),
-            RollSpec("lifepath-past", DiceExpression(1, 6)),
-            RollSpec("lifepath-present", DiceExpression(1, 6)),
+            RollSpec("background-table-1", DiceExpression(1, 6)),
+            RollSpec("background-table-2", DiceExpression(1, 6)),
             *CairnCharacterData.traits.map { RollSpec("trait-${it.id}", DiceExpression(1, 10)) }.toTypedArray(),
         ),
     )
@@ -94,7 +94,7 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
             attributes = listOf("str", "dex", "wil").map(response.totals::getValue),
             hitProtection = response.totals.getValue("hp"),
             age = response.totals.getValue("age"),
-            lifepathRolls = listOf("lifepath-past", "lifepath-present").map(response.totals::getValue),
+            backgroundTableRolls = listOf("background-table-1", "background-table-2").map(response.totals::getValue),
             traitRolls = CairnCharacterData.traits.map { response.totals.getValue("trait-${it.id}") },
         )
         val request = ProcessRequest.Choose(
@@ -109,9 +109,9 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
         state.request.requireMatching(response)
         require(response is ProcessResponse.Selected && response.optionIds.size == 1) { "One selected name is required" }
         val option = state.request.options.single { it.id == response.optionIds.single() }
-        val source = CairnCharacterData.lifepaths.getValue(state.generated.background.lifepathId)
-        val experiences = source.tables.zip(state.generated.lifepathRolls).map { (table, roll) ->
-            LifepathExperience(table.prompt, roll, table.results.single { it.roll == roll }.text)
+        val source = CairnCharacterData.backgroundTables.getValue(state.generated.background.id)
+        val results = source.tables.zip(state.generated.backgroundTableRolls).map { (table, roll) ->
+            ResolvedBackgroundTable(table.prompt, roll, table.results.single { it.roll == roll }.text)
         }
         val request = ProcessRequest.Choose(
             RequestId("cairn-2e.character.attribute-swap"),
@@ -123,7 +123,7 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
                 ChoiceOption("dex-wil", "Swap DEX and WIL"),
             ),
         )
-        return InteractiveStep.Waiting(CairnCreationState.AwaitingSwap(state.generated, option.label, experiences, request), request)
+        return InteractiveStep.Waiting(CairnCreationState.AwaitingSwap(state.generated, option.label, results, request), request)
     }
 
     private fun acceptSwap(state: CairnCreationState.AwaitingSwap, response: ProcessResponse): InteractiveStep.Completed {
@@ -151,7 +151,7 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
                 background = state.generated.background,
                 attributes = Attribute.entries.zip(scores).toMap(),
                 hitProtection = state.generated.hitProtection,
-                lifepath = state.lifepath,
+                backgroundResults = state.backgroundResults,
                 traits = CairnCharacterData.traits.zip(state.generated.traitRolls).map { (trait, roll) ->
                     RolledCharacterTrait(trait.id, trait.name, roll, trait.results[roll - 1])
                 },

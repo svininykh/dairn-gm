@@ -7,16 +7,15 @@ data class CharacterBackground(
     val name: String,
     val names: List<String>,
     val startingEquipment: List<String>,
-    val lifepathId: String,
 )
 
-data class Lifepath(val id: String, val tables: List<LifepathTable>)
+data class BackgroundTables(val backgroundId: String, val tables: List<BackgroundTable>)
 
-data class LifepathTable(val prompt: String, val die: String, val results: List<LifepathResult>)
+data class BackgroundTable(val prompt: String, val die: String, val results: List<BackgroundTableResult>)
 
-data class LifepathResult(val roll: Int, val text: String)
+data class BackgroundTableResult(val roll: Int, val text: String)
 
-data class LifepathExperience(val prompt: String, val roll: Int, val text: String)
+data class ResolvedBackgroundTable(val prompt: String, val roll: Int, val text: String)
 
 data class CharacterTrait(val id: String, val name: String, val results: List<String>)
 
