@@ -62,3 +62,7 @@ Rules content is stored as JSON under each ruleset's `src/main/resources` direct
 constants. The Cairn module validates background and lifepath documents when they are loaded.
 During character creation, the two background-specific lifepath tables are resolved as their own
 stateless transition and the resulting experiences are attached to the completed character.
+
+The ruleset-neutral interaction protocol in `core` represents shell interaction as `Roll`, `Choose`,
+or `EnterText` requests and typed responses. Existing Cairn creation will be migrated to this protocol
+before a different Great Steppe creation process is introduced.
