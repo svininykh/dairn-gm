@@ -1,11 +1,18 @@
 package io.github.dairn.cli
 
+import io.github.dairn.cairn.CairnCharacterCreation
+import io.github.dairn.cairn.CharacterCreationCommand
+import io.github.dairn.cairn.CharacterCreationState
+import io.github.dairn.core.Attribute
 import io.github.dairn.core.ModuleId
 import io.github.dairn.core.ModuleRegistry
+import io.github.dairn.core.RandomDice
+import kotlin.random.Random
 
 class DairnCli(
     private val modules: ModuleRegistry,
     private val output: (String) -> Unit = ::println,
+    private val input: () -> String? = { null },
 ) {
     fun run(arguments: Array<String>): Int {
         val parsed = parseLanguage(arguments.toList()) ?: return 2
@@ -58,8 +65,36 @@ class DairnCli(
         if (moduleIndex < 0 || moduleIndex + 1 >= rest.size) return error(messages.text("error.module.required"), messages)
         val moduleId = runCatching { ModuleId(rest[moduleIndex + 1]) }.getOrNull()
             ?: return error(messages.text("error.module.unknown", rest[moduleIndex + 1]), messages)
-        val module = modules.find(moduleId) ?: return error(messages.text("error.module.unknown", moduleId), messages)
-        output(messages.text("character.scaffold", messages.text(module.info.nameKey)))
+        modules.find(moduleId) ?: return error(messages.text("error.module.unknown", moduleId), messages)
+        if (moduleId.value != "cairn-2e") return error(messages.text("error.character.unsupported", moduleId), messages)
+
+        val seed = optionValue(rest, "--seed")?.toLongOrNull()
+        if ("--seed" in rest && seed == null) return error(messages.text("error.seed"), messages)
+        val dice = RandomDice(seed?.let(::Random) ?: Random.Default)
+        val scores = List(Attribute.entries.size) { dice.roll(3, 6).total }
+        val hitProtection = dice.roll(1, 6).total
+        val started = CairnCharacterCreation.transition(
+            CharacterCreationState.NotStarted,
+            CharacterCreationCommand.Start(scores, hitProtection),
+        )
+
+        output(messages.text("character.rolls", scores.joinToString(", "), hitProtection))
+        output(messages.text("character.assign.prompt"))
+        val assignmentText = optionValue(rest, "--assign") ?: input()
+            ?: return error(messages.text("error.assignment.missing"), messages)
+        val assignment = assignmentText.split(",").mapNotNull { it.trim().toIntOrNull()?.minus(1) }
+        val completed = runCatching {
+            CairnCharacterCreation.transition(
+                started.state,
+                CharacterCreationCommand.AssignAttributes(assignment),
+            )
+        }.getOrElse { return error(messages.text("error.assignment.invalid"), messages) }
+        val character = (completed.state as CharacterCreationState.Completed).character
+        output(messages.text("character.complete"))
+        output("  STR ${character.attributes.getValue(Attribute.STRENGTH)}")
+        output("  DEX ${character.attributes.getValue(Attribute.DEXTERITY)}")
+        output("  WIL ${character.attributes.getValue(Attribute.WILLPOWER)}")
+        output("  HP  ${character.hitProtection}")
         return 0
     }
 
@@ -123,10 +158,16 @@ ${m.text("usage")}: dairn character new --module <id>
 
 ${m.text("options")}:
   -h, --help             ${m.text("option.help")}
-  --module <id>          ${m.text("character.module")}"""
+  --module <id>          ${m.text("character.module")}
+  --seed <number>        ${m.text("character.seed")}
+  --assign <1,2,3>       ${m.text("character.assign")}"""
+
+    private fun optionValue(args: List<String>, option: String): String? {
+        val index = args.indexOf(option)
+        return if (index >= 0) args.getOrNull(index + 1) else null
+    }
 
     private companion object {
         val helpFlags = setOf("-h", "--help")
     }
 }
-

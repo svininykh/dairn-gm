@@ -7,6 +7,5 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
     val modules = ModuleRegistry(listOf(Cairn2eModule, GreatSteppeModule))
-    exitProcess(DairnCli(modules).run(args))
+    exitProcess(DairnCli(modules, input = ::readlnOrNull).run(args))
 }
-

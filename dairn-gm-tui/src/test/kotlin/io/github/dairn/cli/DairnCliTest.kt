@@ -38,10 +38,23 @@ class DairnCliTest {
     }
 
     @Test
-    fun `character new accepts an installed module`() {
-        val (code, text) = execute("--lang", "ru", "character", "new", "--module", "great-steppe")
+    fun `character new completes reproducibly for Cairn`() {
+        val (code, text) = execute(
+            "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42", "--assign", "2,1,3",
+        )
         assertEquals(0, code)
-        assertContains(text, "Великая Степь")
+        assertContains(text, "Персонаж создан")
+        assertContains(text, "STR")
+        assertEquals(text, execute(
+            "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42", "--assign", "2,1,3",
+        ).second)
+    }
+
+    @Test
+    fun `Great Steppe reports that creation is not implemented`() {
+        val (code, text) = execute("character", "new", "--module", "great-steppe")
+        assertEquals(2, code)
+        assertContains(text, "not implemented")
     }
 
     private fun execute(vararg args: String): Pair<Int, String> {
@@ -50,4 +63,3 @@ class DairnCliTest {
         return code to lines.joinToString("\n")
     }
 }
-
