@@ -1,6 +1,5 @@
 package io.github.dairn.cairn
 
-import io.github.dairn.core.Attribute
 import io.github.dairn.core.InteractiveStep
 import io.github.dairn.core.ProcessRequest
 import io.github.dairn.core.ProcessResponse
@@ -9,6 +8,16 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class InteractiveCharacterCreationTest {
+    @Test
+    fun `resource catalog contains complete backgrounds and lifepaths`() {
+        assertEquals(20, CairnCharacterData.backgrounds.size)
+        assertEquals(20, CairnCharacterData.lifepaths.size)
+        CairnCharacterData.backgrounds.forEach { background ->
+            assertEquals(10, background.names.size, background.name)
+            assertEquals(2, CairnCharacterData.lifepaths.getValue(background.lifepathId).tables.size)
+        }
+    }
+
     @Test
     fun `process requests rolls and choices without shell-owned rules`() {
         val started = CairnInteractiveCharacterCreation.start()

@@ -1,9 +1,5 @@
 package io.github.dairn.cairn
 
-import io.github.dairn.core.CharacterBackground
-import io.github.dairn.core.Lifepath
-import io.github.dairn.core.LifepathResult
-import io.github.dairn.core.LifepathTable
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 

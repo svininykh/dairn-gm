@@ -27,7 +27,7 @@ The engine does not persist process state. A TUI, server, StoryTeller, or StoryM
 and supplies random results and user choices as explicit commands.
 
 Rulesets advertise optional capabilities through their module API. The TUI discovers character
-creation through `CharacterCreationModule`; it does not contain ruleset ID checks or own rules logic.
+creation through `InteractiveCharacterCreationModule`; it does not contain ruleset ID checks or own rules logic.
 
 ## Run
 
@@ -67,6 +67,5 @@ The ruleset-neutral interaction protocol in `core` represents shell interaction 
 or `EnterText` requests and typed responses. Existing Cairn creation will be migrated to this protocol
 before a different Great Steppe creation process is introduced.
 
-The Cairn module now exposes an interactive-process implementation that owns its dice expressions,
-request order, and validation. The legacy TUI path remains temporarily available until the shell is
-migrated to the protocol.
+The Cairn module exposes an interactive-process implementation that owns its models, dice expressions,
+request order, and validation. The TUI executes the neutral protocol without Cairn-specific logic.
