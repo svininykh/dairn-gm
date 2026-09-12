@@ -19,3 +19,10 @@ The v0.1 skeleton deliberately contains no AI, player/session model, or complex 
 
 Supported languages are Kazakh (`kk`), Russian (`ru`), and English (`en`).
 
+Examples:
+
+```shell
+./gradlew :cli:run --args="--lang kk --help"
+./gradlew :cli:run --args="--lang ru module list"
+./gradlew :cli:run --args="--lang en character new --module great-steppe"
+```

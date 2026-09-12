@@ -8,4 +8,9 @@ out/
 
 # Generated/local working files outside the DAIRN GM sources
 tmp/
+output/
 
+# Existing project-mirror utilities and artwork are not part of DAIRN GM v0.1
+/AGENTS.md
+/*.py
+/*.png
