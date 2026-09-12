@@ -1,0 +1,500 @@
+{
+  "backgrounds": [
+    {
+      "id": "aurifex",
+      "name": "Aurifex",
+      "names": [
+        "Hestia",
+        "Basil",
+        "Rune",
+        "Prism",
+        "Ember",
+        "Quintess",
+        "Aludel",
+        "Mordant",
+        "Salaman",
+        "Jazia"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Lantern",
+        "Oil Can (6 uses)",
+        "Needle-knife (d6)",
+        "Protective Gloves (_petty_)"
+      ],
+      "lifepathId": "aurifex"
+    },
+    {
+      "id": "barber-surgeon",
+      "name": "Barber-Surgeon",
+      "names": [
+        "Wilmot",
+        "Patch",
+        "Lancet",
+        "Sawbones",
+        "Theo",
+        "Cutwell",
+        "Humor",
+        "Landsford",
+        "Goodeye",
+        "Johanna"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Bonesaw (d6)",
+        "Bandages (3 uses)",
+        "Leech (restores 1 STR, 3 uses)",
+        "Stained Medical Finery (_petty_)"
+      ],
+      "lifepathId": "barber-surgeon"
+    },
+    {
+      "id": "beast-handler",
+      "name": "Beast Handler",
+      "names": [
+        "Amara",
+        "Wulf",
+        "Mireille",
+        "Soren",
+        "Freki",
+        "Aster",
+        "Gerrik",
+        "Boreas",
+        "Veda",
+        "Matheus"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Leather Whip (d6)",
+        "Soporific Darts (STR save or fall asleep, 6 uses)",
+        "Lure",
+        "Rope (25ft)"
+      ],
+      "lifepathId": "beast-handler"
+    },
+    {
+      "id": "bonekeeper",
+      "name": "Bonekeeper",
+      "names": [
+        "Rook",
+        "Ebon",
+        "Moro",
+        "Yew",
+        "Pall",
+        "Leth",
+        "Bea",
+        "Barnaby",
+        "Vesper",
+        "Leder"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Lantern",
+        "Oil Can (6 uses)",
+        "Stake (d6)",
+        "Chains (10ft)"
+      ],
+      "lifepathId": "bonekeeper"
+    },
+    {
+      "id": "cutpurse",
+      "name": "Cutpurse",
+      "names": [
+        "Arlo",
+        "Lyra",
+        "Eamon",
+        "Salina",
+        "Elara",
+        "Freya",
+        "Bull",
+        "Sparrow",
+        "Ivy",
+        "Silas"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Twin Daggers (d6+d6, _bulky_)",
+        "Padded Leather (1 Armor)",
+        "Lockpicks",
+        "Black Outfit (_petty_)"
+      ],
+      "lifepathId": "cutpurse"
+    },
+    {
+      "id": "fieldwarden",
+      "name": "Fieldwarden",
+      "names": [
+        "Seed",
+        "Thresh",
+        "Dibber",
+        "Sow",
+        "Stalk",
+        "Harrow",
+        "Cobb",
+        "Flax",
+        "Briar",
+        "Rye"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Brigandine (1 Armor, _bulky_)",
+        "Sling (d6)",
+        "Hand Axe (d6)",
+        "Repellent (pick the type, 3 uses)"
+      ],
+      "lifepathId": "fieldwarden"
+    },
+    {
+      "id": "fletchwind",
+      "name": "Fletchwind",
+      "names": [
+        "Flint",
+        "Feather",
+        "Crier",
+        "Thunder",
+        "Falcon",
+        "Pluck",
+        "Needle",
+        "Warsong",
+        "Hawk",
+        "Cai"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Bow (see table)",
+        "Serrated Knife (d6)",
+        "Boiled Leather (1 Armor)",
+        "Heartroot Salve (restores 1d4 STR, 1 use)"
+      ],
+      "lifepathId": "fletchwind"
+    },
+    {
+      "id": "foundling",
+      "name": "Foundling",
+      "names": [
+        "Faunus",
+        "Snowdrop",
+        "Wisp",
+        "Silverdew",
+        "Brim",
+        "Solstice",
+        "Steeleye",
+        "Artea",
+        "Gossamer",
+        "Hazel"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Salt Pouch",
+        "Heirloom Amulet (_petty_, glows in the presence of magic)",
+        "Sling (d6)",
+        "Dagger (d6)"
+      ],
+      "lifepathId": "foundling"
+    },
+    {
+      "id": "fungal-forager",
+      "name": "Fungal Forager",
+      "names": [
+        "Unther",
+        "Woozy",
+        "Hilda",
+        "Current",
+        "Leif",
+        "Ratan",
+        "Mourella",
+        "Lal",
+        "Per",
+        "Madrigal"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Sharpened Trowel (d6)",
+        "Candle Helmet (+1 Armor, dim, 6 uses)",
+        "Rope (25ft)",
+        "Metal Pail"
+      ],
+      "lifepathId": "fungal-forager"
+    },
+    {
+      "id": "greenwise",
+      "name": "Greenwise",
+      "names": [
+        "Gunther",
+        "Moss",
+        "Fern",
+        "Lichen",
+        "Root",
+        "Willow",
+        "Sage",
+        "Yarrow",
+        "Rowan",
+        "Ash"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Iron Pot",
+        "Root Knife (d6)",
+        "Healing Salve (restore 1d4 STR, 1 use)",
+        "Twine Bauble (_petty_, _Ward_ once per day) _Ward_: A silver circle 50ft across appears on the ground. Choose one species that cannot cross it."
+      ],
+      "lifepathId": "greenwise"
+    },
+    {
+      "id": "half-witch",
+      "name": "Half Witch",
+      "names": [
+        "Solena",
+        "Veles",
+        "Bryn",
+        "Sabine",
+        "Razvan",
+        "Rowena",
+        "Galen",
+        "Nyx",
+        "Vex",
+        "Iwan"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Spellbook (Thicket: A thicket of trees and dense brush up to 50ft wide suddenly sprouts up. _Wrapped in vines that must be destroyed again with each use._)",
+        "Iron Dagger (d6)",
+        "Herbs Pouch (restore 1 STR, 3 uses)",
+        "Ghillie Suit"
+      ],
+      "lifepathId": "half-witch"
+    },
+    {
+      "id": "hexenbane",
+      "name": "Hexenbane",
+      "names": [
+        "Percival",
+        "Felix",
+        "Isolde",
+        "Wolfram",
+        "Aldric",
+        "Eira",
+        "Oswin",
+        "Ivor",
+        "Brunhilda",
+        "Beatrix"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Vestments of the Order (_petty_)",
+        "Blessed Tinctures",
+        "Silver Knife (d6)",
+        "Crossbow (d8, _bulky_)"
+      ],
+      "lifepathId": "hexenbane"
+    },
+    {
+      "id": "jongleur",
+      "name": "Jongleur",
+      "names": [
+        "Jax",
+        "Selene",
+        "Baladria",
+        "Ada",
+        "Mort",
+        "Saylor",
+        "Tripp",
+        "Lantos",
+        "Echo",
+        "Jubilo"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Costume",
+        "Simple Instrument (Pipes, Lute, etc.)",
+        "Lucky Jerkin (+1 Armor)",
+        "Sling (d6)"
+      ],
+      "lifepathId": "jongleur"
+    },
+    {
+      "id": "kettlewright",
+      "name": "Kettlewright",
+      "names": [
+        "Fergus",
+        "Eon",
+        "Bram",
+        "Idris",
+        "Hester",
+        "Darragh",
+        "Seren",
+        "Rónán",
+        "Berek",
+        "Lorenz"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Pincers",
+        "Roll of Tin",
+        "Gloves (_petty_)",
+        "Hammer (d6)"
+      ],
+      "lifepathId": "kettlewright"
+    },
+    {
+      "id": "marchguard",
+      "name": "Marchguard",
+      "names": [
+        "Gann",
+        "Light",
+        "Saoirse",
+        "Frost",
+        "Thorn",
+        "Reed",
+        "Dirk",
+        "Ragnar",
+        "Brie",
+        "Aasim"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Lantern",
+        "Oil Can (6 uses)",
+        "Long Sword (d10, _bulky_)",
+        "Boiled Leather (1 Armor)"
+      ],
+      "lifepathId": "marchguard"
+    },
+    {
+      "id": "mountebank",
+      "name": "Mountebank",
+      "names": [
+        "Ambrose",
+        "Lucius",
+        "Beauregard",
+        "Cornelius",
+        "Aria",
+        "Toph",
+        "Indigo",
+        "Delphine",
+        "Solene",
+        "Noa"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Cart (+4 slots, _bulky_ when pulled)",
+        "Trick Playing Cards",
+        "Fancy Hat (_petty_)",
+        "Cane Sword (d6)"
+      ],
+      "lifepathId": "mountebank"
+    },
+    {
+      "id": "outrider",
+      "name": "Outrider",
+      "names": [
+        "Drake",
+        "Cyra",
+        "Keir",
+        "Darius",
+        "Valen",
+        "Rorik",
+        "Yara",
+        "Rui",
+        "Talon",
+        "Jory"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Long Sword (d10, _bulky_)",
+        "Leather Jerkin (1 Armor)",
+        "Crossbow (d8, _bulky_)",
+        "Spyglass"
+      ],
+      "lifepathId": "outrider"
+    },
+    {
+      "id": "prowler",
+      "name": "Prowler",
+      "names": [
+        "Winda",
+        "Brielle",
+        "Theron",
+        "Chayse",
+        "Nuja",
+        "Dev",
+        "Raven",
+        "Arawan",
+        "Sable",
+        "Baruani"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Tarp",
+        "Boiled Leather (1 Armor)",
+        "Short Sword (d6)",
+        "Spring-Loaded trap (4 STR damage)"
+      ],
+      "lifepathId": "prowler"
+    },
+    {
+      "id": "rill-runner",
+      "name": "Rill Runner",
+      "names": [
+        "Gale",
+        "Piper",
+        "Brook",
+        "Adair",
+        "Stone",
+        "Dale",
+        "Wren",
+        "Cliff",
+        "Rain",
+        "Robin"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Water Shoes",
+        "Brigandine (1 Armor, _bulky_)",
+        "Compass",
+        "Dagger (d6)"
+      ],
+      "lifepathId": "rill-runner"
+    },
+    {
+      "id": "scrivener",
+      "name": "Scrivener",
+      "names": [
+        "Lazlo",
+        "Stilo",
+        "Akshara",
+        "Pisa",
+        "Ji-Yun",
+        "Kalamos",
+        "Hugo",
+        "Shui",
+        "Kalam",
+        "Julius"
+      ],
+      "startingEquipment": [
+        "Rations (3 uses)",
+        "Torch (3 uses)",
+        "Quill & Ink",
+        "Blank Book",
+        "Awl (d6)",
+        "Badge (_petty_)"
+      ],
+      "lifepathId": "scrivener"
+    }
+  ]
+}

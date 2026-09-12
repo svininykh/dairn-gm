@@ -6,11 +6,19 @@ import kotlin.test.*
 class CharacterCreationTest {
     @Test
     fun `all official backgrounds provide names and starting equipment`() {
-        assertEquals(20, CairnBackgrounds.all.size)
-        CairnBackgrounds.all.forEach { background ->
+        assertEquals(20, CairnCharacterData.backgrounds.size)
+        CairnCharacterData.backgrounds.forEach { background ->
             assertEquals(10, background.names.size, background.name)
             assertTrue(background.startingEquipment.isNotEmpty(), background.name)
             assertFalse("3d6 Gold Pieces" in background.startingEquipment, background.name)
+        }
+        assertEquals(20, CairnCharacterData.lifepaths.size)
+        CairnCharacterData.lifepaths.values.forEach { lifepath ->
+            assertEquals(2, lifepath.tables.size, lifepath.id)
+            lifepath.tables.forEach { table ->
+                assertEquals("d6", table.die)
+                assertEquals((1..6).toList(), table.results.map { it.roll })
+            }
         }
     }
 
@@ -50,7 +58,7 @@ class CharacterCreationTest {
 
     @Test
     fun `swap rejects the same attribute twice`() {
-        val state = CharacterCreationState.AwaitingSwap(CairnBackgrounds.all.first(), "Hestia", listOf(8, 12, 15), 4, 27, 11)
+        val state = CharacterCreationState.AwaitingSwap(CairnCharacterData.backgrounds.first(), "Hestia", listOf(8, 12, 15), 4, 27, 11)
         assertFailsWith<IllegalArgumentException> {
             CairnCharacterCreation.transition(state, CharacterCreationCommand.SwapAttributes(0 to 0))
         }

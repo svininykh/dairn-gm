@@ -57,3 +57,6 @@ following Cairn 2e rules.
 Character creation for Great Steppe remains intentionally unimplemented until its rules are defined.
 
 Cairn-derived rules data and attribution are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+Rules content is stored as JSON under each ruleset's `src/main/resources` directory, not as Kotlin
+constants. The Cairn module validates background and lifepath documents when they are loaded.

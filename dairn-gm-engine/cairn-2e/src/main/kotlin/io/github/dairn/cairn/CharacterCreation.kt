@@ -14,13 +14,13 @@ object CairnCharacterCreation : CharacterCreationProcess {
     }
 
     private fun start(command: CharacterCreationCommand.Start): TransitionResult<CharacterCreationState> {
-        require(command.backgroundRoll in 1..CairnBackgrounds.all.size) { "Background roll must be between 1 and 20" }
+        require(command.backgroundRoll in 1..CairnCharacterData.backgrounds.size) { "Background roll must be between 1 and 20" }
         require(command.scores.size == Attribute.entries.size && command.scores.all { it in 3..18 })
         require(command.hitProtection in 1..6)
         require(command.age in 12..50)
         require(command.goldPieces in 3..18)
         val state = CharacterCreationState.AwaitingName(
-            CairnBackgrounds.all[command.backgroundRoll - 1], command.scores, command.hitProtection, command.age, command.goldPieces,
+            CairnCharacterData.backgrounds[command.backgroundRoll - 1], command.scores, command.hitProtection, command.age, command.goldPieces,
         )
         return TransitionResult(state, pendingChoice = Choice.Required(NAME_CHOICE, state.background.names))
     }
