@@ -1,52 +1,58 @@
 package io.github.dairn.cairn
 
-import io.github.dairn.core.Attribute
-import io.github.dairn.core.Character
-import io.github.dairn.core.CharacterCreationCommand
-import io.github.dairn.core.CharacterCreationProcess
-import io.github.dairn.core.CharacterCreationState
-import io.github.dairn.core.Choice
-import io.github.dairn.core.TransitionResult
+import io.github.dairn.core.*
 
 object CairnCharacterCreation : CharacterCreationProcess {
-    const val ATTRIBUTE_ASSIGNMENT_CHOICE = "cairn-2e.character.attributes"
+    const val NAME_CHOICE = "cairn-2e.character.name"
+    const val ATTRIBUTE_SWAP_CHOICE = "cairn-2e.character.attribute-swap"
 
-    override fun transition(
-        state: CharacterCreationState,
-        command: CharacterCreationCommand,
-    ): TransitionResult<CharacterCreationState> = when {
+    override fun transition(state: CharacterCreationState, command: CharacterCreationCommand): TransitionResult<CharacterCreationState> = when {
         state is CharacterCreationState.NotStarted && command is CharacterCreationCommand.Start -> start(command)
-        state is CharacterCreationState.AwaitingAssignment && command is CharacterCreationCommand.AssignAttributes -> assign(state, command)
+        state is CharacterCreationState.AwaitingName && command is CharacterCreationCommand.ChooseName -> chooseName(state, command)
+        state is CharacterCreationState.AwaitingSwap && command is CharacterCreationCommand.SwapAttributes -> swap(state, command)
         else -> throw IllegalArgumentException("Command ${command::class.simpleName} is invalid for ${state::class.simpleName}")
     }
 
     private fun start(command: CharacterCreationCommand.Start): TransitionResult<CharacterCreationState> {
-        require(command.scores.size == Attribute.entries.size) { "Exactly three attribute scores are required" }
-        require(command.scores.all { it in 3..18 }) { "Attribute scores must be between 3 and 18" }
-        require(command.hitProtection in 1..6) { "Hit Protection must be between 1 and 6" }
-        val state = CharacterCreationState.AwaitingAssignment(command.scores, command.hitProtection)
+        require(command.backgroundRoll in 1..CairnBackgrounds.all.size) { "Background roll must be between 1 and 20" }
+        require(command.scores.size == Attribute.entries.size && command.scores.all { it in 3..18 })
+        require(command.hitProtection in 1..6)
+        require(command.age in 12..50)
+        require(command.goldPieces in 3..18)
+        val state = CharacterCreationState.AwaitingName(
+            CairnBackgrounds.all[command.backgroundRoll - 1], command.scores, command.hitProtection, command.age, command.goldPieces,
+        )
+        return TransitionResult(state, pendingChoice = Choice.Required(NAME_CHOICE, state.background.names))
+    }
+
+    private fun chooseName(state: CharacterCreationState.AwaitingName, command: CharacterCreationCommand.ChooseName): TransitionResult<CharacterCreationState> {
+        require(command.index in state.background.names.indices)
+        val next = CharacterCreationState.AwaitingSwap(
+            state.background, state.background.names[command.index], state.scores, state.hitProtection, state.age, state.goldPieces,
+        )
         return TransitionResult(
-            state = state,
-            pendingChoice = Choice.Required(
-                id = ATTRIBUTE_ASSIGNMENT_CHOICE,
-                options = command.scores,
-                minimum = Attribute.entries.size,
-                maximum = Attribute.entries.size,
-            ),
+            next,
+            pendingChoice = Choice.Required(ATTRIBUTE_SWAP_CHOICE, listOf("keep", "str-dex", "str-wil", "dex-wil")),
         )
     }
 
-    private fun assign(
-        state: CharacterCreationState.AwaitingAssignment,
-        command: CharacterCreationCommand.AssignAttributes,
-    ): TransitionResult<CharacterCreationState> {
-        require(command.order.sorted() == state.scores.indices.toList()) {
-            "Assignment must contain each score index exactly once"
+    private fun swap(state: CharacterCreationState.AwaitingSwap, command: CharacterCreationCommand.SwapAttributes): TransitionResult<CharacterCreationState> {
+        val scores = state.scores.toMutableList()
+        command.positions?.let { (first, second) ->
+            require(first in scores.indices && second in scores.indices && first != second)
+            val value = scores[first]
+            scores[first] = scores[second]
+            scores[second] = value
         }
-        val scores = Attribute.entries.zip(command.order.map(state.scores::get)).toMap()
-        return TransitionResult(
-            state = CharacterCreationState.Completed(Character(scores, state.hitProtection)),
-            completed = true,
+        val character = Character(
+            name = state.name,
+            age = state.age,
+            background = state.background.name,
+            attributes = Attribute.entries.zip(scores).toMap(),
+            hitProtection = state.hitProtection,
+            goldPieces = state.goldPieces,
+            inventory = state.background.startingEquipment,
         )
+        return TransitionResult(CharacterCreationState.Completed(character), completed = true)
     }
 }

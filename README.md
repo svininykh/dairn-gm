@@ -45,12 +45,15 @@ Examples:
 ./gradlew :dairn-gm-tui:run --args="--lang en character new --module cairn-2e"
 ```
 
-Cairn 2e character creation supports an interactive assignment prompt. It can also be run
+Cairn 2e character creation supports interactive name and attribute-swap prompts. It can also be run
 non-interactively and reproducibly for tests and integrations:
 
 ```shell
-./gradlew :dairn-gm-tui:run --args="--lang en character new --module cairn-2e --seed 42 --assign 2,1,3"
+./gradlew :dairn-gm-tui:run --args="--lang en character new --module cairn-2e --seed 42 --name 2 --swap str-wil"
 ```
 
-The assignment numbers select the rolled values for `STR`, `DEX`, and `WIL`, respectively.
+Attributes are rolled in `STR`, `DEX`, `WIL` order. The player may keep them or swap one pair,
+following Cairn 2e rules.
 Character creation for Great Steppe remains intentionally unimplemented until its rules are defined.
+
+Cairn-derived rules data and attribution are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

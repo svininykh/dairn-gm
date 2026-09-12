@@ -44,13 +44,13 @@ class DairnCliTest {
     @Test
     fun `character new completes reproducibly for Cairn`() {
         val (code, text) = execute(
-            "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42", "--assign", "2,1,3",
+            "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42", "--name", "2", "--swap", "str-wil",
         )
         assertEquals(0, code)
         assertContains(text, "Персонаж создан")
         assertContains(text, "STR")
         assertEquals(text, execute(
-            "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42", "--assign", "2,1,3",
+            "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42", "--name", "2", "--swap", "str-wil",
         ).second)
     }
 
@@ -69,7 +69,7 @@ class DairnCliTest {
         }
         val lines = mutableListOf<String>()
         val code = DairnCli(ModuleRegistry(listOf(customModule)), lines::add).run(
-            arrayOf("character", "new", "--module", "custom-rules", "--seed", "7", "--assign", "1,2,3"),
+            arrayOf("character", "new", "--module", "custom-rules", "--seed", "7", "--name", "1", "--swap", "keep"),
         )
 
         assertEquals(0, code)
