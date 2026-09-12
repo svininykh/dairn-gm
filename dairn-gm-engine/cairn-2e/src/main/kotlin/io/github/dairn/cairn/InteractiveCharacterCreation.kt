@@ -10,6 +10,7 @@ data class CairnCharacter(
     val hitProtection: Int,
     val backgroundResults: List<ResolvedBackgroundTable>,
     val traits: List<RolledCharacterTrait>,
+    val bond: Bond,
 ) : ProcessArtifact {
     override val type: String = "cairn-2e.character"
     override val fields: List<ArtifactField>
@@ -24,6 +25,7 @@ data class CairnCharacter(
             ArtifactField("Equipment", background.startingEquipment),
             ArtifactField("Background Results", backgroundResults.map(ResolvedBackgroundTable::text)),
             *traits.map { ArtifactField(it.name, it.result) }.toTypedArray(),
+            ArtifactField("Bond", bond.text),
         )
 }
 
@@ -45,6 +47,7 @@ private data class Generated(
     val age: Int,
     val backgroundTableRolls: List<Int>,
     val traitRolls: List<Int>,
+    val bondRoll: Int,
 )
 
 object CairnInteractiveCharacterCreation : InteractiveProcess {
@@ -63,6 +66,7 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
             RollSpec("background-table-1", DiceExpression(1, 6)),
             RollSpec("background-table-2", DiceExpression(1, 6)),
             *CairnCharacterData.traits.map { RollSpec("trait-${it.id}", DiceExpression(1, 10)) }.toTypedArray(),
+            RollSpec("bond", DiceExpression(1, 20)),
         ),
     )
 
@@ -96,6 +100,7 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
             age = response.totals.getValue("age"),
             backgroundTableRolls = listOf("background-table-1", "background-table-2").map(response.totals::getValue),
             traitRolls = CairnCharacterData.traits.map { response.totals.getValue("trait-${it.id}") },
+            bondRoll = response.totals.getValue("bond"),
         )
         val request = ProcessRequest.Choose(
             RequestId("cairn-2e.character.name"),
@@ -155,6 +160,7 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
                 traits = CairnCharacterData.traits.zip(state.generated.traitRolls).map { (trait, roll) ->
                     RolledCharacterTrait(trait.id, trait.name, roll, trait.results[roll - 1])
                 },
+                bond = CairnCharacterData.bonds[state.generated.bondRoll - 1],
             ),
         )
     }

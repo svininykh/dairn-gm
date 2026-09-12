@@ -13,6 +13,8 @@ class InteractiveCharacterCreationTest {
         assertEquals(20, CairnCharacterData.backgrounds.size)
         assertEquals(20, CairnCharacterData.backgroundTables.size)
         assertEquals(8, CairnCharacterData.traits.size)
+        assertEquals((1..20).toList(), CairnCharacterData.bonds.map(Bond::roll))
+        assertEquals((1..20).toList(), CairnCharacterData.omens.map(Omen::roll))
         CairnCharacterData.traits.forEach { assertEquals(10, it.results.size, it.name) }
         CairnCharacterData.backgrounds.forEach { background ->
             assertEquals(10, background.names.size, background.name)
@@ -29,6 +31,7 @@ class InteractiveCharacterCreationTest {
                 "background", "str", "dex", "wil", "hp", "age", "background-table-1", "background-table-2",
                 "trait-physique", "trait-skin", "trait-hair", "trait-face",
                 "trait-speech", "trait-clothing", "trait-virtue", "trait-vice",
+                "bond",
             ),
             rolls.rolls.map { it.id },
         )
@@ -55,6 +58,7 @@ class InteractiveCharacterCreationTest {
                         "trait-clothing" to 6,
                         "trait-virtue" to 7,
                         "trait-vice" to 8,
+                        "bond" to 1,
                     ),
                 ),
             ),
@@ -83,5 +87,6 @@ class InteractiveCharacterCreationTest {
             listOf("Athletic", "Marked", "Curly", "Elongated", "Formal", "Frayed", "Humble", "Rude"),
             character.traits.map { it.result },
         )
+        assertEquals(1, character.bond.roll)
     }
 }

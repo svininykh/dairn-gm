@@ -10,16 +10,22 @@ internal object CairnCharacterData {
     val backgrounds: List<CharacterBackground>
     val backgroundTables: Map<String, BackgroundTables>
     val traits: List<CharacterTrait>
+    val bonds: List<Bond>
+    val omens: List<Omen>
 
     init {
         val backgroundData = json.decodeFromString<BackgroundDocument>(resource("$ROOT/backgrounds.json"))
         val tableData = json.decodeFromString<BackgroundTableDocument>(resource("$ROOT/background-tables.json"))
         val traitData = json.decodeFromString<TraitDocument>(resource("$ROOT/traits.json"))
+        val bondData = json.decodeFromString<BondDocument>(resource("$ROOT/bonds.json"))
+        val omenData = json.decodeFromString<OmenDocument>(resource("$ROOT/omens.json"))
         backgrounds = backgroundData.backgrounds.map(BackgroundData::toDomain)
         backgroundTables = tableData.backgroundTables
             .map(BackgroundTablesData::toDomain)
             .associateBy(BackgroundTables::backgroundId)
         traits = traitData.categories.map(TraitData::toDomain)
+        bonds = bondData.results.map(BondData::toDomain)
+        omens = omenData.results.map(OmenData::toDomain)
         validate()
     }
 
@@ -46,6 +52,8 @@ internal object CairnCharacterData {
         traits.forEach { trait ->
             require(trait.results.size == 10) { "${trait.id} must define exactly ten d10 results" }
         }
+        require(bonds.map(Bond::roll) == (1..20).toList()) { "Cairn 2e Bonds must define d20 results 1 through 20" }
+        require(omens.map(Omen::roll) == (1..20).toList()) { "Cairn 2e Omens must define d20 results 1 through 20" }
     }
 
     private fun resource(path: String): String = requireNotNull(javaClass.getResource(path)) {
@@ -93,4 +101,20 @@ private data class TraitDocument(
 @Serializable
 private data class TraitData(val id: String, val name: String, val results: List<String>) {
     fun toDomain() = CharacterTrait(id, name, results)
+}
+
+@Serializable
+private data class BondDocument(val sourceRevision: String, val die: String, val results: List<BondData>)
+
+@Serializable
+private data class BondData(val roll: Int, val result: String) {
+    fun toDomain() = Bond(roll, result)
+}
+
+@Serializable
+private data class OmenDocument(val sourceRevision: String, val die: String, val results: List<OmenData>)
+
+@Serializable
+private data class OmenData(val roll: Int, val result: String) {
+    fun toDomain() = Omen(roll, result)
 }
