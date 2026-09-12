@@ -9,6 +9,7 @@ object CairnCharacterCreation : CharacterCreationProcess {
     override fun transition(state: CharacterCreationState, command: CharacterCreationCommand): TransitionResult<CharacterCreationState> = when {
         state is CharacterCreationState.NotStarted && command is CharacterCreationCommand.Start -> start(command)
         state is CharacterCreationState.AwaitingName && command is CharacterCreationCommand.ChooseName -> chooseName(state, command)
+        state is CharacterCreationState.AwaitingLifepath && command is CharacterCreationCommand.ResolveLifepath -> resolveLifepath(state, command)
         state is CharacterCreationState.AwaitingSwap && command is CharacterCreationCommand.SwapAttributes -> swap(state, command)
         else -> throw IllegalArgumentException("Command ${command::class.simpleName} is invalid for ${state::class.simpleName}")
     }
@@ -27,8 +28,30 @@ object CairnCharacterCreation : CharacterCreationProcess {
 
     private fun chooseName(state: CharacterCreationState.AwaitingName, command: CharacterCreationCommand.ChooseName): TransitionResult<CharacterCreationState> {
         require(command.index in state.background.names.indices)
+        val next = CharacterCreationState.AwaitingLifepath(
+            state.background,
+            state.background.names[command.index],
+            state.scores,
+            state.hitProtection,
+            state.age,
+            state.goldPieces,
+            CairnCharacterData.lifepaths.getValue(state.background.lifepathId),
+        )
+        return TransitionResult(
+            next,
+        )
+    }
+
+    private fun resolveLifepath(
+        state: CharacterCreationState.AwaitingLifepath,
+        command: CharacterCreationCommand.ResolveLifepath,
+    ): TransitionResult<CharacterCreationState> {
+        require(command.rolls.size == state.lifepath.tables.size && command.rolls.all { it in 1..6 })
+        val experiences = state.lifepath.tables.zip(command.rolls).map { (table, roll) ->
+            LifepathExperience(table.prompt, roll, table.results.single { it.roll == roll }.text)
+        }
         val next = CharacterCreationState.AwaitingSwap(
-            state.background, state.background.names[command.index], state.scores, state.hitProtection, state.age, state.goldPieces,
+            state.background, state.name, state.scores, state.hitProtection, state.age, state.goldPieces, experiences,
         )
         return TransitionResult(
             next,
@@ -52,6 +75,7 @@ object CairnCharacterCreation : CharacterCreationProcess {
             hitProtection = state.hitProtection,
             goldPieces = state.goldPieces,
             inventory = state.background.startingEquipment,
+            lifepath = state.lifepath,
         )
         return TransitionResult(CharacterCreationState.Completed(character), completed = true)
     }

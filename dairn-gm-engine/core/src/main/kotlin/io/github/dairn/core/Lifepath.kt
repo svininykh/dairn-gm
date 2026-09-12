@@ -15,3 +15,9 @@ data class LifepathResult(
     val roll: Int,
     val text: String,
 )
+
+data class LifepathExperience(
+    val prompt: String,
+    val roll: Int,
+    val text: String,
+)

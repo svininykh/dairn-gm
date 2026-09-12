@@ -31,7 +31,8 @@ class CharacterCreationTest {
         assertFalse(started.completed)
         assertEquals("Hestia", started.pendingChoice?.options?.first())
         val named = CairnCharacterCreation.transition(started.state, CharacterCreationCommand.ChooseName(1))
-        val completed = CairnCharacterCreation.transition(named.state, CharacterCreationCommand.SwapAttributes(0 to 2))
+        val lifepath = CairnCharacterCreation.transition(named.state, CharacterCreationCommand.ResolveLifepath(listOf(1, 6)))
+        val completed = CairnCharacterCreation.transition(lifepath.state, CharacterCreationCommand.SwapAttributes(0 to 2))
         val character = (completed.state as CharacterCreationState.Completed).character
         assertTrue(completed.completed)
         assertEquals("Basil", character.name)
@@ -41,6 +42,7 @@ class CharacterCreationTest {
         assertEquals(4, character.hitProtection)
         assertEquals(11, character.goldPieces)
         assertTrue("Lantern" in character.inventory)
+        assertEquals(listOf(1, 6), character.lifepath.map { it.roll })
     }
 
     @Test
@@ -50,7 +52,8 @@ class CharacterCreationTest {
             CharacterCreationCommand.Start(20, listOf(8, 12, 15), 4, 27, 11),
         )
         val named = CairnCharacterCreation.transition(started.state, CharacterCreationCommand.ChooseName(0))
-        val completed = CairnCharacterCreation.transition(named.state, CharacterCreationCommand.SwapAttributes(null))
+        val lifepath = CairnCharacterCreation.transition(named.state, CharacterCreationCommand.ResolveLifepath(listOf(2, 3)))
+        val completed = CairnCharacterCreation.transition(lifepath.state, CharacterCreationCommand.SwapAttributes(null))
         val character = (completed.state as CharacterCreationState.Completed).character
         assertEquals(listOf(8, 12, 15), Attribute.entries.map(character.attributes::getValue))
         assertEquals("Scrivener", character.background)
@@ -58,7 +61,11 @@ class CharacterCreationTest {
 
     @Test
     fun `swap rejects the same attribute twice`() {
-        val state = CharacterCreationState.AwaitingSwap(CairnCharacterData.backgrounds.first(), "Hestia", listOf(8, 12, 15), 4, 27, 11)
+        val source = CairnCharacterData.lifepaths.getValue("aurifex")
+        val experiences = source.tables.map { table -> LifepathExperience(table.prompt, 1, table.results.first().text) }
+        val state = CharacterCreationState.AwaitingSwap(
+            CairnCharacterData.backgrounds.first(), "Hestia", listOf(8, 12, 15), 4, 27, 11, experiences,
+        )
         assertFailsWith<IllegalArgumentException> {
             CairnCharacterCreation.transition(state, CharacterCreationCommand.SwapAttributes(0 to 0))
         }

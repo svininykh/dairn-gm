@@ -92,6 +92,19 @@ class DairnCli(
             creationModule.characterCreation.transition(started.state, CharacterCreationCommand.ChooseName(nameIndex))
         }.getOrElse { return error(messages.text("error.name.invalid"), messages) }
 
+        val awaitingLifepath = named.state as CharacterCreationState.AwaitingLifepath
+        val lifepathRolls = List(awaitingLifepath.lifepath.tables.size) { dice.roll(1, 6).total }
+        val lifepathResolved = creationModule.characterCreation.transition(
+            named.state,
+            CharacterCreationCommand.ResolveLifepath(lifepathRolls),
+        )
+        val lifepathState = lifepathResolved.state as CharacterCreationState.AwaitingSwap
+        output(messages.text("character.lifepath"))
+        lifepathState.lifepath.forEach { experience ->
+            output("  [${experience.roll}] ${experience.prompt}")
+            output("      ${experience.text}")
+        }
+
         output(messages.text("character.rolls", scores.joinToString(", "), hitProtection, age))
         output(messages.text("character.swap.prompt"))
         val swapText = optionValue(rest, "--swap") ?: input()
@@ -105,7 +118,7 @@ class DairnCli(
         }
         val completed = runCatching {
             creationModule.characterCreation.transition(
-                named.state,
+                lifepathResolved.state,
                 CharacterCreationCommand.SwapAttributes(swap),
             )
         }.getOrElse { return error(messages.text("error.swap.invalid"), messages) }
@@ -121,6 +134,8 @@ class DairnCli(
         output("  GP  ${character.goldPieces}")
         output("  ${messages.text("character.inventory")}:")
         character.inventory.forEach { output("    - $it") }
+        output("  ${messages.text("character.lifepath")}:")
+        character.lifepath.forEach { output("    - ${it.text}") }
         return 0
     }
 

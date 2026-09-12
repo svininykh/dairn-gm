@@ -16,6 +16,16 @@ sealed interface CharacterCreationState : ProcessState {
         val hitProtection: Int,
         val age: Int,
         val goldPieces: Int,
+        val lifepath: List<LifepathExperience>,
+    ) : CharacterCreationState
+    data class AwaitingLifepath(
+        val background: CharacterBackground,
+        val name: String,
+        val scores: List<Int>,
+        val hitProtection: Int,
+        val age: Int,
+        val goldPieces: Int,
+        val lifepath: Lifepath,
     ) : CharacterCreationState
     data class Completed(val character: Character) : CharacterCreationState
 }
@@ -29,6 +39,7 @@ sealed interface CharacterCreationCommand : ProcessCommand {
         val goldPieces: Int,
     ) : CharacterCreationCommand
     data class ChooseName(val index: Int) : CharacterCreationCommand
+    data class ResolveLifepath(val rolls: List<Int>) : CharacterCreationCommand
     /** Null keeps scores in order; otherwise the two zero-based positions are swapped. */
     data class SwapAttributes(val positions: Pair<Int, Int>?) : CharacterCreationCommand
 }

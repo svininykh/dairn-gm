@@ -60,3 +60,5 @@ Cairn-derived rules data and attribution are documented in [THIRD_PARTY_NOTICES.
 
 Rules content is stored as JSON under each ruleset's `src/main/resources` directory, not as Kotlin
 constants. The Cairn module validates background and lifepath documents when they are loaded.
+During character creation, the two background-specific lifepath tables are resolved as their own
+stateless transition and the resulting experiences are attached to the completed character.

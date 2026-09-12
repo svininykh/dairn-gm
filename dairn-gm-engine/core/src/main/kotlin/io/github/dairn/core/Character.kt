@@ -10,6 +10,7 @@ data class Character(
     val hitProtection: Int,
     val goldPieces: Int,
     val inventory: List<String>,
+    val lifepath: List<LifepathExperience>,
 ) {
     init {
         require(name.isNotBlank()) { "Character name cannot be blank" }
@@ -19,5 +20,6 @@ data class Character(
         require(attributes.values.all { it in 3..18 }) { "Attribute scores must be between 3 and 18" }
         require(hitProtection in 1..6) { "Hit Protection must be between 1 and 6" }
         require(goldPieces in 3..18) { "Starting gold must be between 3 and 18" }
+        require(lifepath.isNotEmpty()) { "Character lifepath cannot be empty" }
     }
 }
