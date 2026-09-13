@@ -51,8 +51,9 @@ class DairnCliTest {
         )
         assertEquals(0, code)
         assertContains(text, "Персонаж создан")
-        assertContains(text, "STR")
+        assertContains(text, "СИЛ")
         assertContains(text, "Телосложение")
+        assertContains(text, "Выберите Предысторию")
         assertEquals(text, execute(
             "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42",
             "--choice", "cairn-2e.character.background=roll",

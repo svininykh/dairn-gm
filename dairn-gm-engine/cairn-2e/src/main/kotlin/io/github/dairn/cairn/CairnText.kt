@@ -2,6 +2,7 @@ package io.github.dairn.cairn
 
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
+import java.text.MessageFormat
 import java.util.Properties
 
 internal class CairnText(languageTag: String) {
@@ -18,6 +19,8 @@ internal class CairnText(languageTag: String) {
         ?: error("Missing Cairn 2e text: $key")
 
     fun containsOwn(key: String): Boolean = (localized ?: fallback).containsKey(key)
+
+    fun format(key: String, vararg arguments: Any): String = MessageFormat(get(key)).format(arguments)
 
     private fun loadCatalogs(languageTag: String? = null): Properties = Properties().also { merged ->
         catalogs.forEach { catalog ->

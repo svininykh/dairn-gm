@@ -12,22 +12,23 @@ data class CairnCharacter(
     val backgroundResults: List<ResolvedBackgroundTable>,
     val traits: List<RolledCharacterTrait>,
     val bond: ResolvedBond,
+    private val labels: Map<String, String>,
 ) : ProcessArtifact {
     override val type: String = "cairn-2e.character"
     override val fields: List<ArtifactField>
         get() = listOf(
-            ArtifactField("Name", name),
-            ArtifactField("Age", age),
-            ArtifactField("Background", background.name),
-            ArtifactField("STR", attributes.getValue(Attribute.STRENGTH)),
-            ArtifactField("DEX", attributes.getValue(Attribute.DEXTERITY)),
-            ArtifactField("WIL", attributes.getValue(Attribute.WILLPOWER)),
-            ArtifactField("HP", hitProtection),
-            ArtifactField("GP", goldPieces),
-            ArtifactField("Equipment", background.startingEquipment),
-            ArtifactField("Background Results", backgroundResults.map(ResolvedBackgroundTable::text)),
+            ArtifactField(labels.getValue("name"), name),
+            ArtifactField(labels.getValue("age"), age),
+            ArtifactField(labels.getValue("background"), background.name),
+            ArtifactField(labels.getValue("str"), attributes.getValue(Attribute.STRENGTH)),
+            ArtifactField(labels.getValue("dex"), attributes.getValue(Attribute.DEXTERITY)),
+            ArtifactField(labels.getValue("wil"), attributes.getValue(Attribute.WILLPOWER)),
+            ArtifactField(labels.getValue("hp"), hitProtection),
+            ArtifactField(labels.getValue("gp"), goldPieces),
+            ArtifactField(labels.getValue("equipment"), background.startingEquipment),
+            ArtifactField(labels.getValue("background-results"), backgroundResults.map(ResolvedBackgroundTable::text)),
             *traits.map { ArtifactField(it.name, it.result) }.toTypedArray(),
-            ArtifactField("Bond", bond.text),
+            ArtifactField(labels.getValue("bond"), bond.text),
         )
 }
 
@@ -92,8 +93,8 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
     override fun start(): InteractiveStep.Waiting {
         val request = ProcessRequest.Choose(
             RequestId("cairn-2e.character.background"),
-            "Choose a Background or roll d20",
-            listOf(ChoiceOption("roll", "Roll d20")) +
+            text.get("process.background.prompt"),
+            listOf(ChoiceOption("roll", text.get("process.background.roll"))) +
                 backgrounds.map { ChoiceOption(it.id, it.name) },
         )
         return InteractiveStep.Waiting(CairnCreationState.AwaitingBackground(request), request)
@@ -119,7 +120,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
         if (selected == "roll") {
             val request = ProcessRequest.Roll(
                 RequestId("cairn-2e.character.background-roll"),
-                "Roll a Background",
+                text.get("process.background-roll.prompt"),
                 listOf(RollSpec("background", DiceExpression(1, 20))),
             )
             return InteractiveStep.Waiting(CairnCreationState.AwaitingBackgroundRoll(request), request)
@@ -138,7 +139,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
     private fun requestName(background: CharacterBackground): InteractiveStep.Waiting {
         val request = ProcessRequest.Choose(
             RequestId("cairn-2e.character.name"),
-            "Choose a name for ${background.name}",
+            text.format("process.name.prompt", background.name),
             background.names.mapIndexed { index, name -> ChoiceOption(index.toString(), name) },
         )
         return InteractiveStep.Waiting(CairnCreationState.AwaitingName(CairnDraft(background = background), request), request)
@@ -152,7 +153,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
         val background = requireNotNull(state.draft.background)
         val request = ProcessRequest.Roll(
             RequestId("cairn-2e.character.background-tables"),
-            "Roll on both ${background.name} tables",
+            text.format("process.background-tables.prompt", background.name),
             listOf(
                 RollSpec("gold", DiceExpression(3, 6)),
                 RollSpec("background-table-1", DiceExpression(1, 6)),
@@ -181,7 +182,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
         }
         val request = ProcessRequest.Roll(
             RequestId("cairn-2e.character.abilities"),
-            "Roll Attributes and Hit Protection",
+            text.get("process.abilities.prompt"),
             listOf(
                 RollSpec("str", DiceExpression(3, 6)),
                 RollSpec("dex", DiceExpression(3, 6)),
@@ -205,12 +206,12 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
         val totals = rolledTotals(state.request, response)
         val request = ProcessRequest.Choose(
             RequestId("cairn-2e.character.attribute-swap"),
-            "Keep attributes in order or swap one pair",
+            text.get("process.swap.prompt"),
             listOf(
-                ChoiceOption("keep", "Keep STR/DEX/WIL"),
-                ChoiceOption("str-dex", "Swap STR and DEX"),
-                ChoiceOption("str-wil", "Swap STR and WIL"),
-                ChoiceOption("dex-wil", "Swap DEX and WIL"),
+                ChoiceOption("keep", text.get("process.swap.keep")),
+                ChoiceOption("str-dex", text.get("process.swap.str-dex")),
+                ChoiceOption("str-wil", text.get("process.swap.str-wil")),
+                ChoiceOption("dex-wil", text.get("process.swap.dex-wil")),
             ),
         )
         val draft = state.draft.copy(
@@ -233,7 +234,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
         }
         val request = ProcessRequest.Roll(
             RequestId("cairn-2e.character.traits-and-bond"),
-            "Roll character Traits and Bond",
+            text.get("process.traits-bond.prompt"),
             CairnCharacterData.traits.map { RollSpec("trait-${it.id}", DiceExpression(1, 10)) } +
                 RollSpec("bond", DiceExpression(1, 20)),
         )
@@ -254,7 +255,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
         }
         val request = ProcessRequest.Roll(
             RequestId("cairn-2e.character.age"),
-            "Roll Age",
+            text.get("process.age.prompt"),
             listOf(RollSpec("age", DiceExpression(2, 20, 10))),
         )
         val draft = state.draft.copy(
@@ -282,6 +283,10 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
                 backgroundResults = state.draft.backgroundResults,
                 traits = state.draft.traits,
                 bond = requireNotNull(state.draft.bond),
+                labels = listOf(
+                    "name", "age", "background", "str", "dex", "wil", "hp", "gp",
+                    "equipment", "background-results", "bond",
+                ).associateWith { text.get("field.$it") },
             ),
         )
     }

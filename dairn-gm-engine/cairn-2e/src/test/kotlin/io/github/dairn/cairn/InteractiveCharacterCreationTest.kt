@@ -139,6 +139,7 @@ class InteractiveCharacterCreationTest {
         val process = CairnInteractiveCharacterCreation("ru")
         val started = process.start()
         val backgrounds = assertIs<ProcessRequest.Choose>(started.request)
+        assertEquals("Выберите Предысторию или бросьте к20", backgrounds.prompt)
         assertEquals("Ремесленник", backgrounds.options.single { it.id == "aurifex" }.label)
 
         val namesStep = assertIs<InteractiveStep.Waiting>(
