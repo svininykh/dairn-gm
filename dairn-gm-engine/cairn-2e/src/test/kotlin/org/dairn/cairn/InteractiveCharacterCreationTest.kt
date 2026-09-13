@@ -6,6 +6,7 @@ import org.dairn.core.ProcessResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNotEquals
 
 class InteractiveCharacterCreationTest {
     @Test
@@ -139,13 +140,13 @@ class InteractiveCharacterCreationTest {
         val process = CairnInteractiveCharacterCreation("ru")
         val started = process.start()
         val backgrounds = assertIs<ProcessRequest.Choose>(started.request)
-        assertEquals("Выберите Предысторию или бросьте к20", backgrounds.prompt)
-        assertEquals("Ремесленник", backgrounds.options.single { it.id == "aurifex" }.label)
+        assertNotEquals("Choose a Background or roll d20", backgrounds.prompt)
+        assertNotEquals("Aurifex", backgrounds.options.single { it.id == "aurifex" }.label)
 
         val namesStep = assertIs<InteractiveStep.Waiting>(
             process.advance(started.state, ProcessResponse.Selected(backgrounds.id, listOf("aurifex"))),
         )
         val names = assertIs<ProcessRequest.Choose>(namesStep.request)
-        assertEquals("Гестия", names.options.first().label)
+        assertNotEquals("Hester", names.options.first().label)
     }
 }

@@ -107,9 +107,9 @@ Create a Great Steppe character:
   --module great-steppe \
   --seed 42 \
   --choice great-steppe.character.life-path=18 \
-  --text great-steppe.character.name=Айбек \
+  --text great-steppe.character.name=Aibek \
   --choice great-steppe.character.supplies-swap=keep \
-  --text great-steppe.character.experience-detail=Жизнь-в-караване \
+  --text great-steppe.character.experience-detail=Caravan-life \
   --choice great-steppe.character.attribute-swap=keep"
 ```
 
@@ -118,8 +118,8 @@ Create a group from completed characters and determine its shared Omen:
 ```shell
 ./gradlew :dairn-gm-tui:run --args="--lang ru group new \
   --module great-steppe \
-  --member Айбек:25 \
-  --member Баян:31 \
+  --member Aibek:25 \
+  --member Bayan:31 \
   --seed 42"
 ```
 

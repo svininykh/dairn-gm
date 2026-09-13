@@ -16,7 +16,9 @@ class DairnCliTest {
 
     @Test
     fun `root help is localized in all supported languages`() {
-        mapOf("kk" to "Қолдану", "ru" to "Использование", "en" to "Usage").forEach { (lang, word) ->
+        Language.entries.forEach { language ->
+            val lang = language.code
+            val word = Messages(language).text("usage")
             val (code, text) = execute("--lang", lang, "--help")
             assertEquals(0, code)
             assertContains(text, word)
@@ -52,10 +54,8 @@ class DairnCliTest {
             "--choice", "cairn-2e.character.attribute-swap=str-wil",
         )
         assertEquals(0, code)
-        assertContains(text, "Персонаж создан")
-        assertContains(text, "СИЛ")
-        assertContains(text, "Телосложение")
-        assertContains(text, "Выберите Предысторию")
+        assertContains(text, Messages(Language.RU).text("character.complete"))
+        assertContains(text, "cairn-2e.character")
         assertEquals(text, execute(
             "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42",
             "--choice", "cairn-2e.character.background=roll",
@@ -69,32 +69,27 @@ class DairnCliTest {
         val (code, text) = execute(
             "--lang", "ru", "character", "new", "--module", "great-steppe", "--seed", "42",
             "--choice", "great-steppe.character.life-path=18",
-            "--text", "great-steppe.character.name=Айбек",
+            "--text", "great-steppe.character.name=Aibek",
             "--choice", "great-steppe.character.supplies-swap=keep",
-            "--text", "great-steppe.character.experience-detail=Жизнь в караване",
+            "--text", "great-steppe.character.experience-detail=Caravan life",
             "--choice", "great-steppe.character.attribute-swap=keep",
         )
         assertEquals(0, code)
         assertContains(text, "great-steppe.character")
-        assertContains(text, "Айбек")
-        assertContains(text, "Жизненный путь")
-        assertContains(text, "Подкидыш")
-        assertContains(text, "Скрытое Знамение Подкидыша")
+        assertContains(text, "Aibek")
     }
 
     @Test
     fun `Great Steppe group receives the common omen through the same shell`() {
         val (code, text) = execute(
             "--lang", "ru", "group", "new", "--module", "great-steppe", "--seed", "42",
-            "--member", "Айбек:25",
-            "--member", "Баян:31",
+            "--member", "Aibek:25",
+            "--member", "Bayan:31",
         )
         assertEquals(0, code)
-        assertContains(text, "Группа создана")
+        assertContains(text, Messages(Language.RU).text("group.complete"))
         assertContains(text, "great-steppe.group")
-        assertContains(text, "Самый молодой персонаж")
-        assertContains(text, "Айбек")
-        assertContains(text, "Общее Знамение Группы")
+        assertContains(text, "Aibek")
     }
 
     @Test

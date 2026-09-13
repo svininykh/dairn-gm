@@ -16,13 +16,13 @@ class GreatSteppeCharacterCreationTest {
         val process = GreatSteppeCharacterCreation("ru")
         var step: InteractiveStep = process.start()
         step = choose(process, step, "18")
-        step = enter(process, step, "Айбек")
+        step = enter(process, step, "Aibek")
         step = roll(process, step, mapOf(
             "water" to 1, "food" to 2, "fire" to 3,
             "weapon" to 4, "travel-gear" to 5, "tool" to 6,
         ))
         step = choose(process, step, "water-fire")
-        step = enter(process, step, "Жизнь в караване")
+        step = enter(process, step, "Caravan life")
         step = roll(process, step, mapOf("str" to 8, "dex" to 12, "wil" to 10, "hp" to 4))
         step = choose(process, step, "str-wil")
         step = roll(process, step, mapOf(
@@ -36,11 +36,11 @@ class GreatSteppeCharacterCreationTest {
         val completed = assertIs<InteractiveStep.Completed>(step)
         val character = assertIs<GreatSteppeCharacter>(completed.artifact)
         assertEquals(listOf(10, 12, 8), character.attributes)
-        assertEquals("Айбек", character.name)
+        assertEquals("Aibek", character.name)
         assertEquals(18, character.lifePath.roll)
         assertEquals(25, character.age)
         assertEquals(1, assertNotNull(character.secretOmen).roll)
-        assertFalse(character.fields.any { it.label.contains("общее знамение", ignoreCase = true) })
+        assertFalse(character.fields.any { it.label == GreatSteppeText("ru").get("field.group-omen") })
     }
 
     @Test
@@ -48,7 +48,7 @@ class GreatSteppeCharacterCreationTest {
         val process = GreatSteppeCharacterCreation("ru")
         var step: InteractiveStep = process.start()
         step = choose(process, step, "1")
-        step = enter(process, step, "Баян")
+        step = enter(process, step, "Bayan")
         step = roll(process, step, mapOf(
             "water" to 1, "food" to 1, "fire" to 1,
             "weapon" to 1, "travel-gear" to 1, "tool" to 1,

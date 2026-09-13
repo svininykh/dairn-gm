@@ -10,8 +10,8 @@ class GreatSteppeGroupCreationTest {
     fun `youngest character determines the common omen`() {
         val process = GreatSteppeGroupCreation(
             listOf(
-                GroupMemberInput("aibek", "Айбек", 25),
-                GroupMemberInput("bayan", "Баян", 31),
+                GroupMemberInput("aibek", "Aibek", 25),
+                GroupMemberInput("bayan", "Bayan", 31),
             ),
             "ru",
         )
@@ -21,7 +21,7 @@ class GreatSteppeGroupCreationTest {
             process.advance(waiting.state, ProcessResponse.Rolled(request.id, mapOf("omen" to 4))),
         )
         val group = assertIs<GreatSteppeGroup>(completed.artifact)
-        assertEquals("Айбек", group.youngest.name)
+        assertEquals("Aibek", group.youngest.name)
         assertEquals(4, group.omen.roll)
         assertEquals("great-steppe.group", group.type)
     }
@@ -30,9 +30,9 @@ class GreatSteppeGroupCreationTest {
     fun `equal youngest ages require an explicit choice`() {
         val process = GreatSteppeGroupCreation(
             listOf(
-                GroupMemberInput("aibek", "Айбек", 25),
-                GroupMemberInput("bayan", "Баян", 25),
-                GroupMemberInput("dana", "Дана", 30),
+                GroupMemberInput("aibek", "Aibek", 25),
+                GroupMemberInput("bayan", "Bayan", 25),
+                GroupMemberInput("dana", "Dana", 30),
             ),
             "ru",
         )
@@ -46,6 +46,6 @@ class GreatSteppeGroupCreationTest {
         val completed = assertIs<InteractiveStep.Completed>(
             process.advance(rollWaiting.state, ProcessResponse.Rolled(roll.id, mapOf("omen" to 1))),
         )
-        assertEquals("Баян", assertIs<GreatSteppeGroup>(completed.artifact).youngest.name)
+        assertEquals("Bayan", assertIs<GreatSteppeGroup>(completed.artifact).youngest.name)
     }
 }
