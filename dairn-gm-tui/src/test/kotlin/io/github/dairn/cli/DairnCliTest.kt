@@ -30,6 +30,8 @@ class DairnCliTest {
             arrayOf("module", "list", "-h"),
             arrayOf("character", "--help"),
             arrayOf("character", "new", "--help"),
+            arrayOf("group", "--help"),
+            arrayOf("group", "new", "--help"),
         ).forEach { args -> assertEquals(0, execute(*args).first) }
     }
 
@@ -76,6 +78,21 @@ class DairnCliTest {
         assertContains(text, "great-steppe.character")
         assertContains(text, "Айбек")
         assertContains(text, "Жизненный путь")
+    }
+
+    @Test
+    fun `Great Steppe group receives the common omen through the same shell`() {
+        val (code, text) = execute(
+            "--lang", "ru", "group", "new", "--module", "great-steppe", "--seed", "42",
+            "--member", "Айбек:25",
+            "--member", "Баян:31",
+        )
+        assertEquals(0, code)
+        assertContains(text, "Группа создана")
+        assertContains(text, "great-steppe.group")
+        assertContains(text, "Самый молодой персонаж")
+        assertContains(text, "Айбек")
+        assertContains(text, "Общее Знамение Группы")
     }
 
     @Test

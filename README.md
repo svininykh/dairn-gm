@@ -27,7 +27,7 @@ The engine does not persist process state. A TUI, server, StoryTeller, or StoryM
 and supplies random results and user choices as explicit commands.
 
 Rulesets advertise optional capabilities through their module API. The TUI discovers character
-creation through `InteractiveCharacterCreationModule`; it does not contain ruleset ID checks or own rules logic.
+and group creation through capability interfaces; it does not contain ruleset ID checks or own rules logic.
 
 ## Run
 
@@ -43,6 +43,7 @@ Examples:
 ./gradlew :dairn-gm-tui:run --args="--lang kk --help"
 ./gradlew :dairn-gm-tui:run --args="--lang ru module list"
 ./gradlew :dairn-gm-tui:run --args="--lang en character new --module cairn-2e"
+./gradlew :dairn-gm-tui:run --args="--lang ru group new --module great-steppe --member Айбек:25 --member Баян:31 --seed 42"
 ```
 
 Cairn 2e character creation supports interactive name and attribute-swap prompts. It can also be run
@@ -59,6 +60,11 @@ personal character data, free-form name, attributes, HP, traits, bond, and age a
 Cairn's background-driven process. The group Omen is intentionally excluded from a single-character
 artifact because it is determined only after comparing the ages of all characters.
 
+Great Steppe group creation accepts completed characters as explicit `name:age` inputs, determines
+the youngest character, and rolls the shared group Omen. If several characters share the lowest age,
+the process requests an explicit choice between them. The resulting group is returned as an artifact;
+nothing is persisted by the engine or TUI.
+
 Cairn-derived rules data and attribution are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 Rules structure is stored as JSON under each ruleset's `src/main/resources` directory, not as Kotlin
@@ -67,8 +73,8 @@ localization key when resources are loaded. Background-table results are resolve
 stateless transition and attached to the completed character.
 
 The ruleset-neutral interaction protocol in `core` represents shell interaction as `Roll`, `Choose`,
-or `EnterText` requests and typed responses. Existing Cairn creation will be migrated to this protocol
-before a different Great Steppe creation process is introduced.
+or `EnterText` requests and typed responses. Both rulesets use this protocol for their implemented
+creation processes.
 
 The Cairn module exposes an interactive-process implementation that owns its models, dice expressions,
 request order, and validation. The TUI executes the neutral protocol without Cairn-specific logic.
