@@ -65,13 +65,11 @@ class DairnCliTest {
     @Test
     fun `Great Steppe uses its own creation process through the same shell`() {
         val (code, text) = execute(
-            "character", "new", "--module", "great-steppe", "--seed", "42",
-            "--text", "great-steppe.character.lifepath=Подкидыш",
-            "--text", "great-steppe.character.experience=Жизнь в караване",
-            "--text", "great-steppe.character.inventory=Посох, припасы",
+            "--lang", "ru", "character", "new", "--module", "great-steppe", "--seed", "42",
+            "--choice", "great-steppe.character.life-path=18",
             "--text", "great-steppe.character.name=Айбек",
-            "--text", "great-steppe.character.appearance=Высокий, спокойный",
-            "--text", "great-steppe.character.bond=Долг перед родом",
+            "--choice", "great-steppe.character.supplies-swap=keep",
+            "--text", "great-steppe.character.experience-detail=Жизнь в караване",
             "--choice", "great-steppe.character.attribute-swap=keep",
         )
         assertEquals(0, code)
