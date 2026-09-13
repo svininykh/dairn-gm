@@ -71,11 +71,12 @@ and every deprived day after the first adds one `Fatigue`. Fire is not treated a
 cause because the pinned rules do not define that mechanic yet. A calling shell may account for fire
 when deciding whether full rest was possible.
 
-Inventory load is represented by a ruleset-neutral `InventoryLoad` in `core`: entries declare the
-slots they occupy and Fatigue occupies one slot per point. Great Steppe rules keep the confirmed
-capacity of 10 outside that generic model. Gaining Fatigue reports how many equipment slots must be
-freed before it can be applied; evaluating a resulting full load produces the effect that sets HP to
-zero. The shell remains responsible for choosing discarded equipment and applying returned effects.
+Inventory load is represented by a ruleset-neutral `InventoryLoad` in `core`: entries only declare
+the slots they occupy. The core has no concept of Fatigue. Great Steppe represents each Fatigue as
+its own namespaced one-slot entry and keeps the confirmed capacity of 10 in its module. Gaining
+Fatigue reports how many slots must be freed before it can be applied; evaluating a resulting full
+load produces the effect that sets HP to zero. The shell remains responsible for choosing discarded
+equipment and applying returned effects.
 
 Cairn-derived rules data and attribution are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 

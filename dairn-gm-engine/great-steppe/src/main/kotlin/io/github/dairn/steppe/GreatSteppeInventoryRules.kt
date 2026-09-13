@@ -1,6 +1,7 @@
 package io.github.dairn.steppe
 
 import io.github.dairn.core.GameEffect
+import io.github.dairn.core.InventoryEntry
 import io.github.dairn.core.InventoryLoad
 import io.github.dairn.core.Rule
 
@@ -42,3 +43,13 @@ private fun requireGreatSteppeCapacity(inventory: InventoryLoad) {
 }
 
 const val GREAT_STEPPE_INVENTORY_CAPACITY = 10
+
+private const val FATIGUE_ENTRY_PREFIX = "great-steppe.fatigue."
+
+/** Great Steppe represents each Fatigue as a namespaced one-slot core inventory entry. */
+fun greatSteppeFatigueEntry(sequence: Int): InventoryEntry {
+    require(sequence > 0) { "Fatigue sequence must be positive" }
+    return InventoryEntry("$FATIGUE_ENTRY_PREFIX$sequence", slots = 1)
+}
+
+fun InventoryEntry.isGreatSteppeFatigue(): Boolean = id.startsWith(FATIGUE_ENTRY_PREFIX)

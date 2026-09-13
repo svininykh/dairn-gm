@@ -14,19 +14,16 @@ data class InventoryEntry(
 data class InventoryLoad(
     val capacity: Int,
     val entries: List<InventoryEntry>,
-    val fatigue: Int = 0,
 ) {
     init {
         require(capacity > 0) { "Inventory capacity must be positive" }
-        require(fatigue >= 0) { "Fatigue cannot be negative" }
         require(entries.map(InventoryEntry::id).distinct().size == entries.size) {
             "Inventory entry ids must be unique"
         }
         require(occupiedSlots <= capacity) { "Inventory load exceeds capacity" }
     }
 
-    val equipmentSlots: Int get() = entries.sumOf(InventoryEntry::slots)
-    val occupiedSlots: Int get() = equipmentSlots + fatigue
+    val occupiedSlots: Int get() = entries.sumOf(InventoryEntry::slots)
     val freeSlots: Int get() = capacity - occupiedSlots
     val isFull: Boolean get() = occupiedSlots == capacity
 }
