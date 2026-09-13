@@ -15,7 +15,7 @@ class InteractiveCharacterCreationTest {
         assertEquals(8, CairnCharacterData.traits.size)
         assertEquals((1..20).toList(), CairnCharacterData.bonds.map(Bond::roll))
         assertEquals((1..20).toList(), CairnCharacterData.omens.map(Omen::roll))
-        CairnCharacterData.traits.forEach { assertEquals(10, it.results.size, it.name) }
+        CairnCharacterData.traits.forEach { assertEquals(10, it.resultKeys.size, it.id) }
         CairnCharacterData.backgrounds.forEach { background ->
             assertEquals(10, background.names.size, background.name)
             assertEquals(2, CairnCharacterData.backgroundTables.getValue(background.id).tables.size)
@@ -24,20 +24,21 @@ class InteractiveCharacterCreationTest {
 
     @Test
     fun `process follows the second edition creation order`() {
-        var waiting = CairnInteractiveCharacterCreation.start()
+        val process = CairnInteractiveCharacterCreation()
+        var waiting = process.start()
         val backgroundChoice = assertIs<ProcessRequest.Choose>(waiting.request)
         assertEquals("roll", backgroundChoice.options.first().id)
         assertEquals(21, backgroundChoice.options.size)
 
         waiting = assertIs(
-            CairnInteractiveCharacterCreation.advance(
+            process.advance(
                 waiting.state,
                 ProcessResponse.Selected(backgroundChoice.id, listOf("roll")),
             ),
         )
         val backgroundRoll = assertIs<ProcessRequest.Roll>(waiting.request)
         waiting = assertIs(
-            CairnInteractiveCharacterCreation.advance(
+            process.advance(
                 waiting.state,
                 ProcessResponse.Rolled(backgroundRoll.id, mapOf("background" to 1)),
             ),
@@ -46,14 +47,14 @@ class InteractiveCharacterCreationTest {
         assertEquals("Hestia", names.options.first().label)
 
         waiting = assertIs(
-            CairnInteractiveCharacterCreation.advance(
+            process.advance(
                 waiting.state,
                 ProcessResponse.Selected(names.id, listOf("1")),
             ),
         )
         val backgroundTables = assertIs<ProcessRequest.Roll>(waiting.request)
         waiting = assertIs(
-            CairnInteractiveCharacterCreation.advance(
+            process.advance(
                 waiting.state,
                 ProcessResponse.Rolled(
                     backgroundTables.id,
@@ -64,7 +65,7 @@ class InteractiveCharacterCreationTest {
         val abilities = assertIs<ProcessRequest.Roll>(waiting.request)
         assertEquals(listOf("str", "dex", "wil", "hp"), abilities.rolls.map { it.id })
         waiting = assertIs(
-            CairnInteractiveCharacterCreation.advance(
+            process.advance(
                 waiting.state,
                 ProcessResponse.Rolled(
                     abilities.id,
@@ -74,14 +75,14 @@ class InteractiveCharacterCreationTest {
         )
         val swap = assertIs<ProcessRequest.Choose>(waiting.request)
         waiting = assertIs(
-            CairnInteractiveCharacterCreation.advance(
+            process.advance(
                 waiting.state,
                 ProcessResponse.Selected(swap.id, listOf("str-wil")),
             ),
         )
         val traitsAndBond = assertIs<ProcessRequest.Roll>(waiting.request)
         waiting = assertIs(
-            CairnInteractiveCharacterCreation.advance(
+            process.advance(
                 waiting.state,
                 ProcessResponse.Rolled(
                     traitsAndBond.id,
@@ -101,7 +102,7 @@ class InteractiveCharacterCreationTest {
         )
         val age = assertIs<ProcessRequest.Roll>(waiting.request)
         val completed = assertIs<InteractiveStep.Completed>(
-            CairnInteractiveCharacterCreation.advance(
+            process.advance(
                 waiting.state,
                 ProcessResponse.Rolled(age.id, mapOf("age" to 27)),
             ),
@@ -119,10 +120,11 @@ class InteractiveCharacterCreationTest {
 
     @Test
     fun `background can be selected without a roll`() {
-        val started = CairnInteractiveCharacterCreation.start()
+        val process = CairnInteractiveCharacterCreation()
+        val started = process.start()
         val request = assertIs<ProcessRequest.Choose>(started.request)
         val next = assertIs<InteractiveStep.Waiting>(
-            CairnInteractiveCharacterCreation.advance(
+            process.advance(
                 started.state,
                 ProcessResponse.Selected(request.id, listOf("foundling")),
             ),

@@ -81,7 +81,8 @@ private sealed interface CairnCreationState : ProcessState {
     ) : CairnCreationState
 }
 
-object CairnInteractiveCharacterCreation : InteractiveProcess {
+class CairnInteractiveCharacterCreation(languageTag: String = "en") : InteractiveProcess {
+    private val text = CairnText(languageTag)
     override val id = ProcessId("cairn-2e.character-creation")
 
     override fun start(): InteractiveStep.Waiting {
@@ -237,7 +238,7 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
         val totals = rolledTotals(state.request, response)
         val traits = CairnCharacterData.traits.map { trait ->
             val roll = totals.getValue("trait-${trait.id}")
-            RolledCharacterTrait(trait.id, trait.name, roll, trait.results[roll - 1])
+            RolledCharacterTrait(trait.id, text.get(trait.nameKey), roll, text.get(trait.resultKeys[roll - 1]))
         }
         val request = ProcessRequest.Roll(
             RequestId("cairn-2e.character.age"),

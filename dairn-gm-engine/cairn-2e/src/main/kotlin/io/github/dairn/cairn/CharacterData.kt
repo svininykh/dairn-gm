@@ -50,7 +50,7 @@ internal object CairnCharacterData {
             "physique", "skin", "hair", "face", "speech", "clothing", "virtue", "vice",
         )) { "Cairn 2e must define the eight character trait categories in rules order" }
         traits.forEach { trait ->
-            require(trait.results.size == 10) { "${trait.id} must define exactly ten d10 results" }
+            require(trait.resultKeys.size == 10) { "${trait.id} must define exactly ten d10 results" }
         }
         require(bonds.map(Bond::roll) == (1..20).toList()) { "Cairn 2e Bonds must define d20 results 1 through 20" }
         require(omens.map(Omen::roll) == (1..20).toList()) { "Cairn 2e Omens must define d20 results 1 through 20" }
@@ -99,8 +99,8 @@ private data class TraitDocument(
 )
 
 @Serializable
-private data class TraitData(val id: String, val name: String, val results: List<String>) {
-    fun toDomain() = CharacterTrait(id, name, results)
+private data class TraitData(val id: String, val nameKey: String, val resultKeys: List<String>) {
+    fun toDomain() = CharacterTrait(id, nameKey, resultKeys)
 }
 
 @Serializable

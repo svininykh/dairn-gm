@@ -17,7 +17,7 @@ data class BackgroundTableResult(val roll: Int, val text: String)
 
 data class ResolvedBackgroundTable(val prompt: String, val roll: Int, val text: String)
 
-data class CharacterTrait(val id: String, val name: String, val results: List<String>)
+data class CharacterTrait(val id: String, val nameKey: String, val resultKeys: List<String>)
 
 data class RolledCharacterTrait(val id: String, val name: String, val roll: Int, val result: String)
 

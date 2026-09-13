@@ -52,6 +52,7 @@ class DairnCliTest {
         assertEquals(0, code)
         assertContains(text, "Персонаж создан")
         assertContains(text, "STR")
+        assertContains(text, "Телосложение")
         assertEquals(text, execute(
             "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42",
             "--choice", "cairn-2e.character.background=roll",
@@ -82,7 +83,7 @@ class DairnCliTest {
     fun `character creation is discovered by capability rather than module id`() {
         val customModule = object : InteractiveCharacterCreationModule {
             override val info = ModuleInfo(ModuleId("custom-rules"), "test", "module.custom.name")
-            override fun characterCreationProcess(languageTag: String) = CairnInteractiveCharacterCreation
+            override fun characterCreationProcess(languageTag: String) = CairnInteractiveCharacterCreation(languageTag)
         }
         val lines = mutableListOf<String>()
         val code = DairnCli(ModuleRegistry(listOf(customModule)), lines::add).run(
