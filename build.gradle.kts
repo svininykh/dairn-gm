@@ -4,7 +4,7 @@ plugins {
 }
 
 allprojects {
-    group = "io.github.dairn"
+    group = "org.dairn"
     version = "0.1.0-SNAPSHOT"
 
     repositories {

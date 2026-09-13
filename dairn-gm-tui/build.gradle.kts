@@ -15,5 +15,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("io.github.dairn.cli.MainKt")
+    mainClass.set("org.dairn.cli.MainKt")
 }
