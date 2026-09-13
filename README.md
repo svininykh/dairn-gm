@@ -106,3 +106,14 @@ Great Steppe character tables are pinned to commit `3fabe55fa366c3706a5c54614b16
 of the DAIRN: Great Steppe rules repository. The currently canonical Russian text is stored in split
 `_ru.properties` catalogs; structural JSON contains no table prose. English and Kazakh catalogs will be
 added separately rather than treating an unapproved translation as canonical.
+
+## Content license and attribution
+
+Textual game materials and table content are copyright © 2026 Andrey Svininykh and licensed under
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Cairn-derived materials retain
+attribution to *Cairn Second Edition* author Yochai Gal. Russian Cairn text is based on the official
+translation by Hex Cat studio. See [CONTENT_LICENSE.md](CONTENT_LICENSE.md) and
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for scope, sources, and pinned revisions.
+
+The software source code is not covered by `CONTENT_LICENSE.md`; its public license will be selected
+separately before release.
