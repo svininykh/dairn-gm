@@ -11,5 +11,5 @@ object Cairn2eModule : InteractiveCharacterCreationModule {
         nameKey = "module.cairn-2e.name",
     )
 
-    override val characterCreationProcess = CairnInteractiveCharacterCreation
+    override fun characterCreationProcess(languageTag: String) = CairnInteractiveCharacterCreation
 }

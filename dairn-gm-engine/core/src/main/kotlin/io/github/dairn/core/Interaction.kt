@@ -143,7 +143,7 @@ interface InteractiveProcess {
 
 /** Optional module capability for a ruleset-defined character creation process. */
 interface InteractiveCharacterCreationModule : DairnModule {
-    val characterCreationProcess: InteractiveProcess
+    fun characterCreationProcess(languageTag: String = "en"): InteractiveProcess
 }
 
 fun ProcessRequest.requireMatching(response: ProcessResponse) {

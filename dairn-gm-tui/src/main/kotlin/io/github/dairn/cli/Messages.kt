@@ -8,7 +8,7 @@ enum class Language(val code: String) {
     }
 }
 
-class Messages(private val language: Language) {
+class Messages(val language: Language) {
     fun text(key: String, vararg args: Any): String {
         val template = translations[language]?.get(key) ?: translations.getValue(Language.EN)[key] ?: key
         return template.format(*args)

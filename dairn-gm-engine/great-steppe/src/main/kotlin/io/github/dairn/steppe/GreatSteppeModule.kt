@@ -11,5 +11,5 @@ object GreatSteppeModule : InteractiveCharacterCreationModule {
         nameKey = "module.great-steppe.name",
     )
 
-    override val characterCreationProcess = GreatSteppeCharacterCreation
+    override fun characterCreationProcess(languageTag: String) = GreatSteppeCharacterCreation
 }

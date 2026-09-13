@@ -82,7 +82,7 @@ class DairnCliTest {
     fun `character creation is discovered by capability rather than module id`() {
         val customModule = object : InteractiveCharacterCreationModule {
             override val info = ModuleInfo(ModuleId("custom-rules"), "test", "module.custom.name")
-            override val characterCreationProcess = CairnInteractiveCharacterCreation
+            override fun characterCreationProcess(languageTag: String) = CairnInteractiveCharacterCreation
         }
         val lines = mutableListOf<String>()
         val code = DairnCli(ModuleRegistry(listOf(customModule)), lines::add).run(

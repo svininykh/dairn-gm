@@ -68,7 +68,7 @@ class DairnCli(
         val dice = RandomDice(seed?.let(::Random) ?: Random.Default)
         val choices = optionValues(rest, "--choice").mapNotNull(::parseAssignment).toMap()
         val texts = optionValues(rest, "--text").mapNotNull(::parseAssignment).toMap()
-        return runInteractive(creationModule.characterCreationProcess, dice, choices, texts, messages)
+        return runInteractive(creationModule.characterCreationProcess(messages.language.code), dice, choices, texts, messages)
     }
 
     private fun runInteractive(
