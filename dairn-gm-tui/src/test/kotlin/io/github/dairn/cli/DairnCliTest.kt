@@ -45,6 +45,7 @@ class DairnCliTest {
     fun `character new completes reproducibly for Cairn`() {
         val (code, text) = execute(
             "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42",
+            "--choice", "cairn-2e.character.background=roll",
             "--choice", "cairn-2e.character.name=1",
             "--choice", "cairn-2e.character.attribute-swap=str-wil",
         )
@@ -53,6 +54,7 @@ class DairnCliTest {
         assertContains(text, "STR")
         assertEquals(text, execute(
             "--lang", "ru", "character", "new", "--module", "cairn-2e", "--seed", "42",
+            "--choice", "cairn-2e.character.background=roll",
             "--choice", "cairn-2e.character.name=1",
             "--choice", "cairn-2e.character.attribute-swap=str-wil",
         ).second)
@@ -86,6 +88,7 @@ class DairnCliTest {
         val code = DairnCli(ModuleRegistry(listOf(customModule)), lines::add).run(
             arrayOf(
                 "character", "new", "--module", "custom-rules", "--seed", "7",
+                "--choice", "cairn-2e.character.background=roll",
                 "--choice", "cairn-2e.character.name=0",
                 "--choice", "cairn-2e.character.attribute-swap=keep",
             ),

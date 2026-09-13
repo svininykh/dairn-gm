@@ -29,95 +29,167 @@ data class CairnCharacter(
         )
 }
 
+private data class CairnDraft(
+    val background: CharacterBackground? = null,
+    val name: String? = null,
+    val backgroundResults: List<ResolvedBackgroundTable> = emptyList(),
+    val attributes: List<Int> = emptyList(),
+    val hitProtection: Int? = null,
+    val traits: List<RolledCharacterTrait> = emptyList(),
+    val bond: Bond? = null,
+)
+
 private sealed interface CairnCreationState : ProcessState {
-    data class AwaitingRolls(val request: ProcessRequest.Roll) : CairnCreationState
-    data class AwaitingName(val generated: Generated, val request: ProcessRequest.Choose) : CairnCreationState
+    val request: ProcessRequest
+
+    data class AwaitingBackground(
+        override val request: ProcessRequest.Choose,
+    ) : CairnCreationState
+
+    data class AwaitingBackgroundRoll(
+        override val request: ProcessRequest.Roll,
+    ) : CairnCreationState
+
+    data class AwaitingName(
+        val draft: CairnDraft,
+        override val request: ProcessRequest.Choose,
+    ) : CairnCreationState
+
+    data class AwaitingBackgroundTables(
+        val draft: CairnDraft,
+        override val request: ProcessRequest.Roll,
+    ) : CairnCreationState
+
+    data class AwaitingAbilities(
+        val draft: CairnDraft,
+        override val request: ProcessRequest.Roll,
+    ) : CairnCreationState
+
     data class AwaitingSwap(
-        val generated: Generated,
-        val name: String,
-        val backgroundResults: List<ResolvedBackgroundTable>,
-        val request: ProcessRequest.Choose,
+        val draft: CairnDraft,
+        override val request: ProcessRequest.Choose,
+    ) : CairnCreationState
+
+    data class AwaitingTraitsAndBond(
+        val draft: CairnDraft,
+        override val request: ProcessRequest.Roll,
+    ) : CairnCreationState
+
+    data class AwaitingAge(
+        val draft: CairnDraft,
+        override val request: ProcessRequest.Roll,
     ) : CairnCreationState
 }
-
-private data class Generated(
-    val background: CharacterBackground,
-    val attributes: List<Int>,
-    val hitProtection: Int,
-    val age: Int,
-    val backgroundTableRolls: List<Int>,
-    val traitRolls: List<Int>,
-    val bondRoll: Int,
-)
 
 object CairnInteractiveCharacterCreation : InteractiveProcess {
     override val id = ProcessId("cairn-2e.character-creation")
 
-    private val rollsRequest = ProcessRequest.Roll(
-        id = RequestId("cairn-2e.character.rolls"),
-        prompt = "Roll character details",
-        rolls = listOf(
-            RollSpec("background", DiceExpression(1, 20)),
-            RollSpec("str", DiceExpression(3, 6)),
-            RollSpec("dex", DiceExpression(3, 6)),
-            RollSpec("wil", DiceExpression(3, 6)),
-            RollSpec("hp", DiceExpression(1, 6)),
-            RollSpec("age", DiceExpression(2, 20, 10)),
-            RollSpec("background-table-1", DiceExpression(1, 6)),
-            RollSpec("background-table-2", DiceExpression(1, 6)),
-            *CairnCharacterData.traits.map { RollSpec("trait-${it.id}", DiceExpression(1, 10)) }.toTypedArray(),
-            RollSpec("bond", DiceExpression(1, 20)),
-        ),
-    )
-
-    override fun start(): InteractiveStep.Waiting = InteractiveStep.Waiting(
-        CairnCreationState.AwaitingRolls(rollsRequest),
-        rollsRequest,
-    )
+    override fun start(): InteractiveStep.Waiting {
+        val request = ProcessRequest.Choose(
+            RequestId("cairn-2e.character.background"),
+            "Choose a Background or roll d20",
+            listOf(ChoiceOption("roll", "Roll d20")) +
+                CairnCharacterData.backgrounds.map { ChoiceOption(it.id, it.name) },
+        )
+        return InteractiveStep.Waiting(CairnCreationState.AwaitingBackground(request), request)
+    }
 
     override fun advance(state: ProcessState, response: ProcessResponse): InteractiveStep = when (state) {
-        is CairnCreationState.AwaitingRolls -> acceptRolls(state, response)
+        is CairnCreationState.AwaitingBackground -> acceptBackground(state, response)
+        is CairnCreationState.AwaitingBackgroundRoll -> acceptBackgroundRoll(state, response)
         is CairnCreationState.AwaitingName -> acceptName(state, response)
+        is CairnCreationState.AwaitingBackgroundTables -> acceptBackgroundTables(state, response)
+        is CairnCreationState.AwaitingAbilities -> acceptAbilities(state, response)
         is CairnCreationState.AwaitingSwap -> acceptSwap(state, response)
+        is CairnCreationState.AwaitingTraitsAndBond -> acceptTraitsAndBond(state, response)
+        is CairnCreationState.AwaitingAge -> acceptAge(state, response)
         else -> throw IllegalArgumentException("State does not belong to ${id.value}")
     }
 
-    private fun acceptRolls(state: CairnCreationState.AwaitingRolls, response: ProcessResponse): InteractiveStep.Waiting {
-        state.request.requireMatching(response)
-        require(response is ProcessResponse.Rolled) { "Roll response required" }
-        val expected = state.request.rolls.map(RollSpec::id).toSet()
-        require(response.totals.keys == expected) { "Roll response must contain exactly $expected" }
-        state.request.rolls.forEach { spec ->
-            val total = response.totals.getValue(spec.id)
-            val range = (spec.dice.count + spec.dice.modifier)..(spec.dice.count * spec.dice.sides + spec.dice.modifier)
-            require(total in range) { "${spec.id} result is outside $range" }
+    private fun acceptBackground(
+        state: CairnCreationState.AwaitingBackground,
+        response: ProcessResponse,
+    ): InteractiveStep.Waiting {
+        val selected = selectedOption(state.request, response)
+        if (selected == "roll") {
+            val request = ProcessRequest.Roll(
+                RequestId("cairn-2e.character.background-roll"),
+                "Roll a Background",
+                listOf(RollSpec("background", DiceExpression(1, 20))),
+            )
+            return InteractiveStep.Waiting(CairnCreationState.AwaitingBackgroundRoll(request), request)
         }
-        val background = CairnCharacterData.backgrounds[response.totals.getValue("background") - 1]
-        val generated = Generated(
-            background = background,
-            attributes = listOf("str", "dex", "wil").map(response.totals::getValue),
-            hitProtection = response.totals.getValue("hp"),
-            age = response.totals.getValue("age"),
-            backgroundTableRolls = listOf("background-table-1", "background-table-2").map(response.totals::getValue),
-            traitRolls = CairnCharacterData.traits.map { response.totals.getValue("trait-${it.id}") },
-            bondRoll = response.totals.getValue("bond"),
-        )
+        return requestName(CairnCharacterData.backgrounds.single { it.id == selected })
+    }
+
+    private fun acceptBackgroundRoll(
+        state: CairnCreationState.AwaitingBackgroundRoll,
+        response: ProcessResponse,
+    ): InteractiveStep.Waiting {
+        val totals = rolledTotals(state.request, response)
+        return requestName(CairnCharacterData.backgrounds[totals.getValue("background") - 1])
+    }
+
+    private fun requestName(background: CharacterBackground): InteractiveStep.Waiting {
         val request = ProcessRequest.Choose(
             RequestId("cairn-2e.character.name"),
             "Choose a name for ${background.name}",
             background.names.mapIndexed { index, name -> ChoiceOption(index.toString(), name) },
         )
-        return InteractiveStep.Waiting(CairnCreationState.AwaitingName(generated, request), request)
+        return InteractiveStep.Waiting(CairnCreationState.AwaitingName(CairnDraft(background = background), request), request)
     }
 
-    private fun acceptName(state: CairnCreationState.AwaitingName, response: ProcessResponse): InteractiveStep.Waiting {
-        state.request.requireMatching(response)
-        require(response is ProcessResponse.Selected && response.optionIds.size == 1) { "One selected name is required" }
-        val option = state.request.options.single { it.id == response.optionIds.single() }
-        val source = CairnCharacterData.backgroundTables.getValue(state.generated.background.id)
-        val results = source.tables.zip(state.generated.backgroundTableRolls).map { (table, roll) ->
+    private fun acceptName(
+        state: CairnCreationState.AwaitingName,
+        response: ProcessResponse,
+    ): InteractiveStep.Waiting {
+        val option = state.request.options.single { it.id == selectedOption(state.request, response) }
+        val background = requireNotNull(state.draft.background)
+        val request = ProcessRequest.Roll(
+            RequestId("cairn-2e.character.background-tables"),
+            "Roll on both ${background.name} tables",
+            listOf(
+                RollSpec("background-table-1", DiceExpression(1, 6)),
+                RollSpec("background-table-2", DiceExpression(1, 6)),
+            ),
+        )
+        return InteractiveStep.Waiting(
+            CairnCreationState.AwaitingBackgroundTables(state.draft.copy(name = option.label), request),
+            request,
+        )
+    }
+
+    private fun acceptBackgroundTables(
+        state: CairnCreationState.AwaitingBackgroundTables,
+        response: ProcessResponse,
+    ): InteractiveStep.Waiting {
+        val totals = rolledTotals(state.request, response)
+        val source = CairnCharacterData.backgroundTables.getValue(requireNotNull(state.draft.background).id)
+        val results = source.tables.mapIndexed { index, table ->
+            val roll = totals.getValue("background-table-${index + 1}")
             ResolvedBackgroundTable(table.prompt, roll, table.results.single { it.roll == roll }.text)
         }
+        val request = ProcessRequest.Roll(
+            RequestId("cairn-2e.character.abilities"),
+            "Roll Attributes and Hit Protection",
+            listOf(
+                RollSpec("str", DiceExpression(3, 6)),
+                RollSpec("dex", DiceExpression(3, 6)),
+                RollSpec("wil", DiceExpression(3, 6)),
+                RollSpec("hp", DiceExpression(1, 6)),
+            ),
+        )
+        return InteractiveStep.Waiting(
+            CairnCreationState.AwaitingAbilities(state.draft.copy(backgroundResults = results), request),
+            request,
+        )
+    }
+
+    private fun acceptAbilities(
+        state: CairnCreationState.AwaitingAbilities,
+        response: ProcessResponse,
+    ): InteractiveStep.Waiting {
+        val totals = rolledTotals(state.request, response)
         val request = ProcessRequest.Choose(
             RequestId("cairn-2e.character.attribute-swap"),
             "Keep attributes in order or swap one pair",
@@ -128,40 +200,100 @@ object CairnInteractiveCharacterCreation : InteractiveProcess {
                 ChoiceOption("dex-wil", "Swap DEX and WIL"),
             ),
         )
-        return InteractiveStep.Waiting(CairnCreationState.AwaitingSwap(state.generated, option.label, results, request), request)
+        val draft = state.draft.copy(
+            attributes = listOf("str", "dex", "wil").map(totals::getValue),
+            hitProtection = totals.getValue("hp"),
+        )
+        return InteractiveStep.Waiting(CairnCreationState.AwaitingSwap(draft, request), request)
     }
 
-    private fun acceptSwap(state: CairnCreationState.AwaitingSwap, response: ProcessResponse): InteractiveStep.Completed {
-        state.request.requireMatching(response)
-        require(response is ProcessResponse.Selected && response.optionIds.size == 1) { "One swap choice is required" }
-        val choice = response.optionIds.single()
-        require(state.request.options.any { it.id == choice }) { "Unknown swap choice: $choice" }
-        val scores = state.generated.attributes.toMutableList()
-        val positions = when (choice) {
-            "keep" -> null
-            "str-dex" -> 0 to 1
-            "str-wil" -> 0 to 2
-            "dex-wil" -> 1 to 2
-            else -> error("Validated above")
+    private fun acceptSwap(
+        state: CairnCreationState.AwaitingSwap,
+        response: ProcessResponse,
+    ): InteractiveStep.Waiting {
+        val choice = selectedOption(state.request, response)
+        val scores = state.draft.attributes.toMutableList()
+        when (choice) {
+            "str-dex" -> scores.swap(0, 1)
+            "str-wil" -> scores.swap(0, 2)
+            "dex-wil" -> scores.swap(1, 2)
         }
-        positions?.let { (first, second) ->
-            val value = scores[first]
-            scores[first] = scores[second]
-            scores[second] = value
+        val request = ProcessRequest.Roll(
+            RequestId("cairn-2e.character.traits-and-bond"),
+            "Roll character Traits and Bond",
+            CairnCharacterData.traits.map { RollSpec("trait-${it.id}", DiceExpression(1, 10)) } +
+                RollSpec("bond", DiceExpression(1, 20)),
+        )
+        return InteractiveStep.Waiting(
+            CairnCreationState.AwaitingTraitsAndBond(state.draft.copy(attributes = scores), request),
+            request,
+        )
+    }
+
+    private fun acceptTraitsAndBond(
+        state: CairnCreationState.AwaitingTraitsAndBond,
+        response: ProcessResponse,
+    ): InteractiveStep.Waiting {
+        val totals = rolledTotals(state.request, response)
+        val traits = CairnCharacterData.traits.map { trait ->
+            val roll = totals.getValue("trait-${trait.id}")
+            RolledCharacterTrait(trait.id, trait.name, roll, trait.results[roll - 1])
         }
+        val request = ProcessRequest.Roll(
+            RequestId("cairn-2e.character.age"),
+            "Roll Age",
+            listOf(RollSpec("age", DiceExpression(2, 20, 10))),
+        )
+        val draft = state.draft.copy(
+            traits = traits,
+            bond = CairnCharacterData.bonds[totals.getValue("bond") - 1],
+        )
+        return InteractiveStep.Waiting(CairnCreationState.AwaitingAge(draft, request), request)
+    }
+
+    private fun acceptAge(
+        state: CairnCreationState.AwaitingAge,
+        response: ProcessResponse,
+    ): InteractiveStep.Completed {
+        val age = rolledTotals(state.request, response).getValue("age")
         return InteractiveStep.Completed(
             CairnCharacter(
-                name = state.name,
-                age = state.generated.age,
-                background = state.generated.background,
-                attributes = Attribute.entries.zip(scores).toMap(),
-                hitProtection = state.generated.hitProtection,
-                backgroundResults = state.backgroundResults,
-                traits = CairnCharacterData.traits.zip(state.generated.traitRolls).map { (trait, roll) ->
-                    RolledCharacterTrait(trait.id, trait.name, roll, trait.results[roll - 1])
-                },
-                bond = CairnCharacterData.bonds[state.generated.bondRoll - 1],
+                name = requireNotNull(state.draft.name),
+                age = age,
+                background = requireNotNull(state.draft.background),
+                attributes = Attribute.entries.zip(state.draft.attributes).toMap(),
+                hitProtection = requireNotNull(state.draft.hitProtection),
+                backgroundResults = state.draft.backgroundResults,
+                traits = state.draft.traits,
+                bond = requireNotNull(state.draft.bond),
             ),
         )
+    }
+
+    private fun selectedOption(request: ProcessRequest.Choose, response: ProcessResponse): String {
+        request.requireMatching(response)
+        require(response is ProcessResponse.Selected && response.optionIds.size == 1) { "One selection is required" }
+        return response.optionIds.single().also { selected ->
+            require(request.options.any { it.id == selected }) { "Unknown choice: $selected" }
+        }
+    }
+
+    private fun rolledTotals(request: ProcessRequest.Roll, response: ProcessResponse): Map<String, Int> {
+        request.requireMatching(response)
+        require(response is ProcessResponse.Rolled) { "Roll response required" }
+        val expected = request.rolls.map(RollSpec::id).toSet()
+        require(response.totals.keys == expected) { "Roll response must contain exactly $expected" }
+        request.rolls.forEach { spec ->
+            val total = response.totals.getValue(spec.id)
+            val range = (spec.dice.count + spec.dice.modifier)..(spec.dice.count * spec.dice.sides + spec.dice.modifier)
+            require(total in range) { "${spec.id} result is outside $range" }
+        }
+        return response.totals
+    }
+
+    private fun <T> MutableList<T>.swap(first: Int, second: Int) {
+        val value = this[first]
+        this[first] = this[second]
+        this[second] = value
     }
 }
