@@ -31,9 +31,21 @@ and group creation through capability interfaces; it does not contain ruleset ID
 
 ## Run
 
+The project requires JDK 21. The committed Gradle Wrapper downloads the pinned Gradle 8.8
+distribution and verifies its SHA-256 checksum.
+
 ```shell
 ./gradlew :dairn-gm-tui:run --args="--lang en module list"
 ```
+
+Run all automated checks with:
+
+```shell
+./gradlew test
+```
+
+The same test suite and Gradle Wrapper validation run in GitHub Actions for pushes to `main` and
+for pull requests.
 
 Supported languages are Kazakh (`kk`), Russian (`ru`), and English (`en`).
 
