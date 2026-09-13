@@ -10,7 +10,7 @@ data class CairnCharacter(
     val hitProtection: Int,
     val backgroundResults: List<ResolvedBackgroundTable>,
     val traits: List<RolledCharacterTrait>,
-    val bond: Bond,
+    val bond: ResolvedBond,
 ) : ProcessArtifact {
     override val type: String = "cairn-2e.character"
     override val fields: List<ArtifactField>
@@ -36,7 +36,7 @@ private data class CairnDraft(
     val attributes: List<Int> = emptyList(),
     val hitProtection: Int? = null,
     val traits: List<RolledCharacterTrait> = emptyList(),
-    val bond: Bond? = null,
+    val bond: ResolvedBond? = null,
 )
 
 private sealed interface CairnCreationState : ProcessState {
@@ -247,7 +247,9 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
         )
         val draft = state.draft.copy(
             traits = traits,
-            bond = CairnCharacterData.bonds[totals.getValue("bond") - 1],
+            bond = CairnCharacterData.bonds[totals.getValue("bond") - 1].let {
+                ResolvedBond(it.roll, text.get(it.textKey))
+            },
         )
         return InteractiveStep.Waiting(CairnCreationState.AwaitingAge(draft, request), request)
     }

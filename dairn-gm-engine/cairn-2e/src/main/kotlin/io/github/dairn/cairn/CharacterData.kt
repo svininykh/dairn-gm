@@ -107,14 +107,14 @@ private data class TraitData(val id: String, val nameKey: String, val resultKeys
 private data class BondDocument(val sourceRevision: String, val die: String, val results: List<BondData>)
 
 @Serializable
-private data class BondData(val roll: Int, val result: String) {
-    fun toDomain() = Bond(roll, result)
+private data class BondData(val roll: Int, val textKey: String) {
+    fun toDomain() = Bond(roll, textKey)
 }
 
 @Serializable
 private data class OmenDocument(val sourceRevision: String, val die: String, val results: List<OmenData>)
 
 @Serializable
-private data class OmenData(val roll: Int, val result: String) {
-    fun toDomain() = Omen(roll, result)
+private data class OmenData(val roll: Int, val textKey: String) {
+    fun toDomain() = Omen(roll, textKey)
 }

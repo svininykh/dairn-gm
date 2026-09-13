@@ -21,6 +21,8 @@ data class CharacterTrait(val id: String, val nameKey: String, val resultKeys: L
 
 data class RolledCharacterTrait(val id: String, val name: String, val roll: Int, val result: String)
 
-data class Bond(val roll: Int, val text: String)
+data class Bond(val roll: Int, val textKey: String)
 
-data class Omen(val roll: Int, val text: String)
+data class ResolvedBond(val roll: Int, val text: String)
+
+data class Omen(val roll: Int, val textKey: String)
