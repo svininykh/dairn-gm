@@ -1,0 +1,5 @@
+life-paths
+inventory
+traits
+bonds
+omens

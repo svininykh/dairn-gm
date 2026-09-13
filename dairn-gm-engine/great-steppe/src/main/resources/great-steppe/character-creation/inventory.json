@@ -1,0 +1,61 @@
+{
+  "sourceRevision": "3fabe55fa366c3706a5c54614b1682bd2f7cb5d6",
+  "sourceLanguage": "ru",
+  "die": "d6",
+  "results": [
+    {
+      "roll": 1,
+      "weaponKey": "inventory.1.weapon",
+      "travelGearKey": "inventory.1.travel-gear",
+      "toolKey": "inventory.1.tool",
+      "waterKey": "inventory.1.water",
+      "foodKey": "inventory.1.food",
+      "fireKey": "inventory.1.fire"
+    },
+    {
+      "roll": 2,
+      "weaponKey": "inventory.2.weapon",
+      "travelGearKey": "inventory.2.travel-gear",
+      "toolKey": "inventory.2.tool",
+      "waterKey": "inventory.2.water",
+      "foodKey": "inventory.2.food",
+      "fireKey": "inventory.2.fire"
+    },
+    {
+      "roll": 3,
+      "weaponKey": "inventory.3.weapon",
+      "travelGearKey": "inventory.3.travel-gear",
+      "toolKey": "inventory.3.tool",
+      "waterKey": "inventory.3.water",
+      "foodKey": "inventory.3.food",
+      "fireKey": "inventory.3.fire"
+    },
+    {
+      "roll": 4,
+      "weaponKey": "inventory.4.weapon",
+      "travelGearKey": "inventory.4.travel-gear",
+      "toolKey": "inventory.4.tool",
+      "waterKey": "inventory.4.water",
+      "foodKey": "inventory.4.food",
+      "fireKey": "inventory.4.fire"
+    },
+    {
+      "roll": 5,
+      "weaponKey": "inventory.5.weapon",
+      "travelGearKey": "inventory.5.travel-gear",
+      "toolKey": "inventory.5.tool",
+      "waterKey": "inventory.5.water",
+      "foodKey": "inventory.5.food",
+      "fireKey": "inventory.5.fire"
+    },
+    {
+      "roll": 6,
+      "weaponKey": "inventory.6.weapon",
+      "travelGearKey": "inventory.6.travel-gear",
+      "toolKey": "inventory.6.tool",
+      "waterKey": "inventory.6.water",
+      "foodKey": "inventory.6.food",
+      "fireKey": "inventory.6.fire"
+    }
+  ]
+}

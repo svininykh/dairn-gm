@@ -1,0 +1,127 @@
+{
+  "sourceRevision": "3fabe55fa366c3706a5c54614b1682bd2f7cb5d6",
+  "sourceLanguage": "ru",
+  "die": "d20",
+  "results": [
+    {
+      "roll": 1,
+      "nameKey": "life-path.1.name",
+      "experienceKey": "life-path.1.experience",
+      "uniqueElementKey": "life-path.1.unique"
+    },
+    {
+      "roll": 2,
+      "nameKey": "life-path.2.name",
+      "experienceKey": "life-path.2.experience",
+      "uniqueElementKey": "life-path.2.unique"
+    },
+    {
+      "roll": 3,
+      "nameKey": "life-path.3.name",
+      "experienceKey": "life-path.3.experience",
+      "uniqueElementKey": "life-path.3.unique"
+    },
+    {
+      "roll": 4,
+      "nameKey": "life-path.4.name",
+      "experienceKey": "life-path.4.experience",
+      "uniqueElementKey": "life-path.4.unique"
+    },
+    {
+      "roll": 5,
+      "nameKey": "life-path.5.name",
+      "experienceKey": "life-path.5.experience",
+      "uniqueElementKey": "life-path.5.unique"
+    },
+    {
+      "roll": 6,
+      "nameKey": "life-path.6.name",
+      "experienceKey": "life-path.6.experience",
+      "uniqueElementKey": "life-path.6.unique"
+    },
+    {
+      "roll": 7,
+      "nameKey": "life-path.7.name",
+      "experienceKey": "life-path.7.experience",
+      "uniqueElementKey": "life-path.7.unique"
+    },
+    {
+      "roll": 8,
+      "nameKey": "life-path.8.name",
+      "experienceKey": "life-path.8.experience",
+      "uniqueElementKey": "life-path.8.unique"
+    },
+    {
+      "roll": 9,
+      "nameKey": "life-path.9.name",
+      "experienceKey": "life-path.9.experience",
+      "uniqueElementKey": "life-path.9.unique"
+    },
+    {
+      "roll": 10,
+      "nameKey": "life-path.10.name",
+      "experienceKey": "life-path.10.experience",
+      "uniqueElementKey": "life-path.10.unique"
+    },
+    {
+      "roll": 11,
+      "nameKey": "life-path.11.name",
+      "experienceKey": "life-path.11.experience",
+      "uniqueElementKey": "life-path.11.unique"
+    },
+    {
+      "roll": 12,
+      "nameKey": "life-path.12.name",
+      "experienceKey": "life-path.12.experience",
+      "uniqueElementKey": "life-path.12.unique"
+    },
+    {
+      "roll": 13,
+      "nameKey": "life-path.13.name",
+      "experienceKey": "life-path.13.experience",
+      "uniqueElementKey": "life-path.13.unique"
+    },
+    {
+      "roll": 14,
+      "nameKey": "life-path.14.name",
+      "experienceKey": "life-path.14.experience",
+      "uniqueElementKey": "life-path.14.unique"
+    },
+    {
+      "roll": 15,
+      "nameKey": "life-path.15.name",
+      "experienceKey": "life-path.15.experience",
+      "uniqueElementKey": "life-path.15.unique"
+    },
+    {
+      "roll": 16,
+      "nameKey": "life-path.16.name",
+      "experienceKey": "life-path.16.experience",
+      "uniqueElementKey": "life-path.16.unique"
+    },
+    {
+      "roll": 17,
+      "nameKey": "life-path.17.name",
+      "experienceKey": "life-path.17.experience",
+      "uniqueElementKey": "life-path.17.unique"
+    },
+    {
+      "roll": 18,
+      "nameKey": "life-path.18.name",
+      "experienceKey": "life-path.18.experience",
+      "uniqueElementKey": "life-path.18.unique"
+    },
+    {
+      "roll": 19,
+      "nameKey": "life-path.19.name",
+      "experienceKey": "life-path.19.experience",
+      "uniqueElementKey": "life-path.19.unique"
+    },
+    {
+      "roll": 20,
+      "nameKey": "life-path.20.name",
+      "experienceKey": "life-path.20.experience",
+      "uniqueElementKey": "life-path.20.unique"
+    }
+  ]
+}

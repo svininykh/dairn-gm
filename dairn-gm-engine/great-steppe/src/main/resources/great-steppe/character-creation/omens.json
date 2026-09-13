@@ -1,0 +1,107 @@
+{
+  "sourceRevision": "3fabe55fa366c3706a5c54614b1682bd2f7cb5d6",
+  "sourceLanguage": "ru",
+  "die": "d20",
+  "results": [
+    {
+      "roll": 1,
+      "nameKey": "omen.1.name",
+      "descriptionKey": "omen.1.description"
+    },
+    {
+      "roll": 2,
+      "nameKey": "omen.2.name",
+      "descriptionKey": "omen.2.description"
+    },
+    {
+      "roll": 3,
+      "nameKey": "omen.3.name",
+      "descriptionKey": "omen.3.description"
+    },
+    {
+      "roll": 4,
+      "nameKey": "omen.4.name",
+      "descriptionKey": "omen.4.description"
+    },
+    {
+      "roll": 5,
+      "nameKey": "omen.5.name",
+      "descriptionKey": "omen.5.description"
+    },
+    {
+      "roll": 6,
+      "nameKey": "omen.6.name",
+      "descriptionKey": "omen.6.description"
+    },
+    {
+      "roll": 7,
+      "nameKey": "omen.7.name",
+      "descriptionKey": "omen.7.description"
+    },
+    {
+      "roll": 8,
+      "nameKey": "omen.8.name",
+      "descriptionKey": "omen.8.description"
+    },
+    {
+      "roll": 9,
+      "nameKey": "omen.9.name",
+      "descriptionKey": "omen.9.description"
+    },
+    {
+      "roll": 10,
+      "nameKey": "omen.10.name",
+      "descriptionKey": "omen.10.description"
+    },
+    {
+      "roll": 11,
+      "nameKey": "omen.11.name",
+      "descriptionKey": "omen.11.description"
+    },
+    {
+      "roll": 12,
+      "nameKey": "omen.12.name",
+      "descriptionKey": "omen.12.description"
+    },
+    {
+      "roll": 13,
+      "nameKey": "omen.13.name",
+      "descriptionKey": "omen.13.description"
+    },
+    {
+      "roll": 14,
+      "nameKey": "omen.14.name",
+      "descriptionKey": "omen.14.description"
+    },
+    {
+      "roll": 15,
+      "nameKey": "omen.15.name",
+      "descriptionKey": "omen.15.description"
+    },
+    {
+      "roll": 16,
+      "nameKey": "omen.16.name",
+      "descriptionKey": "omen.16.description"
+    },
+    {
+      "roll": 17,
+      "nameKey": "omen.17.name",
+      "descriptionKey": "omen.17.description"
+    },
+    {
+      "roll": 18,
+      "nameKey": "omen.18.name",
+      "descriptionKey": "omen.18.description"
+    },
+    {
+      "roll": 19,
+      "nameKey": "omen.19.name",
+      "descriptionKey": "omen.19.description"
+    },
+    {
+      "roll": 20,
+      "nameKey": "omen.20.name",
+      "descriptionKey": "omen.20.description"
+    }
+  ]
+}

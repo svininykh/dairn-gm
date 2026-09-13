@@ -1,0 +1,135 @@
+{
+  "sourceRevision": "3fabe55fa366c3706a5c54614b1682bd2f7cb5d6",
+  "sourceLanguage": "ru",
+  "die": "d10",
+  "categories": [
+    {
+      "id": "physique",
+      "nameKey": "trait.physique.name",
+      "resultKeys": [
+        "trait.physique.1",
+        "trait.physique.2",
+        "trait.physique.3",
+        "trait.physique.4",
+        "trait.physique.5",
+        "trait.physique.6",
+        "trait.physique.7",
+        "trait.physique.8",
+        "trait.physique.9",
+        "trait.physique.10"
+      ]
+    },
+    {
+      "id": "skin",
+      "nameKey": "trait.skin.name",
+      "resultKeys": [
+        "trait.skin.1",
+        "trait.skin.2",
+        "trait.skin.3",
+        "trait.skin.4",
+        "trait.skin.5",
+        "trait.skin.6",
+        "trait.skin.7",
+        "trait.skin.8",
+        "trait.skin.9",
+        "trait.skin.10"
+      ]
+    },
+    {
+      "id": "hair",
+      "nameKey": "trait.hair.name",
+      "resultKeys": [
+        "trait.hair.1",
+        "trait.hair.2",
+        "trait.hair.3",
+        "trait.hair.4",
+        "trait.hair.5",
+        "trait.hair.6",
+        "trait.hair.7",
+        "trait.hair.8",
+        "trait.hair.9",
+        "trait.hair.10"
+      ]
+    },
+    {
+      "id": "face",
+      "nameKey": "trait.face.name",
+      "resultKeys": [
+        "trait.face.1",
+        "trait.face.2",
+        "trait.face.3",
+        "trait.face.4",
+        "trait.face.5",
+        "trait.face.6",
+        "trait.face.7",
+        "trait.face.8",
+        "trait.face.9",
+        "trait.face.10"
+      ]
+    },
+    {
+      "id": "speech",
+      "nameKey": "trait.speech.name",
+      "resultKeys": [
+        "trait.speech.1",
+        "trait.speech.2",
+        "trait.speech.3",
+        "trait.speech.4",
+        "trait.speech.5",
+        "trait.speech.6",
+        "trait.speech.7",
+        "trait.speech.8",
+        "trait.speech.9",
+        "trait.speech.10"
+      ]
+    },
+    {
+      "id": "clothing",
+      "nameKey": "trait.clothing.name",
+      "resultKeys": [
+        "trait.clothing.1",
+        "trait.clothing.2",
+        "trait.clothing.3",
+        "trait.clothing.4",
+        "trait.clothing.5",
+        "trait.clothing.6",
+        "trait.clothing.7",
+        "trait.clothing.8",
+        "trait.clothing.9",
+        "trait.clothing.10"
+      ]
+    },
+    {
+      "id": "virtue",
+      "nameKey": "trait.virtue.name",
+      "resultKeys": [
+        "trait.virtue.1",
+        "trait.virtue.2",
+        "trait.virtue.3",
+        "trait.virtue.4",
+        "trait.virtue.5",
+        "trait.virtue.6",
+        "trait.virtue.7",
+        "trait.virtue.8",
+        "trait.virtue.9",
+        "trait.virtue.10"
+      ]
+    },
+    {
+      "id": "flaw",
+      "nameKey": "trait.flaw.name",
+      "resultKeys": [
+        "trait.flaw.1",
+        "trait.flaw.2",
+        "trait.flaw.3",
+        "trait.flaw.4",
+        "trait.flaw.5",
+        "trait.flaw.6",
+        "trait.flaw.7",
+        "trait.flaw.8",
+        "trait.flaw.9",
+        "trait.flaw.10"
+      ]
+    }
+  ]
+}

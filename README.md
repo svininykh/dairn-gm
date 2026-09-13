@@ -82,3 +82,8 @@ English fallback, while localized variants use a language suffix such as `_ru.pr
 
 The locale-neutral `i18n/catalogs.txt` index declares the catalogs to load. The loader rejects duplicate
 keys and the Cairn data validator checks that every structural key exists in both English and Russian.
+
+Great Steppe character tables are pinned to commit `3fabe55fa366c3706a5c54614b1682bd2f7cb5d6`
+of the DAIRN: Great Steppe rules repository. The currently canonical Russian text is stored in split
+`_ru.properties` catalogs; structural JSON contains no table prose. English and Kazakh catalogs will be
+added separately rather than treating an unapproved translation as canonical.

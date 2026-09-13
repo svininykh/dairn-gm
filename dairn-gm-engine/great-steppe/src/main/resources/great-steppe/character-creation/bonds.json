@@ -1,0 +1,87 @@
+{
+  "sourceRevision": "3fabe55fa366c3706a5c54614b1682bd2f7cb5d6",
+  "sourceLanguage": "ru",
+  "die": "d20",
+  "results": [
+    {
+      "roll": 1,
+      "textKey": "bond.1"
+    },
+    {
+      "roll": 2,
+      "textKey": "bond.2"
+    },
+    {
+      "roll": 3,
+      "textKey": "bond.3"
+    },
+    {
+      "roll": 4,
+      "textKey": "bond.4"
+    },
+    {
+      "roll": 5,
+      "textKey": "bond.5"
+    },
+    {
+      "roll": 6,
+      "textKey": "bond.6"
+    },
+    {
+      "roll": 7,
+      "textKey": "bond.7"
+    },
+    {
+      "roll": 8,
+      "textKey": "bond.8"
+    },
+    {
+      "roll": 9,
+      "textKey": "bond.9"
+    },
+    {
+      "roll": 10,
+      "textKey": "bond.10"
+    },
+    {
+      "roll": 11,
+      "textKey": "bond.11"
+    },
+    {
+      "roll": 12,
+      "textKey": "bond.12"
+    },
+    {
+      "roll": 13,
+      "textKey": "bond.13"
+    },
+    {
+      "roll": 14,
+      "textKey": "bond.14"
+    },
+    {
+      "roll": 15,
+      "textKey": "bond.15"
+    },
+    {
+      "roll": 16,
+      "textKey": "bond.16"
+    },
+    {
+      "roll": 17,
+      "textKey": "bond.17"
+    },
+    {
+      "roll": 18,
+      "textKey": "bond.18"
+    },
+    {
+      "roll": 19,
+      "textKey": "bond.19"
+    },
+    {
+      "roll": 20,
+      "textKey": "bond.20"
+    }
+  ]
+}
