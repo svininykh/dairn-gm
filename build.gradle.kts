@@ -16,4 +16,11 @@ subprojects {
     tasks.withType<Test>().configureEach {
         useJUnitPlatform()
     }
+
+    tasks.withType<Jar>().configureEach {
+        from(rootProject.file("LICENSE")) { into("META-INF") }
+        from(rootProject.file("NOTICE")) { into("META-INF") }
+        from(rootProject.file("CONTENT_LICENSE.md")) { into("META-INF") }
+        from(rootProject.file("THIRD_PARTY_NOTICES.md")) { into("META-INF") }
+    }
 }

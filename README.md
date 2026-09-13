@@ -115,5 +115,6 @@ attribution to *Cairn Second Edition* author Yochai Gal. Russian Cairn text is b
 translation by Hex Cat studio. See [CONTENT_LICENSE.md](CONTENT_LICENSE.md) and
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for scope, sources, and pinned revisions.
 
-The software source code is not covered by `CONTENT_LICENSE.md`; its public license will be selected
-separately before release.
+Software source code is copyright © 2026 Andrey Svininykh and licensed under the
+[Apache License 2.0](LICENSE). The CC BY-SA 4.0 content license remains separate and applies to the
+textual game materials and table content described above.

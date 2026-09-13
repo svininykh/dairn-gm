@@ -8,8 +8,8 @@ Copyright © 2026 Andrey Svininykh.
 Licensed under the Creative Commons Attribution-ShareAlike 4.0 International license
 ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)).
 
-This license applies to textual game content and table data. It does not by itself grant a license
-to the software source code in this repository.
+This license applies to textual game content and table data. Software source code is licensed
+separately under the Apache License 2.0; see `LICENSE` and `NOTICE`.
 
 ## Cairn Second Edition adaptations
 
