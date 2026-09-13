@@ -12,6 +12,7 @@ internal object CairnCharacterData {
     val traits: List<CharacterTrait>
     val bonds: List<Bond>
     val omens: List<Omen>
+    private val backgroundDefinitions: List<BackgroundData>
 
     init {
         val backgroundData = json.decodeFromString<BackgroundDocument>(resource("$ROOT/backgrounds.json"))
@@ -19,7 +20,8 @@ internal object CairnCharacterData {
         val traitData = json.decodeFromString<TraitDocument>(resource("$ROOT/traits.json"))
         val bondData = json.decodeFromString<BondDocument>(resource("$ROOT/bonds.json"))
         val omenData = json.decodeFromString<OmenDocument>(resource("$ROOT/omens.json"))
-        backgrounds = backgroundData.backgrounds.map(BackgroundData::toDomain)
+        backgroundDefinitions = backgroundData.backgrounds
+        backgrounds = backgrounds("en")
         backgroundTables = tableData.backgroundTables
             .map(BackgroundTablesData::toDomain)
             .associateBy(BackgroundTables::backgroundId)
@@ -27,6 +29,11 @@ internal object CairnCharacterData {
         bonds = bondData.results.map(BondData::toDomain)
         omens = omenData.results.map(OmenData::toDomain)
         validate()
+    }
+
+    fun backgrounds(languageTag: String): List<CharacterBackground> {
+        val text = CairnText(languageTag)
+        return backgroundDefinitions.map { it.toDomain(text) }
     }
 
     private fun validate() {
@@ -54,6 +61,32 @@ internal object CairnCharacterData {
         }
         require(bonds.map(Bond::roll) == (1..20).toList()) { "Cairn 2e Bonds must define d20 results 1 through 20" }
         require(omens.map(Omen::roll) == (1..20).toList()) { "Cairn 2e Omens must define d20 results 1 through 20" }
+        validateLocalization("en")
+        validateLocalization("ru")
+    }
+
+    private fun validateLocalization(languageTag: String) {
+        val text = CairnText(languageTag)
+        val keys = buildList {
+            backgroundDefinitions.forEach { background ->
+                add(background.nameKey)
+                addAll(background.nameKeys)
+                addAll(background.startingEquipmentKeys)
+            }
+            backgroundTables.values.forEach { background ->
+                background.tables.forEach { table ->
+                    add(table.promptKey)
+                    addAll(table.results.map(BackgroundTableResult::textKey))
+                }
+            }
+            traits.forEach { trait ->
+                add(trait.nameKey)
+                addAll(trait.resultKeys)
+            }
+            addAll(bonds.map(Bond::textKey))
+            addAll(omens.map(Omen::textKey))
+        }
+        require(keys.all(text::containsOwn)) { "Incomplete Cairn 2e $languageTag localization" }
     }
 
     private fun resource(path: String): String = requireNotNull(javaClass.getResource(path)) {
@@ -67,11 +100,16 @@ private data class BackgroundDocument(val backgrounds: List<BackgroundData>)
 @Serializable
 private data class BackgroundData(
     val id: String,
-    val name: String,
-    val names: List<String>,
-    val startingEquipment: List<String>,
+    val nameKey: String,
+    val nameKeys: List<String>,
+    val startingEquipmentKeys: List<String>,
 ) {
-    fun toDomain() = CharacterBackground(id, name, names, startingEquipment)
+    fun toDomain(text: CairnText) = CharacterBackground(
+        id,
+        text.get(nameKey),
+        nameKeys.map(text::get),
+        startingEquipmentKeys.map(text::get),
+    )
 }
 
 @Serializable
@@ -83,13 +121,13 @@ private data class BackgroundTablesData(val id: String, val tables: List<Backgro
 }
 
 @Serializable
-private data class BackgroundTableData(val prompt: String, val die: String, val results: List<BackgroundTableResultData>) {
-    fun toDomain() = BackgroundTable(prompt, die, results.map(BackgroundTableResultData::toDomain))
+private data class BackgroundTableData(val promptKey: String, val die: String, val results: List<BackgroundTableResultData>) {
+    fun toDomain() = BackgroundTable(promptKey, die, results.map(BackgroundTableResultData::toDomain))
 }
 
 @Serializable
-private data class BackgroundTableResultData(val roll: Int, val result: String) {
-    fun toDomain() = BackgroundTableResult(roll, result)
+private data class BackgroundTableResultData(val roll: Int, val textKey: String) {
+    fun toDomain() = BackgroundTableResult(roll, textKey)
 }
 
 @Serializable

@@ -11,9 +11,9 @@ data class CharacterBackground(
 
 data class BackgroundTables(val backgroundId: String, val tables: List<BackgroundTable>)
 
-data class BackgroundTable(val prompt: String, val die: String, val results: List<BackgroundTableResult>)
+data class BackgroundTable(val promptKey: String, val die: String, val results: List<BackgroundTableResult>)
 
-data class BackgroundTableResult(val roll: Int, val text: String)
+data class BackgroundTableResult(val roll: Int, val textKey: String)
 
 data class ResolvedBackgroundTable(val prompt: String, val roll: Int, val text: String)
 

@@ -2,478 +2,478 @@
   "backgrounds": [
     {
       "id": "aurifex",
-      "name": "Aurifex",
-      "names": [
-        "Hestia",
-        "Basil",
-        "Rune",
-        "Prism",
-        "Ember",
-        "Quintess",
-        "Aludel",
-        "Mordant",
-        "Salaman",
-        "Jazia"
+      "nameKey": "background.aurifex.name",
+      "nameKeys": [
+        "background.aurifex.name.1",
+        "background.aurifex.name.2",
+        "background.aurifex.name.3",
+        "background.aurifex.name.4",
+        "background.aurifex.name.5",
+        "background.aurifex.name.6",
+        "background.aurifex.name.7",
+        "background.aurifex.name.8",
+        "background.aurifex.name.9",
+        "background.aurifex.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Lantern",
-        "Oil Can (6 uses)",
-        "Needle-knife (d6)",
-        "Protective Gloves (_petty_)"
+      "startingEquipmentKeys": [
+        "background.aurifex.gear.1",
+        "background.aurifex.gear.2",
+        "background.aurifex.gear.3",
+        "background.aurifex.gear.4",
+        "background.aurifex.gear.5"
       ]
     },
     {
       "id": "barber-surgeon",
-      "name": "Barber-Surgeon",
-      "names": [
-        "Wilmot",
-        "Patch",
-        "Lancet",
-        "Sawbones",
-        "Theo",
-        "Cutwell",
-        "Humor",
-        "Landsford",
-        "Goodeye",
-        "Johanna"
+      "nameKey": "background.barber-surgeon.name",
+      "nameKeys": [
+        "background.barber-surgeon.name.1",
+        "background.barber-surgeon.name.2",
+        "background.barber-surgeon.name.3",
+        "background.barber-surgeon.name.4",
+        "background.barber-surgeon.name.5",
+        "background.barber-surgeon.name.6",
+        "background.barber-surgeon.name.7",
+        "background.barber-surgeon.name.8",
+        "background.barber-surgeon.name.9",
+        "background.barber-surgeon.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Bonesaw (d6)",
-        "Bandages (3 uses)",
-        "Leech (restores 1 STR, 3 uses)",
-        "Stained Medical Finery (_petty_)"
+      "startingEquipmentKeys": [
+        "background.barber-surgeon.gear.1",
+        "background.barber-surgeon.gear.2",
+        "background.barber-surgeon.gear.3",
+        "background.barber-surgeon.gear.4",
+        "background.barber-surgeon.gear.5",
+        "background.barber-surgeon.gear.6"
       ]
     },
     {
       "id": "beast-handler",
-      "name": "Beast Handler",
-      "names": [
-        "Amara",
-        "Wulf",
-        "Mireille",
-        "Soren",
-        "Freki",
-        "Aster",
-        "Gerrik",
-        "Boreas",
-        "Veda",
-        "Matheus"
+      "nameKey": "background.beast-handler.name",
+      "nameKeys": [
+        "background.beast-handler.name.1",
+        "background.beast-handler.name.2",
+        "background.beast-handler.name.3",
+        "background.beast-handler.name.4",
+        "background.beast-handler.name.5",
+        "background.beast-handler.name.6",
+        "background.beast-handler.name.7",
+        "background.beast-handler.name.8",
+        "background.beast-handler.name.9",
+        "background.beast-handler.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Leather Whip (d6)",
-        "Soporific Darts (STR save or fall asleep, 6 uses)",
-        "Lure",
-        "Rope (25ft)"
+      "startingEquipmentKeys": [
+        "background.beast-handler.gear.1",
+        "background.beast-handler.gear.2",
+        "background.beast-handler.gear.3",
+        "background.beast-handler.gear.4",
+        "background.beast-handler.gear.5",
+        "background.beast-handler.gear.6"
       ]
     },
     {
       "id": "bonekeeper",
-      "name": "Bonekeeper",
-      "names": [
-        "Rook",
-        "Ebon",
-        "Moro",
-        "Yew",
-        "Pall",
-        "Leth",
-        "Bea",
-        "Barnaby",
-        "Vesper",
-        "Leder"
+      "nameKey": "background.bonekeeper.name",
+      "nameKeys": [
+        "background.bonekeeper.name.1",
+        "background.bonekeeper.name.2",
+        "background.bonekeeper.name.3",
+        "background.bonekeeper.name.4",
+        "background.bonekeeper.name.5",
+        "background.bonekeeper.name.6",
+        "background.bonekeeper.name.7",
+        "background.bonekeeper.name.8",
+        "background.bonekeeper.name.9",
+        "background.bonekeeper.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Lantern",
-        "Oil Can (6 uses)",
-        "Stake (d6)",
-        "Chains (10ft)"
+      "startingEquipmentKeys": [
+        "background.bonekeeper.gear.1",
+        "background.bonekeeper.gear.2",
+        "background.bonekeeper.gear.3",
+        "background.bonekeeper.gear.4",
+        "background.bonekeeper.gear.5"
       ]
     },
     {
       "id": "cutpurse",
-      "name": "Cutpurse",
-      "names": [
-        "Arlo",
-        "Lyra",
-        "Eamon",
-        "Salina",
-        "Elara",
-        "Freya",
-        "Bull",
-        "Sparrow",
-        "Ivy",
-        "Silas"
+      "nameKey": "background.cutpurse.name",
+      "nameKeys": [
+        "background.cutpurse.name.1",
+        "background.cutpurse.name.2",
+        "background.cutpurse.name.3",
+        "background.cutpurse.name.4",
+        "background.cutpurse.name.5",
+        "background.cutpurse.name.6",
+        "background.cutpurse.name.7",
+        "background.cutpurse.name.8",
+        "background.cutpurse.name.9",
+        "background.cutpurse.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Twin Daggers (d6+d6, _bulky_)",
-        "Padded Leather (1 Armor)",
-        "Lockpicks",
-        "Black Outfit (_petty_)"
+      "startingEquipmentKeys": [
+        "background.cutpurse.gear.1",
+        "background.cutpurse.gear.2",
+        "background.cutpurse.gear.3",
+        "background.cutpurse.gear.4",
+        "background.cutpurse.gear.5",
+        "background.cutpurse.gear.6"
       ]
     },
     {
       "id": "fieldwarden",
-      "name": "Fieldwarden",
-      "names": [
-        "Seed",
-        "Thresh",
-        "Dibber",
-        "Sow",
-        "Stalk",
-        "Harrow",
-        "Cobb",
-        "Flax",
-        "Briar",
-        "Rye"
+      "nameKey": "background.fieldwarden.name",
+      "nameKeys": [
+        "background.fieldwarden.name.1",
+        "background.fieldwarden.name.2",
+        "background.fieldwarden.name.3",
+        "background.fieldwarden.name.4",
+        "background.fieldwarden.name.5",
+        "background.fieldwarden.name.6",
+        "background.fieldwarden.name.7",
+        "background.fieldwarden.name.8",
+        "background.fieldwarden.name.9",
+        "background.fieldwarden.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Brigandine (1 Armor, _bulky_)",
-        "Sling (d6)",
-        "Hand Axe (d6)",
-        "Repellent (pick the type, 3 uses)"
+      "startingEquipmentKeys": [
+        "background.fieldwarden.gear.1",
+        "background.fieldwarden.gear.2",
+        "background.fieldwarden.gear.3",
+        "background.fieldwarden.gear.4",
+        "background.fieldwarden.gear.5",
+        "background.fieldwarden.gear.6"
       ]
     },
     {
       "id": "fletchwind",
-      "name": "Fletchwind",
-      "names": [
-        "Flint",
-        "Feather",
-        "Crier",
-        "Thunder",
-        "Falcon",
-        "Pluck",
-        "Needle",
-        "Warsong",
-        "Hawk",
-        "Cai"
+      "nameKey": "background.fletchwind.name",
+      "nameKeys": [
+        "background.fletchwind.name.1",
+        "background.fletchwind.name.2",
+        "background.fletchwind.name.3",
+        "background.fletchwind.name.4",
+        "background.fletchwind.name.5",
+        "background.fletchwind.name.6",
+        "background.fletchwind.name.7",
+        "background.fletchwind.name.8",
+        "background.fletchwind.name.9",
+        "background.fletchwind.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Bow (see table)",
-        "Serrated Knife (d6)",
-        "Boiled Leather (1 Armor)",
-        "Heartroot Salve (restores 1d4 STR, 1 use)"
+      "startingEquipmentKeys": [
+        "background.fletchwind.gear.1",
+        "background.fletchwind.gear.2",
+        "background.fletchwind.gear.3",
+        "background.fletchwind.gear.4",
+        "background.fletchwind.gear.5",
+        "background.fletchwind.gear.6"
       ]
     },
     {
       "id": "foundling",
-      "name": "Foundling",
-      "names": [
-        "Faunus",
-        "Snowdrop",
-        "Wisp",
-        "Silverdew",
-        "Brim",
-        "Solstice",
-        "Steeleye",
-        "Artea",
-        "Gossamer",
-        "Hazel"
+      "nameKey": "background.foundling.name",
+      "nameKeys": [
+        "background.foundling.name.1",
+        "background.foundling.name.2",
+        "background.foundling.name.3",
+        "background.foundling.name.4",
+        "background.foundling.name.5",
+        "background.foundling.name.6",
+        "background.foundling.name.7",
+        "background.foundling.name.8",
+        "background.foundling.name.9",
+        "background.foundling.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Salt Pouch",
-        "Heirloom Amulet (_petty_, glows in the presence of magic)",
-        "Sling (d6)",
-        "Dagger (d6)"
+      "startingEquipmentKeys": [
+        "background.foundling.gear.1",
+        "background.foundling.gear.2",
+        "background.foundling.gear.3",
+        "background.foundling.gear.4",
+        "background.foundling.gear.5",
+        "background.foundling.gear.6"
       ]
     },
     {
       "id": "fungal-forager",
-      "name": "Fungal Forager",
-      "names": [
-        "Unther",
-        "Woozy",
-        "Hilda",
-        "Current",
-        "Leif",
-        "Ratan",
-        "Mourella",
-        "Lal",
-        "Per",
-        "Madrigal"
+      "nameKey": "background.fungal-forager.name",
+      "nameKeys": [
+        "background.fungal-forager.name.1",
+        "background.fungal-forager.name.2",
+        "background.fungal-forager.name.3",
+        "background.fungal-forager.name.4",
+        "background.fungal-forager.name.5",
+        "background.fungal-forager.name.6",
+        "background.fungal-forager.name.7",
+        "background.fungal-forager.name.8",
+        "background.fungal-forager.name.9",
+        "background.fungal-forager.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Sharpened Trowel (d6)",
-        "Candle Helmet (+1 Armor, dim, 6 uses)",
-        "Rope (25ft)",
-        "Metal Pail"
+      "startingEquipmentKeys": [
+        "background.fungal-forager.gear.1",
+        "background.fungal-forager.gear.2",
+        "background.fungal-forager.gear.3",
+        "background.fungal-forager.gear.4",
+        "background.fungal-forager.gear.5"
       ]
     },
     {
       "id": "greenwise",
-      "name": "Greenwise",
-      "names": [
-        "Gunther",
-        "Moss",
-        "Fern",
-        "Lichen",
-        "Root",
-        "Willow",
-        "Sage",
-        "Yarrow",
-        "Rowan",
-        "Ash"
+      "nameKey": "background.greenwise.name",
+      "nameKeys": [
+        "background.greenwise.name.1",
+        "background.greenwise.name.2",
+        "background.greenwise.name.3",
+        "background.greenwise.name.4",
+        "background.greenwise.name.5",
+        "background.greenwise.name.6",
+        "background.greenwise.name.7",
+        "background.greenwise.name.8",
+        "background.greenwise.name.9",
+        "background.greenwise.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Iron Pot",
-        "Root Knife (d6)",
-        "Healing Salve (restore 1d4 STR, 1 use)",
-        "Twine Bauble (_petty_, _Ward_ once per day) _Ward_: A silver circle 50ft across appears on the ground. Choose one species that cannot cross it."
+      "startingEquipmentKeys": [
+        "background.greenwise.gear.1",
+        "background.greenwise.gear.2",
+        "background.greenwise.gear.3",
+        "background.greenwise.gear.4",
+        "background.greenwise.gear.5",
+        "background.greenwise.gear.6"
       ]
     },
     {
       "id": "half-witch",
-      "name": "Half Witch",
-      "names": [
-        "Solena",
-        "Veles",
-        "Bryn",
-        "Sabine",
-        "Razvan",
-        "Rowena",
-        "Galen",
-        "Nyx",
-        "Vex",
-        "Iwan"
+      "nameKey": "background.half-witch.name",
+      "nameKeys": [
+        "background.half-witch.name.1",
+        "background.half-witch.name.2",
+        "background.half-witch.name.3",
+        "background.half-witch.name.4",
+        "background.half-witch.name.5",
+        "background.half-witch.name.6",
+        "background.half-witch.name.7",
+        "background.half-witch.name.8",
+        "background.half-witch.name.9",
+        "background.half-witch.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Spellbook (Thicket: A thicket of trees and dense brush up to 50ft wide suddenly sprouts up. _Wrapped in vines that must be destroyed again with each use._)",
-        "Iron Dagger (d6)",
-        "Herbs Pouch (restore 1 STR, 3 uses)",
-        "Ghillie Suit"
+      "startingEquipmentKeys": [
+        "background.half-witch.gear.1",
+        "background.half-witch.gear.2",
+        "background.half-witch.gear.3",
+        "background.half-witch.gear.4",
+        "background.half-witch.gear.5",
+        "background.half-witch.gear.6"
       ]
     },
     {
       "id": "hexenbane",
-      "name": "Hexenbane",
-      "names": [
-        "Percival",
-        "Felix",
-        "Isolde",
-        "Wolfram",
-        "Aldric",
-        "Eira",
-        "Oswin",
-        "Ivor",
-        "Brunhilda",
-        "Beatrix"
+      "nameKey": "background.hexenbane.name",
+      "nameKeys": [
+        "background.hexenbane.name.1",
+        "background.hexenbane.name.2",
+        "background.hexenbane.name.3",
+        "background.hexenbane.name.4",
+        "background.hexenbane.name.5",
+        "background.hexenbane.name.6",
+        "background.hexenbane.name.7",
+        "background.hexenbane.name.8",
+        "background.hexenbane.name.9",
+        "background.hexenbane.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Vestments of the Order (_petty_)",
-        "Blessed Tinctures",
-        "Silver Knife (d6)",
-        "Crossbow (d8, _bulky_)"
+      "startingEquipmentKeys": [
+        "background.hexenbane.gear.1",
+        "background.hexenbane.gear.2",
+        "background.hexenbane.gear.3",
+        "background.hexenbane.gear.4",
+        "background.hexenbane.gear.5",
+        "background.hexenbane.gear.6"
       ]
     },
     {
       "id": "jongleur",
-      "name": "Jongleur",
-      "names": [
-        "Jax",
-        "Selene",
-        "Baladria",
-        "Ada",
-        "Mort",
-        "Saylor",
-        "Tripp",
-        "Lantos",
-        "Echo",
-        "Jubilo"
+      "nameKey": "background.jongleur.name",
+      "nameKeys": [
+        "background.jongleur.name.1",
+        "background.jongleur.name.2",
+        "background.jongleur.name.3",
+        "background.jongleur.name.4",
+        "background.jongleur.name.5",
+        "background.jongleur.name.6",
+        "background.jongleur.name.7",
+        "background.jongleur.name.8",
+        "background.jongleur.name.9",
+        "background.jongleur.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Costume",
-        "Simple Instrument (Pipes, Lute, etc.)",
-        "Lucky Jerkin (+1 Armor)",
-        "Sling (d6)"
+      "startingEquipmentKeys": [
+        "background.jongleur.gear.1",
+        "background.jongleur.gear.2",
+        "background.jongleur.gear.3",
+        "background.jongleur.gear.4",
+        "background.jongleur.gear.5",
+        "background.jongleur.gear.6"
       ]
     },
     {
       "id": "kettlewright",
-      "name": "Kettlewright",
-      "names": [
-        "Fergus",
-        "Eon",
-        "Bram",
-        "Idris",
-        "Hester",
-        "Darragh",
-        "Seren",
-        "Rónán",
-        "Berek",
-        "Lorenz"
+      "nameKey": "background.kettlewright.name",
+      "nameKeys": [
+        "background.kettlewright.name.1",
+        "background.kettlewright.name.2",
+        "background.kettlewright.name.3",
+        "background.kettlewright.name.4",
+        "background.kettlewright.name.5",
+        "background.kettlewright.name.6",
+        "background.kettlewright.name.7",
+        "background.kettlewright.name.8",
+        "background.kettlewright.name.9",
+        "background.kettlewright.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Pincers",
-        "Roll of Tin",
-        "Gloves (_petty_)",
-        "Hammer (d6)"
+      "startingEquipmentKeys": [
+        "background.kettlewright.gear.1",
+        "background.kettlewright.gear.2",
+        "background.kettlewright.gear.3",
+        "background.kettlewright.gear.4",
+        "background.kettlewright.gear.5",
+        "background.kettlewright.gear.6"
       ]
     },
     {
       "id": "marchguard",
-      "name": "Marchguard",
-      "names": [
-        "Gann",
-        "Light",
-        "Saoirse",
-        "Frost",
-        "Thorn",
-        "Reed",
-        "Dirk",
-        "Ragnar",
-        "Brie",
-        "Aasim"
+      "nameKey": "background.marchguard.name",
+      "nameKeys": [
+        "background.marchguard.name.1",
+        "background.marchguard.name.2",
+        "background.marchguard.name.3",
+        "background.marchguard.name.4",
+        "background.marchguard.name.5",
+        "background.marchguard.name.6",
+        "background.marchguard.name.7",
+        "background.marchguard.name.8",
+        "background.marchguard.name.9",
+        "background.marchguard.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Lantern",
-        "Oil Can (6 uses)",
-        "Long Sword (d10, _bulky_)",
-        "Boiled Leather (1 Armor)"
+      "startingEquipmentKeys": [
+        "background.marchguard.gear.1",
+        "background.marchguard.gear.2",
+        "background.marchguard.gear.3",
+        "background.marchguard.gear.4",
+        "background.marchguard.gear.5"
       ]
     },
     {
       "id": "mountebank",
-      "name": "Mountebank",
-      "names": [
-        "Ambrose",
-        "Lucius",
-        "Beauregard",
-        "Cornelius",
-        "Aria",
-        "Toph",
-        "Indigo",
-        "Delphine",
-        "Solene",
-        "Noa"
+      "nameKey": "background.mountebank.name",
+      "nameKeys": [
+        "background.mountebank.name.1",
+        "background.mountebank.name.2",
+        "background.mountebank.name.3",
+        "background.mountebank.name.4",
+        "background.mountebank.name.5",
+        "background.mountebank.name.6",
+        "background.mountebank.name.7",
+        "background.mountebank.name.8",
+        "background.mountebank.name.9",
+        "background.mountebank.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Cart (+4 slots, _bulky_ when pulled)",
-        "Trick Playing Cards",
-        "Fancy Hat (_petty_)",
-        "Cane Sword (d6)"
+      "startingEquipmentKeys": [
+        "background.mountebank.gear.1",
+        "background.mountebank.gear.2",
+        "background.mountebank.gear.3",
+        "background.mountebank.gear.4",
+        "background.mountebank.gear.5",
+        "background.mountebank.gear.6"
       ]
     },
     {
       "id": "outrider",
-      "name": "Outrider",
-      "names": [
-        "Drake",
-        "Cyra",
-        "Keir",
-        "Darius",
-        "Valen",
-        "Rorik",
-        "Yara",
-        "Rui",
-        "Talon",
-        "Jory"
+      "nameKey": "background.outrider.name",
+      "nameKeys": [
+        "background.outrider.name.1",
+        "background.outrider.name.2",
+        "background.outrider.name.3",
+        "background.outrider.name.4",
+        "background.outrider.name.5",
+        "background.outrider.name.6",
+        "background.outrider.name.7",
+        "background.outrider.name.8",
+        "background.outrider.name.9",
+        "background.outrider.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Long Sword (d10, _bulky_)",
-        "Leather Jerkin (1 Armor)",
-        "Crossbow (d8, _bulky_)",
-        "Spyglass"
+      "startingEquipmentKeys": [
+        "background.outrider.gear.1",
+        "background.outrider.gear.2",
+        "background.outrider.gear.3",
+        "background.outrider.gear.4",
+        "background.outrider.gear.5",
+        "background.outrider.gear.6"
       ]
     },
     {
       "id": "prowler",
-      "name": "Prowler",
-      "names": [
-        "Winda",
-        "Brielle",
-        "Theron",
-        "Chayse",
-        "Nuja",
-        "Dev",
-        "Raven",
-        "Arawan",
-        "Sable",
-        "Baruani"
+      "nameKey": "background.prowler.name",
+      "nameKeys": [
+        "background.prowler.name.1",
+        "background.prowler.name.2",
+        "background.prowler.name.3",
+        "background.prowler.name.4",
+        "background.prowler.name.5",
+        "background.prowler.name.6",
+        "background.prowler.name.7",
+        "background.prowler.name.8",
+        "background.prowler.name.9",
+        "background.prowler.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Tarp",
-        "Boiled Leather (1 Armor)",
-        "Short Sword (d6)",
-        "Spring-Loaded trap (4 STR damage)"
+      "startingEquipmentKeys": [
+        "background.prowler.gear.1",
+        "background.prowler.gear.2",
+        "background.prowler.gear.3",
+        "background.prowler.gear.4",
+        "background.prowler.gear.5",
+        "background.prowler.gear.6"
       ]
     },
     {
       "id": "rill-runner",
-      "name": "Rill Runner",
-      "names": [
-        "Gale",
-        "Piper",
-        "Brook",
-        "Adair",
-        "Stone",
-        "Dale",
-        "Wren",
-        "Cliff",
-        "Rain",
-        "Robin"
+      "nameKey": "background.rill-runner.name",
+      "nameKeys": [
+        "background.rill-runner.name.1",
+        "background.rill-runner.name.2",
+        "background.rill-runner.name.3",
+        "background.rill-runner.name.4",
+        "background.rill-runner.name.5",
+        "background.rill-runner.name.6",
+        "background.rill-runner.name.7",
+        "background.rill-runner.name.8",
+        "background.rill-runner.name.9",
+        "background.rill-runner.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Water Shoes",
-        "Brigandine (1 Armor, _bulky_)",
-        "Compass",
-        "Dagger (d6)"
+      "startingEquipmentKeys": [
+        "background.rill-runner.gear.1",
+        "background.rill-runner.gear.2",
+        "background.rill-runner.gear.3",
+        "background.rill-runner.gear.4",
+        "background.rill-runner.gear.5",
+        "background.rill-runner.gear.6"
       ]
     },
     {
       "id": "scrivener",
-      "name": "Scrivener",
-      "names": [
-        "Lazlo",
-        "Stilo",
-        "Akshara",
-        "Pisa",
-        "Ji-Yun",
-        "Kalamos",
-        "Hugo",
-        "Shui",
-        "Kalam",
-        "Julius"
+      "nameKey": "background.scrivener.name",
+      "nameKeys": [
+        "background.scrivener.name.1",
+        "background.scrivener.name.2",
+        "background.scrivener.name.3",
+        "background.scrivener.name.4",
+        "background.scrivener.name.5",
+        "background.scrivener.name.6",
+        "background.scrivener.name.7",
+        "background.scrivener.name.8",
+        "background.scrivener.name.9",
+        "background.scrivener.name.10"
       ],
-      "startingEquipment": [
-        "Rations (3 uses)",
-        "Torch (3 uses)",
-        "Quill & Ink",
-        "Blank Book",
-        "Awl (d6)",
-        "Badge (_petty_)"
+      "startingEquipmentKeys": [
+        "background.scrivener.gear.1",
+        "background.scrivener.gear.2",
+        "background.scrivener.gear.3",
+        "background.scrivener.gear.4",
+        "background.scrivener.gear.5",
+        "background.scrivener.gear.6"
       ]
     }
   ]

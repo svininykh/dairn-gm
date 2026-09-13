@@ -8,6 +8,7 @@ data class CairnCharacter(
     val background: CharacterBackground,
     val attributes: Map<Attribute, Int>,
     val hitProtection: Int,
+    val goldPieces: Int,
     val backgroundResults: List<ResolvedBackgroundTable>,
     val traits: List<RolledCharacterTrait>,
     val bond: ResolvedBond,
@@ -22,6 +23,7 @@ data class CairnCharacter(
             ArtifactField("DEX", attributes.getValue(Attribute.DEXTERITY)),
             ArtifactField("WIL", attributes.getValue(Attribute.WILLPOWER)),
             ArtifactField("HP", hitProtection),
+            ArtifactField("GP", goldPieces),
             ArtifactField("Equipment", background.startingEquipment),
             ArtifactField("Background Results", backgroundResults.map(ResolvedBackgroundTable::text)),
             *traits.map { ArtifactField(it.name, it.result) }.toTypedArray(),
@@ -35,6 +37,7 @@ private data class CairnDraft(
     val backgroundResults: List<ResolvedBackgroundTable> = emptyList(),
     val attributes: List<Int> = emptyList(),
     val hitProtection: Int? = null,
+    val goldPieces: Int? = null,
     val traits: List<RolledCharacterTrait> = emptyList(),
     val bond: ResolvedBond? = null,
 )
@@ -83,6 +86,7 @@ private sealed interface CairnCreationState : ProcessState {
 
 class CairnInteractiveCharacterCreation(languageTag: String = "en") : InteractiveProcess {
     private val text = CairnText(languageTag)
+    private val backgrounds = CairnCharacterData.backgrounds(languageTag)
     override val id = ProcessId("cairn-2e.character-creation")
 
     override fun start(): InteractiveStep.Waiting {
@@ -90,7 +94,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
             RequestId("cairn-2e.character.background"),
             "Choose a Background or roll d20",
             listOf(ChoiceOption("roll", "Roll d20")) +
-                CairnCharacterData.backgrounds.map { ChoiceOption(it.id, it.name) },
+                backgrounds.map { ChoiceOption(it.id, it.name) },
         )
         return InteractiveStep.Waiting(CairnCreationState.AwaitingBackground(request), request)
     }
@@ -120,7 +124,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
             )
             return InteractiveStep.Waiting(CairnCreationState.AwaitingBackgroundRoll(request), request)
         }
-        return requestName(CairnCharacterData.backgrounds.single { it.id == selected })
+        return requestName(backgrounds.single { it.id == selected })
     }
 
     private fun acceptBackgroundRoll(
@@ -128,7 +132,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
         response: ProcessResponse,
     ): InteractiveStep.Waiting {
         val totals = rolledTotals(state.request, response)
-        return requestName(CairnCharacterData.backgrounds[totals.getValue("background") - 1])
+        return requestName(backgrounds[totals.getValue("background") - 1])
     }
 
     private fun requestName(background: CharacterBackground): InteractiveStep.Waiting {
@@ -150,6 +154,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
             RequestId("cairn-2e.character.background-tables"),
             "Roll on both ${background.name} tables",
             listOf(
+                RollSpec("gold", DiceExpression(3, 6)),
                 RollSpec("background-table-1", DiceExpression(1, 6)),
                 RollSpec("background-table-2", DiceExpression(1, 6)),
             ),
@@ -168,7 +173,11 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
         val source = CairnCharacterData.backgroundTables.getValue(requireNotNull(state.draft.background).id)
         val results = source.tables.mapIndexed { index, table ->
             val roll = totals.getValue("background-table-${index + 1}")
-            ResolvedBackgroundTable(table.prompt, roll, table.results.single { it.roll == roll }.text)
+            ResolvedBackgroundTable(
+                text.get(table.promptKey),
+                roll,
+                text.get(table.results.single { it.roll == roll }.textKey),
+            )
         }
         val request = ProcessRequest.Roll(
             RequestId("cairn-2e.character.abilities"),
@@ -181,7 +190,10 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
             ),
         )
         return InteractiveStep.Waiting(
-            CairnCreationState.AwaitingAbilities(state.draft.copy(backgroundResults = results), request),
+            CairnCreationState.AwaitingAbilities(
+                state.draft.copy(backgroundResults = results, goldPieces = totals.getValue("gold")),
+                request,
+            ),
             request,
         )
     }
@@ -266,6 +278,7 @@ class CairnInteractiveCharacterCreation(languageTag: String = "en") : Interactiv
                 background = requireNotNull(state.draft.background),
                 attributes = Attribute.entries.zip(state.draft.attributes).toMap(),
                 hitProtection = requireNotNull(state.draft.hitProtection),
+                goldPieces = requireNotNull(state.draft.goldPieces),
                 backgroundResults = state.draft.backgroundResults,
                 traits = state.draft.traits,
                 bond = requireNotNull(state.draft.bond),

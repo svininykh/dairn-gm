@@ -58,7 +58,7 @@ class InteractiveCharacterCreationTest {
                 waiting.state,
                 ProcessResponse.Rolled(
                     backgroundTables.id,
-                    mapOf("background-table-1" to 1, "background-table-2" to 6),
+                    mapOf("gold" to 11, "background-table-1" to 1, "background-table-2" to 6),
                 ),
             ),
         )
@@ -109,6 +109,7 @@ class InteractiveCharacterCreationTest {
         )
         val character = assertIs<CairnCharacter>(completed.artifact)
         assertEquals("Basil", character.name)
+        assertEquals(11, character.goldPieces)
         assertEquals(listOf(15, 12, 8), Attribute.entries.map(character.attributes::getValue))
         assertEquals(listOf(1, 6), character.backgroundResults.map { it.roll })
         assertEquals(
@@ -131,5 +132,19 @@ class InteractiveCharacterCreationTest {
         )
         assertIs<ProcessRequest.Choose>(next.request)
         assertEquals("Choose a name for Foundling", next.request.prompt)
+    }
+
+    @Test
+    fun `official Russian bundle localizes backgrounds and their tables`() {
+        val process = CairnInteractiveCharacterCreation("ru")
+        val started = process.start()
+        val backgrounds = assertIs<ProcessRequest.Choose>(started.request)
+        assertEquals("Ремесленник", backgrounds.options.single { it.id == "aurifex" }.label)
+
+        val namesStep = assertIs<InteractiveStep.Waiting>(
+            process.advance(started.state, ProcessResponse.Selected(backgrounds.id, listOf("aurifex"))),
+        )
+        val names = assertIs<ProcessRequest.Choose>(namesStep.request)
+        assertEquals("Гестия", names.options.first().label)
     }
 }

@@ -61,10 +61,10 @@ artifact because it is determined only after comparing the ages of all character
 
 Cairn-derived rules data and attribution are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-Rules content is stored as JSON under each ruleset's `src/main/resources` directory, not as Kotlin
-constants. The Cairn module validates background and lifepath documents when they are loaded.
-During character creation, the two background-specific lifepath tables are resolved as their own
-stateless transition and the resulting experiences are attached to the completed character.
+Rules structure is stored as JSON under each ruleset's `src/main/resources` directory, not as Kotlin
+constants. The Cairn module validates Backgrounds, their two tables, Traits, Bonds, Omens, and every
+localization key when resources are loaded. Background-table results are resolved as their own
+stateless transition and attached to the completed character.
 
 The ruleset-neutral interaction protocol in `core` represents shell interaction as `Roll`, `Choose`,
 or `EnterText` requests and typed responses. Existing Cairn creation will be migrated to this protocol
@@ -72,3 +72,10 @@ before a different Great Steppe creation process is introduced.
 
 The Cairn module exposes an interactive-process implementation that owns its models, dice expressions,
 request order, and validation. The TUI executes the neutral protocol without Cairn-specific logic.
+
+## Ruleset localization
+
+Ruleset JSON resources contain only structural data, stable identifiers, dice values, and localization
+keys. English text is stored in an unqualified `messages.properties` bundle and is the fallback for
+languages that do not yet have a complete translation. Language-specific bundles use the usual suffix,
+for example `messages_ru.properties` for Russian.

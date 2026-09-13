@@ -13,6 +13,8 @@ internal class CairnText(languageTag: String) {
     fun get(key: String): String = localized?.getProperty(key) ?: fallback.getProperty(key)
         ?: error("Missing Cairn 2e text: $key")
 
+    fun containsOwn(key: String): Boolean = (localized ?: fallback).containsKey(key)
+
     private fun load(path: String): Properties = requireNotNull(loadOrNull(path)) {
         "Missing Cairn 2e localization resource: $path"
     }
