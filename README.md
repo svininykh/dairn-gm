@@ -65,6 +65,12 @@ the youngest character, and rolls the shared group Omen. If several characters s
 the process requests an explicit choice between them. The resulting group is returned as an artifact;
 nothing is persisted by the engine or TUI.
 
+The Great Steppe engine also exposes a pure daily survival rule for the currently confirmed text:
+lack of water, food, or full rest causes `Deprived`; recovery is blocked while the condition remains,
+and every deprived day after the first adds one `Fatigue`. Fire is not treated as a fourth direct
+cause because the pinned rules do not define that mechanic yet. A calling shell may account for fire
+when deciding whether full rest was possible.
+
 Cairn-derived rules data and attribution are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 Rules structure is stored as JSON under each ruleset's `src/main/resources` directory, not as Kotlin
