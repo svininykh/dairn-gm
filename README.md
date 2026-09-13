@@ -76,6 +76,9 @@ request order, and validation. The TUI executes the neutral protocol without Cai
 ## Ruleset localization
 
 Ruleset JSON resources contain only structural data, stable identifiers, dice values, and localization
-keys. English text is stored in an unqualified `messages.properties` bundle and is the fallback for
-languages that do not yet have a complete translation. Language-specific bundles use the usual suffix,
-for example `messages_ru.properties` for Russian.
+keys. Localization is split into domain catalogs such as `traits`, `bonds`, and `omens`; every Cairn
+Background has its own catalog under `i18n/backgrounds`. Unqualified `.properties` files contain the
+English fallback, while localized variants use a language suffix such as `_ru.properties`.
+
+The locale-neutral `i18n/catalogs.txt` index declares the catalogs to load. The loader rejects duplicate
+keys and the Cairn data validator checks that every structural key exists in both English and Russian.
