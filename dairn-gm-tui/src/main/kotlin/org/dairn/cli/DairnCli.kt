@@ -130,9 +130,14 @@ class DairnCli(
                 is ProcessRequest.Choose -> {
                     output(request.prompt)
                     request.options.forEachIndexed { index, option -> output("  ${index + 1}. ${option.label} [${option.id}]") }
-                    val entered = suppliedChoices[request.id.value] ?: input()
+                    val supplied = suppliedChoices[request.id.value]
+                    val entered = supplied ?: input()
                         ?: return error(messages.text("error.response.missing", request.id.value), messages)
-                    val selected = request.options.getOrNull(entered.toIntOrNull()?.minus(1) ?: -1)?.id ?: entered
+                    val selected = if (supplied != null) {
+                        supplied
+                    } else {
+                        request.options.getOrNull(entered.toIntOrNull()?.minus(1) ?: -1)?.id ?: entered
+                    }
                     if (request.options.none { it.id == selected }) {
                         return error(messages.text("error.response.invalid", request.id.value), messages)
                     }

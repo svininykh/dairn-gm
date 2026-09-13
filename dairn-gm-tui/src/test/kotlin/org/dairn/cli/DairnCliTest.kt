@@ -78,6 +78,8 @@ class DairnCliTest {
         assertContains(text, "great-steppe.character")
         assertContains(text, "Айбек")
         assertContains(text, "Жизненный путь")
+        assertContains(text, "Подкидыш")
+        assertContains(text, "Скрытое Знамение Подкидыша")
     }
 
     @Test
