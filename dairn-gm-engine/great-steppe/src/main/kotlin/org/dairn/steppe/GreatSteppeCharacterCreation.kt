@@ -10,15 +10,48 @@ data class GreatSteppeLifePath(
     val uniqueElement: String,
 )
 
-data class GreatSteppeInventory(
-    val water: String,
-    val food: String,
-    val fire: String,
-    val weapon: String,
-    val travelGear: String,
-    val tool: String,
+enum class GreatSteppeInventoryCategory(val id: String) {
+    WATER("water"), FOOD("food"), FIRE("fire"), WEAPON("weapon"),
+    TRAVEL_GEAR("travel-gear"), TOOL("tool")
+}
+
+enum class GreatSteppeSupplyUnit { DAYS, NIGHTS }
+
+data class GreatSteppeSupply(val amount: Int, val unit: GreatSteppeSupplyUnit) {
+    init {
+        require(amount >= 0) { "Supply amount cannot be negative" }
+    }
+}
+
+data class GreatSteppeInventoryItem(
+    val id: String,
+    val category: GreatSteppeInventoryCategory,
+    val name: String,
+    val slots: Int,
+    val supply: GreatSteppeSupply? = null,
 ) {
-    fun asList(): List<String> = listOf(water, food, fire, weapon, travelGear, tool)
+    init {
+        require(id.isNotBlank())
+        require(name.isNotBlank())
+        require(slots in 0..2)
+    }
+
+    val bulky: Boolean get() = slots == 2
+    fun asCoreEntry() = InventoryEntry(id, slots)
+}
+
+data class GreatSteppeInventory(val items: List<GreatSteppeInventoryItem>) {
+    init {
+        require(items.map(GreatSteppeInventoryItem::category).toSet() == GreatSteppeInventoryCategory.entries.toSet())
+        require(items.map(GreatSteppeInventoryItem::id).distinct().size == items.size)
+    }
+
+    val load = InventoryLoad(GREAT_STEPPE_INVENTORY_CAPACITY, items.map(GreatSteppeInventoryItem::asCoreEntry))
+
+    operator fun get(category: GreatSteppeInventoryCategory): GreatSteppeInventoryItem =
+        items.single { it.category == category }
+
+    fun asList(): List<String> = items.map(GreatSteppeInventoryItem::name)
 }
 
 data class GreatSteppeTrait(val id: String, val name: String, val roll: Int, val result: String)
@@ -45,6 +78,7 @@ data class GreatSteppeCharacter(
             add(ArtifactField(labels.getValue("experience"), listOf(lifePath.experience, lifePath.detail).filter(String::isNotBlank)))
             add(ArtifactField(labels.getValue("unique-element"), lifePath.uniqueElement))
             add(ArtifactField(labels.getValue("inventory"), inventory.asList()))
+            add(ArtifactField(labels.getValue("inventory-load"), "${inventory.load.occupiedSlots}/${inventory.load.capacity}"))
             add(ArtifactField(labels.getValue("str"), attributes[0]))
             add(ArtifactField(labels.getValue("dex"), attributes[1]))
             add(ArtifactField(labels.getValue("wil"), attributes[2]))
@@ -287,26 +321,35 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
             draft.experienceDetail,
             text.get(definition.uniqueElementKey),
         )
-        fun inventoryText(category: String): String {
-            val roll = draft.inventoryRolls.getValue(category)
+        fun inventoryItem(category: GreatSteppeInventoryCategory): GreatSteppeInventoryItem {
+            val categoryId = category.id
+            val roll = draft.inventoryRolls.getValue(categoryId)
             val row = GreatSteppeCharacterData.inventory[roll - 1]
-            val key = when (category) {
-                "water" -> row.waterKey
-                "food" -> row.foodKey
-                "fire" -> row.fireKey
-                "weapon" -> row.weaponKey
-                "travel-gear" -> row.travelGearKey
-                "tool" -> row.toolKey
-                else -> error("Unknown inventory category")
+            val (key, slots) = when (category) {
+                GreatSteppeInventoryCategory.WATER -> row.waterKey to row.waterSlots
+                GreatSteppeInventoryCategory.FOOD -> row.foodKey to row.foodSlots
+                GreatSteppeInventoryCategory.FIRE -> row.fireKey to row.fireSlots
+                GreatSteppeInventoryCategory.WEAPON -> row.weaponKey to row.weaponSlots
+                GreatSteppeInventoryCategory.TRAVEL_GEAR -> row.travelGearKey to row.travelGearSlots
+                GreatSteppeInventoryCategory.TOOL -> row.toolKey to row.toolSlots
             }
-            return text.get(key)
+            val supply = when (category) {
+                GreatSteppeInventoryCategory.WATER -> GreatSteppeSupply(row.waterDays, GreatSteppeSupplyUnit.DAYS)
+                GreatSteppeInventoryCategory.FOOD -> GreatSteppeSupply(row.foodDays, GreatSteppeSupplyUnit.DAYS)
+                GreatSteppeInventoryCategory.FIRE -> GreatSteppeSupply(row.fireNights, GreatSteppeSupplyUnit.NIGHTS)
+                else -> null
+            }
+            return GreatSteppeInventoryItem(
+                "great-steppe.starting.$categoryId",
+                category,
+                text.get(key),
+                slots,
+                supply,
+            )
         }
-        val inventory = GreatSteppeInventory(
-            inventoryText("water"), inventoryText("food"), inventoryText("fire"),
-            inventoryText("weapon"), inventoryText("travel-gear"), inventoryText("tool"),
-        )
+        val inventory = GreatSteppeInventory(GreatSteppeInventoryCategory.entries.map(::inventoryItem))
         val labelIds = listOf(
-            "name", "life-path", "experience", "unique-element", "inventory",
+            "name", "life-path", "experience", "unique-element", "inventory", "inventory-load",
             "str", "dex", "wil", "hp", "bond", "age", "secret-omen",
         )
         return InteractiveStep.Completed(

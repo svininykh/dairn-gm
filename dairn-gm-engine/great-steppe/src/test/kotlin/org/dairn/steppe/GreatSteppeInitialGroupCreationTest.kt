@@ -13,6 +13,7 @@ class GreatSteppeInitialGroupCreationTest {
         val artifact = complete(GreatSteppeInitialGroupCreation(1, "ru"))
         assertEquals(1, artifact.characters.size)
         assertEquals(artifact.characters.single(), artifact.youngest)
+        assertTrue(artifact.characters.single().inventory.load.occupiedSlots <= GREAT_STEPPE_INVENTORY_CAPACITY)
         assertEquals("great-steppe.initial-group", artifact.type)
     }
 

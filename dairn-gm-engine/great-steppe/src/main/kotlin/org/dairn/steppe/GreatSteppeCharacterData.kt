@@ -21,11 +21,16 @@ internal object GreatSteppeCharacterData {
     init {
         require(lifePaths.map(LifePathDefinition::roll) == (1..20).toList())
         require(inventory.map(StartingInventoryResult::roll) == (1..6).toList())
+        require(inventory.all { it.hasValidLoadMetadata() })
         require(traits.size == 8 && traits.all { it.resultKeys.size == 10 })
         require(bonds.map(TextTableResult::roll) == (1..20).toList())
         require(omens.map(OmenDefinition::roll) == (1..20).toList())
         validateRussianKeys()
     }
+
+    private fun StartingInventoryResult.hasValidLoadMetadata(): Boolean =
+        listOf(weaponSlots, travelGearSlots, toolSlots, waterSlots, foodSlots, fireSlots).all { it in 0..2 } &&
+            waterDays > 0 && foodDays > 0 && fireNights >= 0
 
     private fun validateRussianKeys() {
         val catalogs = requireNotNull(javaClass.getResource("/great-steppe/i18n/catalogs.txt"))
@@ -75,11 +80,20 @@ private data class LifePathDocument(val sourceRevision: String, val sourceLangua
 internal data class StartingInventoryResult(
     val roll: Int,
     val weaponKey: String,
+    val weaponSlots: Int,
     val travelGearKey: String,
+    val travelGearSlots: Int,
     val toolKey: String,
+    val toolSlots: Int,
     val waterKey: String,
+    val waterSlots: Int,
+    val waterDays: Int,
     val foodKey: String,
+    val foodSlots: Int,
+    val foodDays: Int,
     val fireKey: String,
+    val fireSlots: Int,
+    val fireNights: Int,
 )
 
 @Serializable

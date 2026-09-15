@@ -40,6 +40,18 @@ class GreatSteppeCharacterCreationTest {
         assertEquals(18, character.lifePath.roll)
         assertEquals(25, character.age)
         assertEquals(1, assertNotNull(character.secretOmen).roll)
+        assertEquals(5, character.inventory.load.occupiedSlots)
+        assertEquals(5, character.inventory.load.freeSlots)
+        assertEquals(
+            GreatSteppeSupply(2, GreatSteppeSupplyUnit.DAYS),
+            character.inventory[GreatSteppeInventoryCategory.WATER].supply,
+        )
+        assertEquals(1, character.inventory[GreatSteppeInventoryCategory.WATER].slots)
+        assertEquals(
+            GreatSteppeSupply(0, GreatSteppeSupplyUnit.NIGHTS),
+            character.inventory[GreatSteppeInventoryCategory.FIRE].supply,
+        )
+        assertEquals(0, character.inventory[GreatSteppeInventoryCategory.FIRE].slots)
         assertFalse(character.fields.any { it.label == GreatSteppeText("ru").get("field.group-omen") })
     }
 
@@ -66,6 +78,10 @@ class GreatSteppeCharacterCreationTest {
 
         val character = assertIs<GreatSteppeCharacter>(assertIs<InteractiveStep.Completed>(step).artifact)
         assertEquals(null, character.secretOmen)
+        assertEquals(6, character.inventory.items.size)
+        assertEquals(5, character.inventory.load.occupiedSlots)
+        assertEquals(2, character.inventory[GreatSteppeInventoryCategory.WEAPON].slots)
+        assertEquals(true, character.inventory[GreatSteppeInventoryCategory.WEAPON].bulky)
     }
 
     private fun choose(process: InteractiveProcess, step: InteractiveStep, option: String): InteractiveStep {

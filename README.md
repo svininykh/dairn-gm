@@ -11,6 +11,8 @@ same engine can later power a terminal application, CRUD server, StoryTeller, or
 - Ruleset-neutral dice, tables, choices, rules, effects, inventory slots, and interactive processes.
 - Cairn Second Edition character creation with English and Russian rules resources.
 - DAIRN: Great Steppe character creation using its own Life Paths and starting inventory procedure.
+- Structured Great Steppe starting inventory with slot load, Bulky items, and Water, Food, and Fire
+  durations represented as rules data rather than parsed from localized text.
 - Complete Great Steppe initial-group creation: create each character, select the youngest character
   when ages are tied, and determine the shared Omen.
 - Confirmed Great Steppe survival effects for water, food, full rest, Deprived, and Fatigue.
