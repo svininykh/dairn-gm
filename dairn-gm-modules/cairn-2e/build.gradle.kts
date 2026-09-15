@@ -8,7 +8,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":dairn-gm-engine:core"))
+    implementation(project(":dairn-gm-engine"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     testImplementation(kotlin("test"))
 }

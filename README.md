@@ -25,11 +25,11 @@ same engine can later power a terminal application, CRUD server, StoryTeller, or
 
 ```text
 dairn-gm
-├── dairn-gm-engine
-│   ├── core          Ruleset-neutral engine API
-│   ├── cairn-2e      Cairn Second Edition module
-│   └── great-steppe  DAIRN: Great Steppe module
-└── dairn-gm-tui      Text interface and development shell
+├── dairn-gm-engine       Ruleset-neutral engine API
+├── dairn-gm-modules
+│   ├── cairn-2e          Cairn Second Edition module
+│   └── great-steppe      DAIRN: Great Steppe module
+└── dairn-gm-tui          Text interface and development shell
 ```
 
 The dependency direction is one-way:
@@ -42,7 +42,7 @@ TUI / future server / future GUI
               core
 ```
 
-`core` does not know about Cairn, Great Steppe, HP, Fatigue, water, food, or Omens. Ruleset modules
+`dairn-gm-engine` does not know about Cairn, Great Steppe, HP, Fatigue, water, food, or Omens. Ruleset modules
 provide those meanings and expose optional capabilities such as character or group creation.
 
 ## Stateless process model

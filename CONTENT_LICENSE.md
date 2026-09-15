@@ -13,7 +13,7 @@ separately under the Apache License 2.0; see `LICENSE` and `NOTICE`.
 
 ## Cairn Second Edition adaptations
 
-Some materials in `dairn-gm-engine/cairn-2e/src/main/resources` are adapted from *Cairn Second
+Some materials in `dairn-gm-modules/cairn-2e/src/main/resources` are adapted from *Cairn Second
 Edition* by Yochai Gal. Cairn Second Edition is licensed under CC BY-SA 4.0.
 
 The Russian text is based on the official Russian translation by Hex Cat studio, also distributed
@@ -30,7 +30,7 @@ See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for source links and pinned
 ## DAIRN: Great Steppe materials
 
 The textual game materials and table content in
-`dairn-gm-engine/great-steppe/src/main/resources` are:
+`dairn-gm-modules/great-steppe/src/main/resources` are:
 
 Copyright © 2026 Andrey Svininykh.
 
