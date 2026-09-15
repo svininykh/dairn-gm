@@ -11,7 +11,8 @@ same engine can later power a terminal application, CRUD server, StoryTeller, or
 - Ruleset-neutral dice, tables, choices, rules, effects, inventory slots, and interactive processes.
 - Cairn Second Edition character creation with English and Russian rules resources.
 - DAIRN: Great Steppe character creation using its own Life Paths and starting inventory procedure.
-- Great Steppe group creation, including selection of the youngest character and a shared Omen.
+- Complete Great Steppe initial-group creation: create each character, select the youngest character
+  when ages are tied, and determine the shared Omen.
 - Confirmed Great Steppe survival effects for water, food, full rest, Deprived, and Fatigue.
 - A development TUI with help at every command level and interface messages in Kazakh, Russian,
   and English.
@@ -113,7 +114,22 @@ Create a Great Steppe character:
   --choice great-steppe.character.attribute-swap=keep"
 ```
 
-Create a group from completed characters and determine its shared Omen:
+Create four new Great Steppe characters and assemble their initial group interactively:
+
+```shell
+./gradlew :dairn-gm-tui:run --args="--lang ru group new \
+  --module great-steppe \
+  --members 4 \
+  --seed 42"
+```
+
+The initial-group process composes the existing character-creation process for each member. Its
+request IDs are namespaced as `great-steppe.initial-group.member-1.*`,
+`great-steppe.initial-group.member-2.*`, and so on, allowing a future server or GUI to route every
+response unambiguously.
+
+If the characters already exist outside the engine, create a group from their names and ages and
+determine its shared Omen with the shorter command:
 
 ```shell
 ./gradlew :dairn-gm-tui:run --args="--lang ru group new \
@@ -123,8 +139,8 @@ Create a group from completed characters and determine its shared Omen:
   --seed 42"
 ```
 
-A one-character group is valid. If several characters share the youngest age, the process asks which
-one determines the group Omen.
+A one-character group is valid in both forms. If several characters share the youngest age, the
+process asks which one determines the group Omen.
 
 ## Build and test
 

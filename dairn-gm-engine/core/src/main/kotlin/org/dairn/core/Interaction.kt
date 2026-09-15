@@ -162,6 +162,14 @@ interface InteractiveGroupCreationModule : DairnModule {
     ): InteractiveProcess
 }
 
+/** Optional module capability for creating new characters and assembling their initial group. */
+interface InteractiveInitialGroupCreationModule : DairnModule {
+    fun initialGroupCreationProcess(
+        memberCount: Int,
+        languageTag: String = "en",
+    ): InteractiveProcess
+}
+
 fun ProcessRequest.requireMatching(response: ProcessResponse) {
     require(id == response.requestId) {
         "Response ${response.requestId.value} does not match request ${id.value}"

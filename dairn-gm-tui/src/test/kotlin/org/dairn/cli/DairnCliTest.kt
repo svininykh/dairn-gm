@@ -93,6 +93,32 @@ class DairnCliTest {
     }
 
     @Test
+    fun `Great Steppe creates a complete initial group through the shell`() {
+        val (code, text) = execute(
+            "--lang", "ru", "group", "new", "--module", "great-steppe", "--members", "1", "--seed", "42",
+            "--choice", "great-steppe.initial-group.member-1.life-path=1",
+            "--text", "great-steppe.initial-group.member-1.name=Aibek",
+            "--choice", "great-steppe.initial-group.member-1.supplies-swap=keep",
+            "--text", "great-steppe.initial-group.member-1.experience-detail=None",
+            "--choice", "great-steppe.initial-group.member-1.attribute-swap=keep",
+        )
+        assertEquals(0, code)
+        assertContains(text, "great-steppe.initial-group")
+        assertContains(text, "Aibek")
+    }
+
+    @Test
+    fun `initial group requires a positive member count`() {
+        val missing = execute("group", "new", "--module", "great-steppe", "--members")
+        val zero = execute("group", "new", "--module", "great-steppe", "--members", "0")
+
+        assertEquals(2, missing.first)
+        assertContains(missing.second, Messages(Language.EN).text("error.members", ""))
+        assertEquals(2, zero.first)
+        assertContains(zero.second, Messages(Language.EN).text("error.members", "0"))
+    }
+
+    @Test
     fun `character creation is discovered by capability rather than module id`() {
         val customModule = object : InteractiveCharacterCreationModule {
             override val info = ModuleInfo(ModuleId("custom-rules"), "test", "module.custom.name")

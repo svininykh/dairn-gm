@@ -88,6 +88,25 @@ class DairnCli(
         val moduleId = runCatching { ModuleId(moduleValue) }.getOrNull()
             ?: return error(messages.text("error.module.unknown", moduleValue), messages)
         val module = modules.find(moduleId) ?: return error(messages.text("error.module.unknown", moduleId), messages)
+        if ("--members" in rest) {
+            if ("--member" in rest) return error(messages.text("error.group.input.exclusive"), messages)
+            val requestedCount = optionValue(rest, "--members")
+                ?: return error(messages.text("error.members", ""), messages)
+            val memberCount = requestedCount.toIntOrNull()?.takeIf { it > 0 }
+                ?: return error(messages.text("error.members", requestedCount), messages)
+            val initialModule = module as? InteractiveInitialGroupCreationModule
+                ?: return error(messages.text("error.group.unsupported", moduleId), messages)
+            val seed = optionValue(rest, "--seed")?.toLongOrNull()
+            if ("--seed" in rest && seed == null) return error(messages.text("error.seed"), messages)
+            return runInteractive(
+                initialModule.initialGroupCreationProcess(memberCount, messages.language.code),
+                RandomDice(seed?.let(::Random) ?: Random.Default),
+                optionValues(rest, "--choice").mapNotNull(::parseAssignment).toMap(),
+                optionValues(rest, "--text").mapNotNull(::parseAssignment).toMap(),
+                messages,
+                "group.complete",
+            )
+        }
         val creationModule = module as? InteractiveGroupCreationModule
             ?: return error(messages.text("error.group.unsupported", moduleId), messages)
         val members = optionValues(rest, "--member").mapIndexed { index, value ->
@@ -230,7 +249,7 @@ ${m.text("options")}:
   --module <id>          ${m.text("character.module")}
   --seed <number>        ${m.text("character.seed")}
   --choice <id=value>    ${m.text("character.choice.option")}
-  --text <id=value>      Supply a text response non-interactively"""
+  --text <id=value>      ${m.text("character.text.option")}"""
 
     private fun groupHelp(m: Messages) = """${m.text("group.description")}
 
@@ -244,14 +263,16 @@ ${m.text("commands")}:
 
     private fun groupNewHelp(m: Messages) = """${m.text("group.new")}
 
-${m.text("usage")}: dairn group new --module <id> --member <name:age> [--member <name:age> ...]
+${m.text("usage")}: dairn group new --module <id> (--members <count> | --member <name:age> ...)
 
 ${m.text("options")}:
   -h, --help             ${m.text("option.help")}
   --module <id>          ${m.text("character.module")}
+  --members <count>      ${m.text("group.members")}
   --member <name:age>    ${m.text("group.member")}
   --seed <number>        ${m.text("character.seed")}
-  --choice <id=value>    ${m.text("character.choice.option")}"""
+  --choice <id=value>    ${m.text("character.choice.option")}
+  --text <id=value>      ${m.text("character.text.option")}"""
 
     private fun optionValue(args: List<String>, option: String): String? {
         val index = args.indexOf(option)
