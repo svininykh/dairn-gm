@@ -3,9 +3,11 @@ plugins {
     kotlin("plugin.serialization") version "2.0.20" apply false
 }
 
+val releaseVersion = providers.gradleProperty("releaseVersion").orElse("0.1.0-SNAPSHOT")
+
 allprojects {
     group = "org.dairn"
-    version = "0.1.0-SNAPSHOT"
+    version = releaseVersion.get()
 
     repositories {
         mavenCentral()

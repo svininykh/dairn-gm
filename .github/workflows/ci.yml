@@ -30,5 +30,8 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@67621b124fd2e251c5e8a0e6e3b91318f2287669 # v6.3.0
 
-      - name: Run tests
-        run: ./gradlew test
+      - name: Build and publish Engine locally
+        run: ./gradlew clean build publishToMavenLocal -PreleaseVersion=0.1.0-ci
+
+      - name: Verify an external Engine consumer
+        run: ./gradlew -p smoke-tests/external-module test -PengineVersion=0.1.0-ci
