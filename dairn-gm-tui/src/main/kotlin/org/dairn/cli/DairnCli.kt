@@ -37,7 +37,7 @@ class DairnCli(
                 if (args.drop(1).any { it in helpFlags }) output(moduleListHelp(messages))
                 else {
                     output(messages.text("module.list.heading"))
-                    modules.all().forEach { output("  ${it.info.id}\t${messages.text(it.info.nameKey)}\t${it.info.version}") }
+                    modules.all().forEach { output("  ${it.info.id}\t${it.info.name}\t${it.info.version}") }
                 }
                 0
             }
@@ -88,39 +88,19 @@ class DairnCli(
         val moduleId = runCatching { ModuleId(moduleValue) }.getOrNull()
             ?: return error(messages.text("error.module.unknown", moduleValue), messages)
         val module = modules.find(moduleId) ?: return error(messages.text("error.module.unknown", moduleId), messages)
-        if ("--members" in rest) {
-            if ("--member" in rest) return error(messages.text("error.group.input.exclusive"), messages)
-            val requestedCount = optionValue(rest, "--members")
-                ?: return error(messages.text("error.members", ""), messages)
-            val memberCount = requestedCount.toIntOrNull()?.takeIf { it > 0 }
-                ?: return error(messages.text("error.members", requestedCount), messages)
-            val initialModule = module as? InteractiveInitialGroupCreationModule
-                ?: return error(messages.text("error.group.unsupported", moduleId), messages)
-            val seed = optionValue(rest, "--seed")?.toLongOrNull()
-            if ("--seed" in rest && seed == null) return error(messages.text("error.seed"), messages)
-            return runInteractive(
-                initialModule.initialGroupCreationProcess(memberCount, messages.language.code),
-                RandomDice(seed?.let(::Random) ?: Random.Default),
-                optionValues(rest, "--choice").mapNotNull(::parseAssignment).toMap(),
-                optionValues(rest, "--text").mapNotNull(::parseAssignment).toMap(),
-                messages,
-                "group.complete",
-            )
-        }
-        val creationModule = module as? InteractiveGroupCreationModule
+        val requestedCount = optionValue(rest, "--members")
+            ?: return error(messages.text("error.members", ""), messages)
+        val memberCount = requestedCount.toIntOrNull()?.takeIf { it > 0 }
+            ?: return error(messages.text("error.members", requestedCount), messages)
+        val initialModule = module as? InteractiveInitialGroupCreationModule
             ?: return error(messages.text("error.group.unsupported", moduleId), messages)
-        val members = optionValues(rest, "--member").mapIndexed { index, value ->
-            parseMember(value, index + 1) ?: return error(messages.text("error.member", value), messages)
-        }
-        if (members.isEmpty()) return error(messages.text("error.member.required"), messages)
         val seed = optionValue(rest, "--seed")?.toLongOrNull()
         if ("--seed" in rest && seed == null) return error(messages.text("error.seed"), messages)
-        val choices = optionValues(rest, "--choice").mapNotNull(::parseAssignment).toMap()
         return runInteractive(
-            creationModule.groupCreationProcess(members, messages.language.code),
+            initialModule.initialGroupCreationProcess(memberCount, messages.language.code),
             RandomDice(seed?.let(::Random) ?: Random.Default),
-            choices,
-            emptyMap(),
+            optionValues(rest, "--choice").mapNotNull(::parseAssignment).toMap(),
+            optionValues(rest, "--text").mapNotNull(::parseAssignment).toMap(),
             messages,
             "group.complete",
         )
@@ -263,13 +243,12 @@ ${m.text("commands")}:
 
     private fun groupNewHelp(m: Messages) = """${m.text("group.new")}
 
-${m.text("usage")}: dairn group new --module <id> (--members <count> | --member <name:age> ...)
+${m.text("usage")}: dairn group new --module <id> --members <count>
 
 ${m.text("options")}:
   -h, --help             ${m.text("option.help")}
   --module <id>          ${m.text("character.module")}
   --members <count>      ${m.text("group.members")}
-  --member <name:age>    ${m.text("group.member")}
   --seed <number>        ${m.text("character.seed")}
   --choice <id=value>    ${m.text("character.choice.option")}
   --text <id=value>      ${m.text("character.text.option")}"""
@@ -288,14 +267,6 @@ ${m.text("options")}:
         return if (separator > 0 && separator < value.lastIndex) {
             value.substring(0, separator) to value.substring(separator + 1)
         } else null
-    }
-
-    private fun parseMember(value: String, number: Int): GroupMemberInput? {
-        val separator = value.lastIndexOf(':')
-        if (separator <= 0 || separator == value.lastIndex) return null
-        val name = value.substring(0, separator).trim()
-        val age = value.substring(separator + 1).toIntOrNull() ?: return null
-        return runCatching { GroupMemberInput("member-$number", name, age) }.getOrNull()
     }
 
     private companion object {

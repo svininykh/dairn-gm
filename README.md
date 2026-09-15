@@ -132,19 +132,8 @@ request IDs are namespaced as `great-steppe.initial-group.member-1.*`,
 `great-steppe.initial-group.member-2.*`, and so on, allowing a future server or GUI to route every
 response unambiguously.
 
-If the characters already exist outside the engine, create a group from their names and ages and
-determine its shared Omen with the shorter command:
-
-```shell
-./gradlew :dairn-gm-tui:run --args="--lang ru group new \
-  --module great-steppe \
-  --member Aibek:25 \
-  --member Bayan:31 \
-  --seed 42"
-```
-
-A one-character group is valid in both forms. If several characters share the youngest age, the
-process asks which one determines the group Omen.
+A one-character group is valid. If several characters share the youngest age, the process asks
+which one determines the group Omen.
 
 ## Build and test
 

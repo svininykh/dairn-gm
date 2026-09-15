@@ -11,8 +11,13 @@ data class ModuleId(val value: String) {
 data class ModuleInfo(
     val id: ModuleId,
     val version: String,
-    val nameKey: String,
-)
+    val name: String,
+) {
+    init {
+        require(version.isNotBlank()) { "Module version cannot be blank" }
+        require(name.isNotBlank()) { "Module name cannot be blank" }
+    }
+}
 
 interface DairnModule {
     val info: ModuleInfo
@@ -29,4 +34,3 @@ class ModuleRegistry(modules: Iterable<DairnModule>) {
 
     fun find(id: ModuleId): DairnModule? = modulesById[id]
 }
-

@@ -80,19 +80,6 @@ class DairnCliTest {
     }
 
     @Test
-    fun `Great Steppe group receives the common omen through the same shell`() {
-        val (code, text) = execute(
-            "--lang", "ru", "group", "new", "--module", "great-steppe", "--seed", "42",
-            "--member", "Aibek:25",
-            "--member", "Bayan:31",
-        )
-        assertEquals(0, code)
-        assertContains(text, Messages(Language.RU).text("group.complete"))
-        assertContains(text, "great-steppe.group")
-        assertContains(text, "Aibek")
-    }
-
-    @Test
     fun `Great Steppe creates a complete initial group through the shell`() {
         val (code, text) = execute(
             "--lang", "ru", "group", "new", "--module", "great-steppe", "--members", "1", "--seed", "42",
@@ -121,7 +108,7 @@ class DairnCliTest {
     @Test
     fun `character creation is discovered by capability rather than module id`() {
         val customModule = object : InteractiveCharacterCreationModule {
-            override val info = ModuleInfo(ModuleId("custom-rules"), "test", "module.custom.name")
+            override val info = ModuleInfo(ModuleId("custom-rules"), "test", "Custom Rules")
             override fun characterCreationProcess(languageTag: String) = CairnInteractiveCharacterCreation(languageTag)
         }
         val lines = mutableListOf<String>()
@@ -136,6 +123,20 @@ class DairnCliTest {
 
         assertEquals(0, code)
         assertContains(lines.joinToString("\n"), "Character created")
+    }
+
+    @Test
+    fun `module supplies its own display name`() {
+        val customModule = object : InteractiveCharacterCreationModule {
+            override val info = ModuleInfo(ModuleId("custom-rules"), "test", "Custom Rules")
+            override fun characterCreationProcess(languageTag: String) = CairnInteractiveCharacterCreation(languageTag)
+        }
+        val lines = mutableListOf<String>()
+
+        val code = DairnCli(ModuleRegistry(listOf(customModule)), lines::add).run(arrayOf("module", "list"))
+
+        assertEquals(0, code)
+        assertContains(lines.joinToString("\n"), "Custom Rules")
     }
 
     private fun execute(vararg args: String): Pair<Int, String> {

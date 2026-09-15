@@ -20,7 +20,6 @@ class CoreApiTest {
     }
 
     private fun module(id: String) = object : DairnModule {
-        override val info = ModuleInfo(ModuleId(id), "test", "module.$id.name")
+        override val info = ModuleInfo(ModuleId(id), "test", id.replaceFirstChar(Char::uppercase))
     }
 }
-

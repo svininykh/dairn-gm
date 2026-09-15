@@ -8,7 +8,7 @@ object Cairn2eModule : InteractiveCharacterCreationModule {
     override val info = ModuleInfo(
         id = ModuleId("cairn-2e"),
         version = "0.1.0",
-        nameKey = "module.cairn-2e.name",
+        name = "Cairn 2e",
     )
 
     override fun characterCreationProcess(languageTag: String) = CairnInteractiveCharacterCreation(languageTag)

@@ -154,22 +154,6 @@ interface InteractiveCharacterCreationModule : DairnModule {
     fun characterCreationProcess(languageTag: String = "en"): InteractiveProcess
 }
 
-data class GroupMemberInput(val id: String, val name: String, val age: Int) {
-    init {
-        require(id.isNotBlank()) { "Group member id cannot be blank" }
-        require(name.isNotBlank()) { "Group member name cannot be blank" }
-        require(age > 0) { "Group member age must be positive" }
-    }
-}
-
-/** Optional module capability for creating a group from completed characters. */
-interface InteractiveGroupCreationModule : DairnModule {
-    fun groupCreationProcess(
-        members: List<GroupMemberInput>,
-        languageTag: String = "en",
-    ): InteractiveProcess
-}
-
 /** Optional module capability for creating new characters and assembling their initial group. */
 interface InteractiveInitialGroupCreationModule : DairnModule {
     fun initialGroupCreationProcess(
