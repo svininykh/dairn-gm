@@ -1,5 +1,13 @@
 package org.dairn.core
 
+/**
+ * An immutable, module-owned snapshot of an unfinished interactive process.
+ *
+ * Hosts must treat the state as opaque and return it to the same process implementation.
+ * Persistence and serialization are not part of the Engine 0.1 contract.
+ */
+interface ProcessState
+
 @JvmInline
 value class ProcessId(val value: String) {
     init {

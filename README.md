@@ -56,7 +56,9 @@ current process state + response → next state or completed artifact
 The engine does not save characters, groups, process state, or world state. A calling application
 owns persistence and supplies dice results, choices, and text responses. This is intentional: the
 same process can be hosted by different interfaces without embedding a database or UI into the
-rules engine.
+rules engine. `InteractiveProcess` is the single process contract in Engine 0.1; its `ProcessState`
+is an immutable, module-owned value that hosts treat as opaque. State serialization is not part of
+the 0.1 contract.
 
 ## Requirements
 
