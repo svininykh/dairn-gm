@@ -73,7 +73,7 @@ SHA-256 checksum.
 Clone the repository, enter its directory, and list the available modules:
 
 ```shell
-git clone <repository-url>
+git clone https://github.com/svininykh/dairn-gm.git
 cd dairn-gm
 ./gradlew :dairn-gm-tui:run --args="--lang en module list"
 ```
@@ -85,6 +85,31 @@ Show the complete command overview:
 ```
 
 Supported interface language codes are `en`, `ru`, and `kk`.
+
+## Using the Engine from another project
+
+The preview Engine is published from GitHub tags through
+[JitPack](https://jitpack.io). Add the repository and the Engine dependency:
+
+```kotlin
+repositories {
+    mavenCentral()
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation(
+        "com.github.svininykh.dairn-gm:dairn-gm-engine:v0.1.0-preview.1"
+    )
+}
+```
+
+An external rules module implements `DairnModule` and any supported capability, such as
+`InteractiveCharacterCreationModule`. It does not need to fork this repository or depend on the TUI
+or bundled rulesets. See `smoke-tests/external-module` for a minimal independently built example.
+
+Engine 0.1 provides the module contracts but does not discover third-party JAR files automatically.
+A host application owns its `ModuleRegistry` and decides which module instances to register.
 
 ## Usage examples
 
@@ -150,7 +175,15 @@ Build all modules:
 ```
 
 GitHub Actions performs the same test suite and validates the Gradle Wrapper for pushes to `main`
-and for pull requests.
+and for pull requests. It also publishes Engine to the local Maven repository and builds the
+independent external-module smoke test against that artifact.
+
+Test the complete publication path locally:
+
+```shell
+./gradlew clean build publishToMavenLocal -PreleaseVersion=0.1.0-local
+./gradlew -p smoke-tests/external-module test -PengineVersion=0.1.0-local
+```
 
 ## Rules resources and localization
 
@@ -173,6 +206,7 @@ see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 - There is no persistence, server, graphical interface, AI, Player/Session model, or complex world
   state.
 - The TUI is a development shell, not the final game-master interface.
+- Engine 0.1 does not automatically discover or load third-party module JAR files.
 - Great Steppe English and Kazakh rules catalogs are not yet available.
 - Detailed Great Steppe procedures for consuming water, food, and fire are intentionally not
   implemented because the pinned source text does not define them yet.
