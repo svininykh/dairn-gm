@@ -17,3 +17,7 @@ dependencies {
 application {
     mainClass.set("org.dairn.cli.MainKt")
 }
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
+}

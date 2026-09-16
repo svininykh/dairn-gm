@@ -2,10 +2,7 @@ package org.dairn.cli
 
 import org.dairn.cairn.Cairn2eModule
 import org.dairn.cairn.CairnInteractiveCharacterCreation
-import org.dairn.core.InteractiveCharacterCreationModule
-import org.dairn.core.ModuleId
-import org.dairn.core.ModuleInfo
-import org.dairn.core.ModuleRegistry
+import org.dairn.core.*
 import org.dairn.steppe.GreatSteppeModule
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -139,9 +136,54 @@ class DairnCliTest {
         assertContains(lines.joinToString("\n"), "Custom Rules")
     }
 
+    @Test
+    fun `enter and zero select the roll option by default`() {
+        listOf("", "0").forEach { answer ->
+            val lines = mutableListOf<String>()
+            val module = object : InteractiveCharacterCreationModule {
+                override val info = ModuleInfo(ModuleId("roll-test"), "test", "Roll Test")
+                override fun characterCreationProcess(languageTag: String) = RollChoiceProcess()
+            }
+
+            val code = DairnCli(ModuleRegistry(listOf(module)), lines::add) { answer }.run(
+                arrayOf("character", "new", "--module", "roll-test"),
+            )
+
+            assertEquals(0, code)
+            assertContains(lines.joinToString("\n"), "  0. Roll [roll]")
+            assertContains(lines.joinToString("\n"), "result:")
+            assertContains(lines.joinToString("\n"), "    roll")
+        }
+    }
+
     private fun execute(vararg args: String): Pair<Int, String> {
         val lines = mutableListOf<String>()
         val code = DairnCli(registry, lines::add).run(arrayOf(*args))
         return code to lines.joinToString("\n")
+    }
+
+    private class RollChoiceProcess : InteractiveProcess {
+        override val id = ProcessId("roll-choice-test")
+
+        override fun start() = InteractiveStep.Waiting(
+            TestState,
+            ProcessRequest.Choose(
+                RequestId("roll-test.choice"),
+                "Choose",
+                listOf(ChoiceOption("roll", "Roll"), ChoiceOption("fixed", "Fixed")),
+            ),
+        )
+
+        override fun advance(state: ProcessState, response: ProcessResponse): InteractiveStep {
+            val selected = (response as ProcessResponse.Selected).optionIds.single()
+            return InteractiveStep.Completed(
+                object : ProcessArtifact {
+                    override val type = "roll-test.character"
+                    override val fields = listOf(ArtifactField("result", selected))
+                },
+            )
+        }
+
+        private data object TestState : ProcessState
     }
 }
