@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets
 import java.util.Properties
 
 internal object GreatSteppeCharacterData {
-    const val SOURCE_REVISION = "3fabe55fa366c3706a5c54614b1682bd2f7cb5d6"
+    const val SOURCE_REVISION = "e8efc7f1351a7fbfeb1876579e7b8ab1c5633256"
     private const val ROOT = "/great-steppe/character-creation"
     private val json = Json { ignoreUnknownKeys = false }
 
@@ -71,7 +71,15 @@ internal object GreatSteppeCharacterData {
 }
 
 @Serializable
-internal data class LifePathDefinition(val roll: Int, val nameKey: String, val experienceKey: String, val uniqueElementKey: String)
+internal data class LifePathDefinition(
+    val roll: Int,
+    val nameKey: String,
+    val experienceKey: String,
+    val uniqueElementKey: String,
+    val uniqueElementType: UniqueElementType,
+)
+
+enum class UniqueElementType { TALISMAN, COMPANION, VALUE }
 
 @Serializable
 private data class LifePathDocument(val sourceRevision: String, val sourceLanguage: String, val die: String, val results: List<LifePathDefinition>)

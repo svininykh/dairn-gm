@@ -22,7 +22,6 @@ class GreatSteppeCharacterCreationTest {
             "weapon" to 4, "travel-gear" to 5, "tool" to 6,
         ))
         step = choose(process, step, "water-fire")
-        step = enter(process, step, "Caravan life")
         step = roll(process, step, mapOf("str" to 8, "dex" to 12, "wil" to 10, "hp" to 4))
         step = choose(process, step, "str-wil")
         step = roll(process, step, mapOf(
@@ -66,7 +65,6 @@ class GreatSteppeCharacterCreationTest {
             "weapon" to 1, "travel-gear" to 1, "tool" to 1,
         ))
         step = choose(process, step, "keep")
-        step = enter(process, step, "")
         step = roll(process, step, mapOf("str" to 9, "dex" to 10, "wil" to 11, "hp" to 3))
         step = choose(process, step, "keep")
         step = roll(process, step, mapOf(
@@ -82,6 +80,24 @@ class GreatSteppeCharacterCreationTest {
         assertEquals(5, character.inventory.load.occupiedSlots)
         assertEquals(2, character.inventory[GreatSteppeInventoryCategory.WEAPON].slots)
         assertEquals(true, character.inventory[GreatSteppeInventoryCategory.WEAPON].bulky)
+    }
+
+    @Test
+    fun `only craft and hidden-past life paths request an experience detail`() {
+        val craft = GreatSteppeCharacterCreation("ru")
+        var step: InteractiveStep = craft.start()
+        step = choose(craft, step, "8")
+        step = enter(craft, step, "Bayan")
+        step = roll(craft, step, mapOf(
+            "water" to 1, "food" to 1, "fire" to 1,
+            "weapon" to 1, "travel-gear" to 1, "tool" to 1,
+        ))
+        step = choose(craft, step, "keep")
+
+        val waiting = assertIs<InteractiveStep.Waiting>(step)
+        val request = assertIs<ProcessRequest.EnterText>(waiting.request)
+        assertEquals("great-steppe.character.experience-detail", request.id.value)
+        assertEquals("Выберите ремесло, которому обучался персонаж", request.prompt)
     }
 
     private fun choose(process: InteractiveProcess, step: InteractiveStep, option: String): InteractiveStep {

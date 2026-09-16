@@ -11,7 +11,7 @@ class GreatSteppeCharacterDataTest {
         assertEquals(8, GreatSteppeCharacterData.traits.size)
         assertEquals(20, GreatSteppeCharacterData.bonds.size)
         assertEquals(20, GreatSteppeCharacterData.omens.size)
-        assertEquals("3fabe55fa366c3706a5c54614b1682bd2f7cb5d6", GreatSteppeCharacterData.SOURCE_REVISION)
+        assertEquals("e8efc7f1351a7fbfeb1876579e7b8ab1c5633256", GreatSteppeCharacterData.SOURCE_REVISION)
     }
 
     @Test

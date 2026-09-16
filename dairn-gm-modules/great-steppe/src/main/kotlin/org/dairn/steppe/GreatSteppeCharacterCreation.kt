@@ -8,6 +8,7 @@ data class GreatSteppeLifePath(
     val experience: String,
     val detail: String,
     val uniqueElement: String,
+    val uniqueElementType: UniqueElementType,
 )
 
 enum class GreatSteppeInventoryCategory(val id: String) {
@@ -76,7 +77,7 @@ data class GreatSteppeCharacter(
             add(ArtifactField(labels.getValue("name"), name))
             add(ArtifactField(labels.getValue("life-path"), lifePath.name))
             add(ArtifactField(labels.getValue("experience"), listOf(lifePath.experience, lifePath.detail).filter(String::isNotBlank)))
-            add(ArtifactField(labels.getValue("unique-element"), lifePath.uniqueElement))
+            add(ArtifactField(labels.getValue("unique-element.${lifePath.uniqueElementType.name.lowercase()}"), lifePath.uniqueElement))
             add(ArtifactField(labels.getValue("inventory"), inventory.asList()))
             add(ArtifactField(labels.getValue("inventory-load"), "${inventory.load.occupiedSlots}/${inventory.load.capacity}"))
             add(ArtifactField(labels.getValue("str"), attributes[0]))
@@ -205,16 +206,25 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
             "water-fire" -> rolls.swap("water", "fire")
             "food-fire" -> rolls.swap("food", "fire")
         }
-        val request = ProcessRequest.EnterText(
-            RequestId("great-steppe.character.experience-detail"),
-            text.get("process.experience-detail.prompt"),
-            allowBlank = true,
-        )
-        return waiting(Stage.EXPERIENCE, state.draft.copy(inventoryRolls = rolls), request)
+        val draft = state.draft.copy(inventoryRolls = rolls)
+        val lifePathRoll = requireNotNull(draft.lifePath).roll
+        return if (lifePathRoll in lifePathsRequiringDetail) {
+            val request = ProcessRequest.EnterText(
+                RequestId("great-steppe.character.experience-detail"),
+                text.get("process.experience-detail.$lifePathRoll.prompt"),
+            )
+            waiting(Stage.EXPERIENCE, draft, request)
+        } else {
+            requestAbilities(draft)
+        }
     }
 
     private fun acceptExperience(state: State, response: ProcessResponse): InteractiveStep.Waiting {
         val detail = entered(state.request as ProcessRequest.EnterText, response)
+        return requestAbilities(state.draft.copy(experienceDetail = detail))
+    }
+
+    private fun requestAbilities(draft: Draft): InteractiveStep.Waiting {
         val request = ProcessRequest.Roll(
             RequestId("great-steppe.character.abilities"),
             text.get("process.abilities.prompt"),
@@ -225,7 +235,7 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
                 RollSpec("hp", DiceExpression(1, 6)),
             ),
         )
-        return waiting(Stage.ABILITIES, state.draft.copy(experienceDetail = detail), request)
+        return waiting(Stage.ABILITIES, draft, request)
     }
 
     private fun acceptAbilities(state: State, response: ProcessResponse): InteractiveStep.Waiting {
@@ -320,6 +330,7 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
             text.get(definition.experienceKey),
             draft.experienceDetail,
             text.get(definition.uniqueElementKey),
+            definition.uniqueElementType,
         )
         fun inventoryItem(category: GreatSteppeInventoryCategory): GreatSteppeInventoryItem {
             val categoryId = category.id
@@ -349,7 +360,7 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
         }
         val inventory = GreatSteppeInventory(GreatSteppeInventoryCategory.entries.map(::inventoryItem))
         val labelIds = listOf(
-            "name", "life-path", "experience", "unique-element", "inventory", "inventory-load",
+            "name", "life-path", "experience", "unique-element.talisman", "unique-element.companion", "unique-element.value", "inventory", "inventory-load",
             "str", "dex", "wil", "hp", "bond", "age", "secret-omen",
         )
         return InteractiveStep.Completed(
@@ -410,5 +421,6 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
 
     private companion object {
         const val FOUNDLING_ROLL = 18
+        val lifePathsRequiringDetail = setOf(8, 17)
     }
 }
