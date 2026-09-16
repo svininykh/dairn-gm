@@ -128,9 +128,9 @@ class DairnCli(
                 }
                 is ProcessRequest.Choose -> {
                     output(request.prompt)
-                    val rollOption = request.options.singleOrNull { it.id == "roll" }
-                    val numberedOptions = request.options.filterNot { it === rollOption }
-                    rollOption?.let { output("  0. ${it.label} [${it.id}]") }
+                    val defaultOption = request.options.singleOrNull { it.id in defaultChoiceIds }
+                    val numberedOptions = request.options.filterNot { it === defaultOption }
+                    defaultOption?.let { output("  0. ${it.label} [${it.id}]") }
                     numberedOptions.forEachIndexed { index, option -> output("  ${index + 1}. ${option.label} [${option.id}]") }
                     val supplied = suppliedChoices[request.id.value]
                     val entered = supplied ?: input()
@@ -139,7 +139,7 @@ class DairnCli(
                         supplied
                     } else {
                         when {
-                            rollOption != null && (entered.isBlank() || entered.trim() == "0") -> rollOption.id
+                            defaultOption != null && (entered.isBlank() || entered.trim() == "0") -> defaultOption.id
                             else -> numberedOptions.getOrNull(entered.trim().toIntOrNull()?.minus(1) ?: -1)?.id ?: entered.trim()
                         }
                     }
@@ -277,5 +277,6 @@ ${m.text("options")}:
 
     private companion object {
         val helpFlags = setOf("-h", "--help")
+        val defaultChoiceIds = setOf("roll", "keep")
     }
 }

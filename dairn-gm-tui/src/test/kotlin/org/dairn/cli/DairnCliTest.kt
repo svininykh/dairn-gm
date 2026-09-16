@@ -137,22 +137,24 @@ class DairnCliTest {
     }
 
     @Test
-    fun `enter and zero select the roll option by default`() {
-        listOf("", "0").forEach { answer ->
-            val lines = mutableListOf<String>()
-            val module = object : InteractiveCharacterCreationModule {
-                override val info = ModuleInfo(ModuleId("roll-test"), "test", "Roll Test")
-                override fun characterCreationProcess(languageTag: String) = RollChoiceProcess()
+    fun `enter and zero select roll or keep by default`() {
+        listOf("roll", "keep").forEach { defaultId ->
+            listOf("", "0").forEach { answer ->
+                val lines = mutableListOf<String>()
+                val module = object : InteractiveCharacterCreationModule {
+                    override val info = ModuleInfo(ModuleId("roll-test"), "test", "Roll Test")
+                    override fun characterCreationProcess(languageTag: String) = DefaultChoiceProcess(defaultId)
+                }
+
+                val code = DairnCli(ModuleRegistry(listOf(module)), lines::add) { answer }.run(
+                    arrayOf("character", "new", "--module", "roll-test"),
+                )
+
+                assertEquals(0, code)
+                assertContains(lines.joinToString("\n"), "  0. ${defaultId.replaceFirstChar(Char::uppercase)} [$defaultId]")
+                assertContains(lines.joinToString("\n"), "result:")
+                assertContains(lines.joinToString("\n"), "    $defaultId")
             }
-
-            val code = DairnCli(ModuleRegistry(listOf(module)), lines::add) { answer }.run(
-                arrayOf("character", "new", "--module", "roll-test"),
-            )
-
-            assertEquals(0, code)
-            assertContains(lines.joinToString("\n"), "  0. Roll [roll]")
-            assertContains(lines.joinToString("\n"), "result:")
-            assertContains(lines.joinToString("\n"), "    roll")
         }
     }
 
@@ -162,7 +164,7 @@ class DairnCliTest {
         return code to lines.joinToString("\n")
     }
 
-    private class RollChoiceProcess : InteractiveProcess {
+    private class DefaultChoiceProcess(private val defaultId: String) : InteractiveProcess {
         override val id = ProcessId("roll-choice-test")
 
         override fun start() = InteractiveStep.Waiting(
@@ -170,7 +172,7 @@ class DairnCliTest {
             ProcessRequest.Choose(
                 RequestId("roll-test.choice"),
                 "Choose",
-                listOf(ChoiceOption("roll", "Roll"), ChoiceOption("fixed", "Fixed")),
+                listOf(ChoiceOption(defaultId, defaultId.replaceFirstChar(Char::uppercase)), ChoiceOption("fixed", "Fixed")),
             ),
         )
 
