@@ -54,6 +54,8 @@ class GreatSteppeInitialGroupCreationTest {
                             request.id.value.endsWith(".life-path") -> "1"
                             request.id.value.endsWith(".supplies-swap") -> "keep"
                             request.id.value.endsWith(".attribute-swap") -> "keep"
+                            ".trait-" in request.id.value -> "roll"
+                            request.id.value.endsWith(".bond") -> "roll"
                             request.id.value.endsWith(".youngest") -> "member-2"
                             else -> error("Unexpected choice: ${request.id.value}")
                         },

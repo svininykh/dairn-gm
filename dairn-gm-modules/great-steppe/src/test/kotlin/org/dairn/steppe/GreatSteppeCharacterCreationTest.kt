@@ -24,11 +24,7 @@ class GreatSteppeCharacterCreationTest {
         step = choose(process, step, "water-fire")
         step = roll(process, step, mapOf("str" to 8, "dex" to 12, "wil" to 10, "hp" to 4))
         step = choose(process, step, "str-wil")
-        step = roll(process, step, mapOf(
-            "trait-physique" to 1, "trait-skin" to 2, "trait-hair" to 3,
-            "trait-face" to 4, "trait-speech" to 5, "trait-clothing" to 6,
-            "trait-virtue" to 7, "trait-flaw" to 8, "bond" to 9,
-        ))
+        step = rollTraitsAndBond(process, step, listOf(1, 2, 3, 4, 5, 6, 7, 8), 9)
         step = roll(process, step, mapOf("age" to 25))
         step = roll(process, step, mapOf("omen" to 1))
 
@@ -67,11 +63,7 @@ class GreatSteppeCharacterCreationTest {
         step = choose(process, step, "keep")
         step = roll(process, step, mapOf("str" to 9, "dex" to 10, "wil" to 11, "hp" to 3))
         step = choose(process, step, "keep")
-        step = roll(process, step, mapOf(
-            "trait-physique" to 1, "trait-skin" to 1, "trait-hair" to 1,
-            "trait-face" to 1, "trait-speech" to 1, "trait-clothing" to 1,
-            "trait-virtue" to 1, "trait-flaw" to 1, "bond" to 1,
-        ))
+        step = rollTraitsAndBond(process, step, List(8) { 1 }, 1)
         step = roll(process, step, mapOf("age" to 30))
 
         val character = assertIs<GreatSteppeCharacter>(assertIs<InteractiveStep.Completed>(step).artifact)
@@ -116,5 +108,15 @@ class GreatSteppeCharacterCreationTest {
         val waiting = assertIs<InteractiveStep.Waiting>(step)
         val request = assertIs<ProcessRequest.Roll>(waiting.request)
         return process.advance(waiting.state, ProcessResponse.Rolled(request.id, totals))
+    }
+
+    private fun rollTraitsAndBond(process: InteractiveProcess, initial: InteractiveStep, traitRolls: List<Int>, bondRoll: Int): InteractiveStep {
+        var step = initial
+        traitRolls.forEach { traitRoll ->
+            step = choose(process, step, "roll")
+            step = roll(process, step, mapOf("trait" to traitRoll))
+        }
+        step = choose(process, step, "roll")
+        return roll(process, step, mapOf("bond" to bondRoll))
     }
 }

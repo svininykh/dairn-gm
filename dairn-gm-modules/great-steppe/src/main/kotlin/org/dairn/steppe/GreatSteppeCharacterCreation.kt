@@ -109,11 +109,12 @@ private data class State(
     val stage: Stage,
     val draft: Draft,
     val request: ProcessRequest,
+    val traitIndex: Int? = null,
 ) : ProcessState
 
 private enum class Stage {
     LIFE_PATH, LIFE_PATH_ROLL, NAME, INVENTORY, SUPPLIES_SWAP, EXPERIENCE,
-    ABILITIES, ATTRIBUTES_SWAP, TRAITS_BOND, AGE, FOUNDLING_OMEN,
+    ABILITIES, ATTRIBUTES_SWAP, TRAIT, TRAIT_ROLL, BOND, BOND_ROLL, AGE, FOUNDLING_OMEN,
 }
 
 class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProcess {
@@ -142,7 +143,10 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
             Stage.EXPERIENCE -> acceptExperience(state, response)
             Stage.ABILITIES -> acceptAbilities(state, response)
             Stage.ATTRIBUTES_SWAP -> acceptAttributesSwap(state, response)
-            Stage.TRAITS_BOND -> acceptTraitsAndBond(state, response)
+            Stage.TRAIT -> acceptTrait(state, response)
+            Stage.TRAIT_ROLL -> acceptTraitRoll(state, response)
+            Stage.BOND -> acceptBond(state, response)
+            Stage.BOND_ROLL -> acceptBondRoll(state, response)
             Stage.AGE -> acceptAge(state, response)
             Stage.FOUNDLING_OMEN -> acceptFoundlingOmen(state, response)
         }
@@ -268,22 +272,73 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
             "str-wil" -> scores.swap(0, 2)
             "dex-wil" -> scores.swap(1, 2)
         }
-        val request = ProcessRequest.Roll(
-            RequestId("great-steppe.character.traits-and-bond"),
-            text.get("process.traits-bond.prompt"),
-            GreatSteppeCharacterData.traits.map { RollSpec("trait-${it.id}", DiceExpression(1, 10)) } +
-                RollSpec("bond", DiceExpression(1, 20)),
-        )
-        return waiting(Stage.TRAITS_BOND, state.draft.copy(attributes = scores), request)
+        return requestTrait(state.draft.copy(attributes = scores), 0)
     }
 
-    private fun acceptTraitsAndBond(state: State, response: ProcessResponse): InteractiveStep.Waiting {
-        val totals = rolled(state.request as ProcessRequest.Roll, response)
-        val traits = GreatSteppeCharacterData.traits.map { trait ->
-            val roll = totals.getValue("trait-${trait.id}")
-            GreatSteppeTrait(trait.id, text.get(trait.nameKey), roll, text.get(trait.resultKeys[roll - 1]))
+    private fun requestTrait(draft: Draft, traitIndex: Int): InteractiveStep.Waiting {
+        val trait = GreatSteppeCharacterData.traits[traitIndex]
+        val request = ProcessRequest.Choose(
+            RequestId("great-steppe.character.trait-${trait.id}"),
+            text.get("process.trait.prompt").format(text.get(trait.nameKey)),
+            listOf(ChoiceOption("roll", text.get("process.trait.roll"))) +
+                trait.resultKeys.mapIndexed { index, key -> ChoiceOption((index + 1).toString(), text.get(key)) },
+        )
+        return waiting(Stage.TRAIT, draft, request, traitIndex)
+    }
+
+    private fun acceptTrait(state: State, response: ProcessResponse): InteractiveStep.Waiting {
+        val traitIndex = requireNotNull(state.traitIndex)
+        val choice = selected(state.request as ProcessRequest.Choose, response)
+        if (choice == "roll") {
+            val trait = GreatSteppeCharacterData.traits[traitIndex]
+            val request = ProcessRequest.Roll(
+                RequestId("great-steppe.character.trait-${trait.id}-roll"),
+                text.get("process.trait-roll.prompt").format(text.get(trait.nameKey)),
+                listOf(RollSpec("trait", DiceExpression(1, 10))),
+            )
+            return waiting(Stage.TRAIT_ROLL, state.draft, request, traitIndex)
         }
-        val bondDefinition = GreatSteppeCharacterData.bonds[totals.getValue("bond") - 1]
+        return recordTraitAndContinue(state.draft, traitIndex, choice.toInt())
+    }
+
+    private fun acceptTraitRoll(state: State, response: ProcessResponse): InteractiveStep.Waiting =
+        recordTraitAndContinue(state.draft, requireNotNull(state.traitIndex), rolled(state.request as ProcessRequest.Roll, response).getValue("trait"))
+
+    private fun recordTraitAndContinue(draft: Draft, traitIndex: Int, roll: Int): InteractiveStep.Waiting {
+        val trait = GreatSteppeCharacterData.traits[traitIndex]
+        val resolved = GreatSteppeTrait(trait.id, text.get(trait.nameKey), roll, text.get(trait.resultKeys[roll - 1]))
+        val nextDraft = draft.copy(traits = draft.traits + resolved)
+        return if (traitIndex + 1 < GreatSteppeCharacterData.traits.size) requestTrait(nextDraft, traitIndex + 1) else requestBond(nextDraft)
+    }
+
+    private fun requestBond(draft: Draft): InteractiveStep.Waiting {
+        val request = ProcessRequest.Choose(
+            RequestId("great-steppe.character.bond"),
+            text.get("process.bond.prompt"),
+            listOf(ChoiceOption("roll", text.get("process.bond.roll"))) +
+                GreatSteppeCharacterData.bonds.map { ChoiceOption(it.roll.toString(), text.get(it.textKey)) },
+        )
+        return waiting(Stage.BOND, draft, request)
+    }
+
+    private fun acceptBond(state: State, response: ProcessResponse): InteractiveStep.Waiting {
+        val choice = selected(state.request as ProcessRequest.Choose, response)
+        if (choice == "roll") {
+            val request = ProcessRequest.Roll(
+                RequestId("great-steppe.character.bond-roll"),
+                text.get("process.bond-roll.prompt"),
+                listOf(RollSpec("bond", DiceExpression(1, 20))),
+            )
+            return waiting(Stage.BOND_ROLL, state.draft, request)
+        }
+        return requestAge(state.draft, choice.toInt())
+    }
+
+    private fun acceptBondRoll(state: State, response: ProcessResponse): InteractiveStep.Waiting =
+        requestAge(state.draft, rolled(state.request as ProcessRequest.Roll, response).getValue("bond"))
+
+    private fun requestAge(draft: Draft, bondRoll: Int): InteractiveStep.Waiting {
+        val bondDefinition = GreatSteppeCharacterData.bonds[bondRoll - 1]
         val request = ProcessRequest.Roll(
             RequestId("great-steppe.character.age"),
             text.get("process.age.prompt"),
@@ -291,10 +346,7 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
         )
         return waiting(
             Stage.AGE,
-            state.draft.copy(
-                traits = traits,
-                bond = GreatSteppeBond(bondDefinition.roll, text.get(bondDefinition.textKey)),
-            ),
+            draft.copy(bond = GreatSteppeBond(bondDefinition.roll, text.get(bondDefinition.textKey))),
             request,
         )
     }
@@ -381,8 +433,8 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
 
     private fun lifePath(roll: Int): LifePathDefinition = GreatSteppeCharacterData.lifePaths[roll - 1]
 
-    private fun waiting(stage: Stage, draft: Draft, request: ProcessRequest) =
-        InteractiveStep.Waiting(State(stage, draft, request), request)
+    private fun waiting(stage: Stage, draft: Draft, request: ProcessRequest, traitIndex: Int? = null) =
+        InteractiveStep.Waiting(State(stage, draft, request, traitIndex), request)
 
     private fun selected(request: ProcessRequest.Choose, response: ProcessResponse): String {
         require(response is ProcessResponse.Selected && response.optionIds.size == 1)
