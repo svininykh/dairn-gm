@@ -99,7 +99,18 @@ repositories {
 
 dependencies {
     implementation(
-        "com.github.svininykh.dairn-gm:dairn-gm-engine:v0.1.0-preview.2"
+        "com.github.svininykh.dairn-gm:dairn-gm-engine:v0.1.0-preview.3"
+    )
+}
+```
+
+Ruleset modules are published separately. A StoryTeller that needs Great Steppe
+Omens should depend on the same immutable tag:
+
+```kotlin
+dependencies {
+    implementation(
+        "com.github.svininykh.dairn-gm:dairn-gm-great-steppe:v0.1.0-preview.3"
     )
 }
 ```
@@ -183,6 +194,7 @@ Test the complete publication path locally:
 ```shell
 ./gradlew clean build publishToMavenLocal -PreleaseVersion=0.1.0-local
 ./gradlew -p smoke-tests/external-module test -PengineVersion=0.1.0-local
+./gradlew -p smoke-tests/great-steppe-module test -PrulesetVersion=0.1.0-local
 ```
 
 ## Rules resources and localization
