@@ -4,7 +4,7 @@ import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.util.Properties
 
-internal class GreatSteppeText(languageTag: String) {
+internal class GreatSteppeText(val languageTag: String) {
     private val catalogs = requireNotNull(javaClass.getResource("/great-steppe/i18n/catalogs.txt"))
         .readText().lineSequence().map(String::trim).filter(String::isNotEmpty).toList()
     private val requested = loadCatalogs(languageTag)

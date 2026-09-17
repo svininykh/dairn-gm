@@ -367,11 +367,7 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
 
     private fun acceptFoundlingOmen(state: State, response: ProcessResponse): InteractiveStep.Completed {
         val roll = rolled(state.request as ProcessRequest.Roll, response).getValue("omen")
-        val definition = GreatSteppeCharacterData.omens[roll - 1]
-        return complete(
-            state.draft,
-            GreatSteppeOmen(roll, text.get(definition.nameKey), text.get(definition.descriptionKey)),
-        )
+        return complete(state.draft, GreatSteppeModule.resolveOmen(roll, text.languageTag))
     }
 
     private fun complete(draft: Draft, secretOmen: GreatSteppeOmen?): InteractiveStep.Completed {

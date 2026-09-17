@@ -2,6 +2,7 @@ package org.dairn.steppe
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class GreatSteppeCharacterDataTest {
     @Test
@@ -27,5 +28,14 @@ class GreatSteppeCharacterDataTest {
         ).sum()
 
         assertEquals(GREAT_STEPPE_INVENTORY_CAPACITY, maximumLoad)
+    }
+
+    @Test
+    fun `public omen resolver resolves a localized table result`() {
+        val omen = GreatSteppeModule.resolveOmen(1, "ru")
+
+        assertEquals(1, omen.roll)
+        assertEquals("Река течёт вспять", omen.name)
+        assertFailsWith<IllegalArgumentException> { GreatSteppeModule.resolveOmen(0) }
     }
 }

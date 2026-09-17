@@ -172,16 +172,11 @@ class GreatSteppeInitialGroupCreation(
         require(response is ProcessResponse.Rolled && response.totals.keys == setOf("omen"))
         val roll = response.totals.getValue("omen")
         require(roll in 1..20)
-        val definition = GreatSteppeCharacterData.omens[roll - 1]
         return InteractiveStep.Completed(
             GreatSteppeInitialGroup(
                 state.characters,
                 requireNotNull(state.youngest),
-                GreatSteppeOmen(
-                    roll,
-                    text.get(definition.nameKey),
-                    text.get(definition.descriptionKey),
-                ),
+                GreatSteppeModule.resolveOmen(roll, text.languageTag),
                 mapOf(
                     "members" to text.get("field.group-members"),
                     "youngest" to text.get("field.youngest-character"),
