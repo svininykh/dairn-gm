@@ -70,6 +70,15 @@ class DairnCliTest {
             "--choice", "great-steppe.character.supplies-swap=keep",
             "--text", "great-steppe.character.experience-detail=Caravan life",
             "--choice", "great-steppe.character.attribute-swap=keep",
+            "--choice", "great-steppe.character.trait-physique=roll",
+            "--choice", "great-steppe.character.trait-skin=roll",
+            "--choice", "great-steppe.character.trait-hair=roll",
+            "--choice", "great-steppe.character.trait-face=roll",
+            "--choice", "great-steppe.character.trait-speech=roll",
+            "--choice", "great-steppe.character.trait-clothing=roll",
+            "--choice", "great-steppe.character.trait-virtue=roll",
+            "--choice", "great-steppe.character.trait-flaw=roll",
+            "--choice", "great-steppe.character.bond=roll",
         )
         assertEquals(0, code)
         assertContains(text, "great-steppe.character")
@@ -85,6 +94,15 @@ class DairnCliTest {
             "--choice", "great-steppe.initial-group.member-1.supplies-swap=keep",
             "--text", "great-steppe.initial-group.member-1.experience-detail=None",
             "--choice", "great-steppe.initial-group.member-1.attribute-swap=keep",
+            "--choice", "great-steppe.initial-group.member-1.trait-physique=roll",
+            "--choice", "great-steppe.initial-group.member-1.trait-skin=roll",
+            "--choice", "great-steppe.initial-group.member-1.trait-hair=roll",
+            "--choice", "great-steppe.initial-group.member-1.trait-face=roll",
+            "--choice", "great-steppe.initial-group.member-1.trait-speech=roll",
+            "--choice", "great-steppe.initial-group.member-1.trait-clothing=roll",
+            "--choice", "great-steppe.initial-group.member-1.trait-virtue=roll",
+            "--choice", "great-steppe.initial-group.member-1.trait-flaw=roll",
+            "--choice", "great-steppe.initial-group.member-1.bond=roll",
         )
         assertEquals(0, code)
         assertContains(text, "great-steppe.initial-group")

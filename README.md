@@ -99,7 +99,7 @@ repositories {
 
 dependencies {
     implementation(
-        "com.github.svininykh.dairn-gm:dairn-gm-engine:v0.1.0-preview.1"
+        "com.github.svininykh.dairn-gm:dairn-gm-engine:v0.1.0-preview.2"
     )
 }
 ```
