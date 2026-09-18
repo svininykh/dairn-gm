@@ -8,13 +8,16 @@ data class GreatSteppeInitialGroup(
     val omen: GreatSteppeOmen,
     private val labels: Map<String, String>,
 ) : ProcessArtifact {
+    private fun memberLabel(character: GreatSteppeCharacter, index: Int): String =
+        character.name ?: labels.getValue("unnamed-member").format(index)
+
     override val type = "great-steppe.initial-group"
     override val fields: List<ArtifactField> = listOf(
         ArtifactField(
             labels.getValue("members"),
-            characters.map { "${it.name} (${it.age}) — ${it.lifePath.name}" },
+            characters.mapIndexed { index, character -> "${memberLabel(character, index + 1)} (${character.age}) — ${character.lifePath.name}" },
         ),
-        ArtifactField(labels.getValue("youngest"), youngest.name),
+        ArtifactField(labels.getValue("youngest"), memberLabel(youngest, characters.indexOf(youngest) + 1)),
         ArtifactField(labels.getValue("omen"), listOf(omen.name, omen.description)),
     )
 }
@@ -113,7 +116,12 @@ class GreatSteppeInitialGroupCreation(
             val request = ProcessRequest.Choose(
                 RequestId("great-steppe.initial-group.youngest"),
                 text.get("process.initial-group.youngest.prompt"),
-                youngest.map { ChoiceOption("member-${it.index + 1}", "${it.value.name} (${it.value.age})") },
+                youngest.map { candidate ->
+                    ChoiceOption(
+                        "member-${candidate.index + 1}",
+                        "${candidate.value.name ?: text.get("process.initial-group.member.unnamed").format(candidate.index + 1)} (${candidate.value.age})",
+                    )
+                },
             )
             InteractiveStep.Waiting(
                 InitialGroupState(
@@ -181,6 +189,7 @@ class GreatSteppeInitialGroupCreation(
                     "members" to text.get("field.group-members"),
                     "youngest" to text.get("field.youngest-character"),
                     "omen" to text.get("field.group-omen"),
+                    "unnamed-member" to text.get("process.initial-group.member.unnamed"),
                 ),
             ),
         )

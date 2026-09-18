@@ -9,6 +9,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class GreatSteppeCharacterCreationTest {
     @Test
@@ -72,6 +73,27 @@ class GreatSteppeCharacterCreationTest {
         assertEquals(5, character.inventory.load.occupiedSlots)
         assertEquals(2, character.inventory[GreatSteppeInventoryCategory.WEAPON].slots)
         assertEquals(true, character.inventory[GreatSteppeInventoryCategory.WEAPON].bulky)
+    }
+
+    @Test
+    fun `name may be left for a later reader interaction`() {
+        val process = GreatSteppeCharacterCreation("ru")
+        var step: InteractiveStep = process.start()
+        step = choose(process, step, "1")
+        step = enter(process, step, "")
+        step = roll(process, step, mapOf(
+            "water" to 1, "food" to 1, "fire" to 1,
+            "weapon" to 1, "travel-gear" to 1, "tool" to 1,
+        ))
+        step = choose(process, step, "keep")
+        step = roll(process, step, mapOf("str" to 9, "dex" to 10, "wil" to 11, "hp" to 3))
+        step = choose(process, step, "keep")
+        step = rollTraitsAndBond(process, step, List(8) { 1 }, 1)
+        step = roll(process, step, mapOf("age" to 30))
+
+        val character = assertIs<GreatSteppeCharacter>(assertIs<InteractiveStep.Completed>(step).artifact)
+        assertNull(character.name)
+        assertFalse(character.fields.any { it.label == GreatSteppeText("ru").get("field.name") })
     }
 
     @Test

@@ -29,9 +29,19 @@ class GreatSteppeInitialGroupCreationTest {
         assertTrue("great-steppe.initial-group.youngest" in requestIds)
     }
 
+    @Test
+    fun `initial group supports unnamed heroes`() {
+        val artifact = complete(GreatSteppeInitialGroupCreation(2, "ru"), unnamed = true)
+
+        assertTrue(artifact.characters.all { it.name == null })
+        assertTrue(artifact.fields.flatMap { it.values }.none { it.contains("null") })
+        assertTrue(artifact.fields.flatMap { it.values }.any { it.contains("Безымянный герой") })
+    }
+
     private fun complete(
         process: GreatSteppeInitialGroupCreation,
         requestIds: MutableList<String> = mutableListOf(),
+        unnamed: Boolean = false,
     ): GreatSteppeInitialGroup {
         var step: InteractiveStep = process.start()
         while (step is InteractiveStep.Waiting) {
@@ -45,7 +55,7 @@ class GreatSteppeInitialGroupCreationTest {
                 )
                 is ProcessRequest.EnterText -> ProcessResponse.TextEntered(
                     request.id,
-                    if ("member-1" in request.id.value) "Aibek" else "Bayan",
+                    if (unnamed) "" else if ("member-1" in request.id.value) "Aibek" else "Bayan",
                 )
                 is ProcessRequest.Choose -> ProcessResponse.Selected(
                     request.id,

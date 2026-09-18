@@ -99,7 +99,7 @@ repositories {
 
 dependencies {
     implementation(
-        "com.github.svininykh.dairn-gm:dairn-gm-engine:v0.1.0-preview.3"
+        "com.github.svininykh.dairn-gm:dairn-gm-engine:v0.1.0-preview.4"
     )
 }
 ```
@@ -110,7 +110,7 @@ Omens should depend on the same immutable tag:
 ```kotlin
 dependencies {
     implementation(
-        "com.github.svininykh.dairn-gm:dairn-gm-great-steppe:v0.1.0-preview.3"
+        "com.github.svininykh.dairn-gm:dairn-gm-great-steppe:v0.1.0-preview.4"
     )
 }
 ```

@@ -5,6 +5,17 @@ All notable changes to DAIRN GM will be documented in this file.
 The project follows [Semantic Versioning](https://semver.org/) after the `0.1.0` preview line. While
 the project is in preview, its public API may change between releases.
 
+## 0.1.0-preview.4 — 2026-09-18
+
+### Added
+
+- Automatic Great Steppe character generation using the existing rules process and injectable dice.
+- Support for temporarily unnamed heroes and unset reader-authored life-path details.
+
+### Changed
+
+- Initial group creation displays unnamed heroes without assigning a domain name.
+
 ## 0.1.0-preview.1 — Unreleased
 
 ### Added

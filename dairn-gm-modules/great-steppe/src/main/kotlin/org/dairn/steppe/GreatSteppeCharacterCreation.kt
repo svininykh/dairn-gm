@@ -6,7 +6,8 @@ data class GreatSteppeLifePath(
     val roll: Int,
     val name: String,
     val experience: String,
-    val detail: String,
+    /** Reader-authored detail, which may be supplied after automatic generation. */
+    val detail: String?,
     val uniqueElement: String,
     val uniqueElementType: UniqueElementType,
 )
@@ -60,7 +61,8 @@ data class GreatSteppeBond(val roll: Int, val text: String)
 data class GreatSteppeOmen(val roll: Int, val name: String, val description: String)
 
 data class GreatSteppeCharacter(
-    val name: String,
+    /** Reader-assigned name, which may be supplied after automatic generation. */
+    val name: String?,
     val lifePath: GreatSteppeLifePath,
     val inventory: GreatSteppeInventory,
     val attributes: List<Int>,
@@ -74,9 +76,9 @@ data class GreatSteppeCharacter(
     override val type = "great-steppe.character"
     override val fields: List<ArtifactField>
         get() = buildList {
-            add(ArtifactField(labels.getValue("name"), name))
+            name?.let { add(ArtifactField(labels.getValue("name"), it)) }
             add(ArtifactField(labels.getValue("life-path"), lifePath.name))
-            add(ArtifactField(labels.getValue("experience"), listOf(lifePath.experience, lifePath.detail).filter(String::isNotBlank)))
+            add(ArtifactField(labels.getValue("experience"), listOfNotNull(lifePath.experience, lifePath.detail).filter(String::isNotBlank)))
             add(ArtifactField(labels.getValue("unique-element.${lifePath.uniqueElementType.name.lowercase()}"), lifePath.uniqueElement))
             add(ArtifactField(labels.getValue("inventory"), inventory.asList()))
             add(ArtifactField(labels.getValue("inventory-load"), "${inventory.load.occupiedSlots}/${inventory.load.capacity}"))
@@ -97,7 +99,7 @@ private data class Draft(
     val lifePath: LifePathDefinition? = null,
     val name: String? = null,
     val inventoryRolls: Map<String, Int> = emptyMap(),
-    val experienceDetail: String = "",
+    val experienceDetail: String? = null,
     val attributes: List<Int> = emptyList(),
     val hitProtection: Int? = null,
     val traits: List<GreatSteppeTrait> = emptyList(),
@@ -172,12 +174,13 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
         val request = ProcessRequest.EnterText(
             RequestId("great-steppe.character.name"),
             text.get("process.name.prompt"),
+            allowBlank = true,
         )
         return waiting(Stage.NAME, draft, request)
     }
 
     private fun acceptName(state: State, response: ProcessResponse): InteractiveStep.Waiting {
-        val name = entered(state.request as ProcessRequest.EnterText, response)
+        val name = entered(state.request as ProcessRequest.EnterText, response).trim().ifBlank { null }
         val request = ProcessRequest.Roll(
             RequestId("great-steppe.character.inventory"),
             text.get("process.inventory.prompt"),
@@ -216,6 +219,7 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
             val request = ProcessRequest.EnterText(
                 RequestId("great-steppe.character.experience-detail"),
                 text.get("process.experience-detail.$lifePathRoll.prompt"),
+                allowBlank = true,
             )
             waiting(Stage.EXPERIENCE, draft, request)
         } else {
@@ -224,7 +228,7 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
     }
 
     private fun acceptExperience(state: State, response: ProcessResponse): InteractiveStep.Waiting {
-        val detail = entered(state.request as ProcessRequest.EnterText, response)
+        val detail = entered(state.request as ProcessRequest.EnterText, response).trim().ifBlank { null }
         return requestAbilities(state.draft.copy(experienceDetail = detail))
     }
 
@@ -413,7 +417,7 @@ class GreatSteppeCharacterCreation(languageTag: String = "ru") : InteractiveProc
         )
         return InteractiveStep.Completed(
             GreatSteppeCharacter(
-                requireNotNull(draft.name),
+                draft.name,
                 lifePath,
                 inventory,
                 draft.attributes,
