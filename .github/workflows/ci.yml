@@ -35,3 +35,9 @@ jobs:
 
       - name: Verify an external Engine consumer
         run: ./gradlew -p smoke-tests/external-module test -PengineVersion=0.1.0-ci
+
+      - name: Verify an independent DAIRN rules consumer
+        run: ./gradlew -p smoke-tests/dairn-rules-module test -PrulesetVersion=0.1.0-ci
+
+      - name: Verify an external Great Steppe consumer
+        run: ./gradlew -p smoke-tests/great-steppe-module test -PrulesetVersion=0.1.0-ci

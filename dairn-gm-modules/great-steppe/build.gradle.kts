@@ -11,6 +11,7 @@ kotlin {
 
 dependencies {
     api(project(":dairn-gm-engine"))
+    api(project(":dairn-gm-modules:dairn-rules"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     testImplementation(kotlin("test"))
 }

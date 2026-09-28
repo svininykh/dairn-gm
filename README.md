@@ -28,6 +28,7 @@ dairn-gm
 ├── dairn-gm-engine       Ruleset-neutral engine API
 ├── dairn-gm-modules
 │   ├── cairn-2e          Cairn Second Edition module
+│   ├── dairn-rules       Setting-neutral DAIRN Ability Score checks
 │   └── great-steppe      DAIRN: Great Steppe module
 └── dairn-gm-tui          Text interface and development shell
 ```
@@ -122,6 +123,43 @@ or bundled rulesets. See `smoke-tests/external-module` for a minimal independent
 Engine 0.1 provides the module contracts but does not discover third-party JAR files automatically.
 A host application owns its `ModuleRegistry` and decides which module instances to register.
 
+### Common DAIRN rules
+
+`dairn-gm-modules:dairn-rules` provides STR / DEX / WIL checks independently of
+Great Steppe and Cairn. Dependency arrows mean "depends on":
+`application/scenario → dairn-rules → dairn-gm-engine`.
+Great Steppe also depends on `dairn-rules` and exposes character extension functions
+`abilityScore`, `check`, and `resolveCheck` in `org.dairn.steppe`. These read STR,
+DEX, or WIL from the supplied character snapshot and delegate to the common rules.
+Supply a snapshot with updated scores after ability loss; the adapter does not
+track injuries or decide whether a character can act. Cairn remains independent.
+The common rules module has no setting resources or dependency on either setting
+module or the TUI.
+
+```kotlin
+import org.dairn.core.RandomDice
+import org.dairn.rules.AbilityScore
+import org.dairn.rules.DairnRulesModule
+import kotlin.random.Random
+
+val dice = RandomDice(Random(42))
+val dex = DairnRulesModule.check(AbilityScore.DEX, 12, dice)
+val wil = DairnRulesModule.resolveCheck(AbilityScore.WIL, 10, roll = 11)
+// dex/wil retain ability, score, roll, and successful.
+```
+
+The caller supplies the current score and decides whether a check is warranted,
+who makes it, and what consequences follow. The operation resolves one d20:
+1 always succeeds, 20 always fails, otherwise roll ≤ score succeeds. It adds no
+experience, profession, or Fatigue modifiers. It does not impose a character
+creation range or model eligibility to act: resolving a roll against zero does
+not negate Chapter 3's death/incapacity rules. Character state is caller-owned.
+
+The separate published artifact is `org.dairn:dairn-gm-dairn-rules` for local Maven
+consumers. `smoke-tests/dairn-rules-module` demonstrates DEX/WIL using only that
+artifact and verifies that neither setting module is present at runtime.
+See [the source baseline](docs/dairn-rules-source.md).
+
 ## Usage examples
 
 Start Cairn 2e character creation interactively:
@@ -195,6 +233,7 @@ Test the complete publication path locally:
 ./gradlew clean build publishToMavenLocal -PreleaseVersion=0.1.0-local
 ./gradlew -p smoke-tests/external-module test -PengineVersion=0.1.0-local
 ./gradlew -p smoke-tests/great-steppe-module test -PrulesetVersion=0.1.0-local
+./gradlew -p smoke-tests/dairn-rules-module test -PrulesetVersion=0.1.0-local
 ```
 
 ## Rules resources and localization

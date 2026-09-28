@@ -5,6 +5,15 @@ All notable changes to DAIRN GM will be documented in this file.
 The project follows [Semantic Versioning](https://semver.org/) after the `0.1.0` preview line. While
 the project is in preview, its public API may change between releases.
 
+## Unreleased
+
+### Added
+
+- Independent `dairn-rules` module with STR / DEX / WIL checks, injectable dice,
+  and resolution of supplied d20 rolls according to the Chapter 3 working master.
+- Great Steppe character adapters for the shared Ability Score checks.
+- Published-artifact smoke tests for neutral rules and Great Steppe checks in CI.
+
 ## 0.1.0-preview.4 — 2026-09-18
 
 ### Added
