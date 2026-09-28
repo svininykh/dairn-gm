@@ -42,3 +42,27 @@ dependency is exported with `api` because the extension signatures expose common
 rules types. The external Great Steppe smoke test verifies this publication path.
 The reverse dependency does not exist: the neutral rules consumer still runs
 without either setting module. Cairn remains unchanged.
+
+## Pre-push review — 2026-09-28
+
+Rechecked the current local source texts before publishing the implementation:
+
+- Chapter 3 master SHA-256:
+  `6e8631408d30d01ef590d278112e0341f8c2041585448e452e21d5cc38be975a`.
+- Game procedures SHA-256:
+  `7e6e06c4d73e14fc1e139a1b887f71fdfa0c97dbf6f0b5fc5068ec5b32a74b4e`.
+
+Both now state the d20 comparison and natural 1/20 exceptions explicitly; these
+rules still match the implementation. The earlier hashes above remain the
+implementation baseline. The source working tree is being edited independently.
+
+The neutral module, deterministic boundary tests, and independent consumer meet
+the functional requirements of Issue #3. The Great Steppe adapter is an additional
+integration beyond the minimum required scope, retained in the current result.
+It is not necessary to demonstrate neutral DEX/WIL checks. Consequently, the
+Issue's strict unchanged-setting-modules criterion has this documented deviation.
+
+Validation before this documentation update: the full Gradle build and local
+publication succeeded, as did the neutral-rules and Great Steppe external smoke
+tests. This update changes documentation only. Publishing these commits does not
+by itself close Issue #3.
